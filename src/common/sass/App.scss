@@ -1,0 +1,13 @@
+// IMPORTANT: if you want to import sass/scss module you need to import it before import tailwind
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.App {
+  &_text-center {
+    text-align: center;
+  }
+
+  @apply bg-amber-300
+}
