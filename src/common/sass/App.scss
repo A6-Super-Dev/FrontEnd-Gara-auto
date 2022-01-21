@@ -5,9 +5,8 @@
 @tailwind utilities;
 
 .App {
-  &_text-center {
-    text-align: center;
-  }
-
-  @apply bg-amber-300
+  width: 100vw;
+  height: 100vh;
+  
+  @apply bg-slate-100 m-0 p-0 box-border flex justify-center items-center
 }

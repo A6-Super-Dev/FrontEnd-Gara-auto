@@ -1,0 +1,30 @@
+@import '../../common/sass/variable';
+
+.loading {
+  &-box {
+    width: rem(470px, 16px);
+    height: rem(160px, 16px);
+    background-color: $primary-color;
+    @apply flex justify-evenly items-center;
+  }
+
+  &-pin {
+    // background: linear-gradient(to left, $primary-color 50%, $white 50%) right;
+    // background-size: 200%;
+
+    @apply h-5/6 w-1/6 bg-white;
+  }
+
+  .circle {
+    width: 58px;
+    height: 150px;
+    shape-outside: circle(50% at 30%);
+    clip-path: circle(50% at 0%);
+    background-color: $primary-color;
+    @apply ml-3 float-right;
+  }
+
+  &-text {
+    @apply text-center text-4xl font-semibold mt-6 tracking-wide;
+  }
+}
