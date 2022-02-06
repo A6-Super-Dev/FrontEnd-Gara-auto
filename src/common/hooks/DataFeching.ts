@@ -1,20 +1,26 @@
 import { useEffect, useState } from 'react';
-import { sampleTestApi } from '../../services/axiosConnection';
-import { ErrorTypes } from '../../services/types';
 
-export function useDataFetching(endPointFetch: Function) {
-  const [loading, setLoading] = useState(false);
+export function useDataFetch(fetch: boolean, endPointFetch: Function) {
+  const [loading, setLoading] = useState(fetch);
   const [error, setError] = useState<string | undefined | object>(undefined);
+  const [result, setResult] = useState<any | undefined>(undefined);
 
-  async function fetchData() {
-    try {
-      setLoading(!loading);
-      const result = await endPointFetch();
-    } catch (error: any) {
-      console.log(error);
-      setError(error.message);
-    } finally {
-      setLoading(!loading);
+  useEffect(() => {
+    if (loading && endPointFetch) {
+      const fetchData = async () => {
+        try {
+          const tmp = await endPointFetch();
+          setResult(tmp);
+        } catch (error: any) {
+          console.log(error);
+          setError(error.message);
+        } finally {
+          setLoading(!loading);
+        }
+      };
+      fetchData();
     }
-  }
+  }, [loading, endPointFetch]);
+
+  return [loading, setLoading, error, result];
 }
