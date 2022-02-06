@@ -1,7 +1,19 @@
 import axios from 'axios';
-import { BASE_URL, END_POINT } from './types';
+import { BASE_URL } from './types';
 
-export const sampleTestApi = async () => {
-  const { data } = await axios.get(BASE_URL + END_POINT.sampleApi);
-  return data;
-};
+export const AxiosClient = axios.create({
+  baseURL: BASE_URL,
+  timeout: 15000,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
+AxiosClient.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  (error) => {
+    throw error;
+  }
+);

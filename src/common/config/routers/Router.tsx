@@ -3,10 +3,11 @@ import { SignIn } from '../../../pages/admin/auth/signIn/SignIn';
 import { LogIn } from '../../../pages/client/auth/logIn/LogIn';
 import { PasswordRecover } from '../../../pages/client/auth/passwordRecover/PasswordRecover';
 import { SignUp } from '../../../pages/client/auth/signUp/SignUp';
+import { Home } from '../../../pages/client/common/Home';
 import { routerPath } from '../../constants/routerPath';
-import { Route as Iroute } from '../interface/route';
+import { Route as Router } from '../interface/route';
 
-export const router: Iroute[] = [
+export const router: Router[] = [
   {
     path: routerPath.admin.auth.PASSCODE_RECOVER,
     element: <PasscodeRecover />,
@@ -26,6 +27,10 @@ export const router: Iroute[] = [
   {
     path: routerPath.client.auth.SIGN_UP,
     element: <SignUp />,
+  },
+  {
+    path: routerPath.client.common.HOME,
+    element: <Home />,
   },
 ];
 
