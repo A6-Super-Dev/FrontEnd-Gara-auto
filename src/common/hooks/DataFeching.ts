@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 
 export function useDataFetch(fetch: boolean, endPointFetch: Function) {
   const [loading, setLoading] = useState(fetch);
@@ -8,9 +8,8 @@ export function useDataFetch(fetch: boolean, endPointFetch: Function) {
     try {
       const tmp = await endPointFetch();
       setResult(tmp);
-    } catch (error: any) {
-      console.log(error);
-      setError(error.message);
+    } catch (exception: any) {
+      setError(exception.message);
     } finally {
       setLoading(!loading);
     }
