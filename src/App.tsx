@@ -1,7 +1,6 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   BrowserRouter,
-  Navigate,
   Route as Channel,
   Routes as Switch,
 } from 'react-router-dom';
@@ -11,12 +10,16 @@ import { router, allRouteName } from './common/config/routers/Router';
 import { routerPath } from './common/constants/routerPath';
 
 function App() {
-  const location = window.location.pathname;
+  const [location] = useState(window.location.pathname);
+
+  useEffect(() => {
+    if (allRouteName.includes(location) === false) {
+      window.location.pathname = routerPath.client.common.HOME;
+    }
+  }, [location]);
+
   return (
     <BrowserRouter>
-      {allRouteName.includes(location) === false && (
-        <Navigate to={routerPath.client.common.HOME} />
-      )}
       <Switch>
         {router.map((el: Route, index: number) => {
           return <Channel path={el.path} element={el.element} key={index} />;
