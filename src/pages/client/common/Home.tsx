@@ -16,7 +16,7 @@ export const Home = () => {
 
   return (
     <div>
-      <button className="test-button" onClick={() => handleOnclick()}>
+      <button className="test-button">
         <svg
           className="fill-current w-4 h-4 mr-2"
           xmlns="http://www.w3.org/2000/svg"

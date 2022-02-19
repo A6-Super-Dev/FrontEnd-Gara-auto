@@ -1,11 +1,11 @@
 import Cookies from 'js-cookie';
 
 interface CookieAttributes {
-  expires?: number | Date | undefined;
-  path?: string | undefined;
-  domain?: string | undefined;
-  secure?: boolean | undefined;
-  sameSite?: 'strict' | 'Strict' | 'lax' | 'Lax' | 'none' | 'None' | undefined;
+  expires?: number | Date;
+  path?: string;
+  domain?: string;
+  secure?: boolean;
+  sameSite?: 'strict' | 'Strict' | 'lax' | 'Lax' | 'none' | 'None';
   [property: string]: any;
 }
 
