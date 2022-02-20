@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import ReCAPTCHA from 'react-google-recaptcha';
 import { useLocalStorage } from '../../../../common/hooks/LocalStorage';
 

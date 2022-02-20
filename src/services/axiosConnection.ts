@@ -1,8 +1,8 @@
 import axios from 'axios';
-import { BASE_URL } from './types';
+import ServiceTypes from './types';
 
 export const AxiosClient = axios.create({
-  baseURL: BASE_URL,
+  baseURL: ServiceTypes.BASE_URL,
   timeout: 15000,
   headers: {
     'Content-Type': 'application/json',

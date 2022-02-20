@@ -1,9 +1,9 @@
 import { AxiosClient } from './axiosConnection';
-import { END_POINT, TestHookReturn } from './types';
+import ServiceTypes, { TestHookReturn } from './types';
 
 export const clientService = {
   test: async (): Promise<TestHookReturn> => {
-    const { data } = await AxiosClient.get(END_POINT.sampleApi);
+    const { data } = await AxiosClient.get(ServiceTypes.END_POINT);
     return data.data;
   },
 };
