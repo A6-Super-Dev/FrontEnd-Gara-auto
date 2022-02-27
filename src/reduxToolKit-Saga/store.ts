@@ -4,12 +4,14 @@ import rootSaga from './rootsaga';
 import { persistStore, persistReducer } from 'redux-persist';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import counterSlice from './common/Counter/CounterSlice';
+import loginSlice from './auth/LoginSlice';
 
 const sagaMiddleware = createSagaMiddleware();
 
 const persistConfig = {
   key: 'root',
   storage,
+  whitelist: ['counter', 'login'],
 };
 
 export const store = configureStore({
@@ -17,6 +19,7 @@ export const store = configureStore({
     persistConfig,
     combineReducers({
       counter: counterSlice,
+      login: loginSlice,
     })
   ),
   middleware: (getDefaultMiddleware) =>

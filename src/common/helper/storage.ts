@@ -32,3 +32,7 @@ export const setCookie = (
 export const getCookie = (name: string) => {
   return Cookies.get(name);
 };
+
+export const destroyCookie = (key: string, option?: CookieAttributes) => {
+  Cookies.remove(key, option || undefined);
+};

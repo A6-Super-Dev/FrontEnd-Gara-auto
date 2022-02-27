@@ -20,7 +20,7 @@ class ServiceTypes {
     this.environment = 'develop';
     this.BASE_URL =
       this.environment === 'develop'
-        ? 'http://localhost:6000/home/'
+        ? 'http://localhost:6000/'
         : 'https://back-end-compu-mobile.herokuapp.com/';
   }
 
