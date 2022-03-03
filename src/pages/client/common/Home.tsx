@@ -1,17 +1,19 @@
 import React from 'react';
 import { useAppDispatch } from '../../../common/hooks/ReduxHook';
-import { login, logOut } from '../../../reduxToolKit-Saga/auth/LoginSlice';
+import { AuthActionType } from '../../../reduxToolKit-Saga/auth/LoginSaga';
+import { logOut } from '../../../reduxToolKit-Saga/auth/LoginSlice';
 import './Home.scss';
 
 export const Home = () => {
   const dispatch = useAppDispatch();
   function DispatchLogin() {
-    dispatch(
-      login({
+    dispatch({
+      type: AuthActionType.LOGIN,
+      payload: {
         email: 'ducquang03102000@gmail.com',
         password: 'ducquang123',
-      })
-    );
+      },
+    });
   }
 
   function DispatchLogout() {

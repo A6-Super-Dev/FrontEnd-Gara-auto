@@ -9,7 +9,7 @@ import {
 } from '../../common/helper/storage';
 import { LoginDataReturn } from '../../common/interfaces/Client';
 import ClientService from '../../services/clientService';
-import { login, loginReject, loginSuccess, logOut, reset } from './LoginSlice';
+import { loginReject, loginSuccess, logOut, reset } from './LoginSlice';
 import TimeHelper from '../../common/helper/time';
 
 interface LoginParams {
@@ -30,6 +30,11 @@ interface ErrorResponse {
   data: ErrorResponseData;
 }
 
+export enum AuthActionType {
+  LOGIN = 'LOGIN',
+  LOGOUT = 'LOGOUT',
+}
+
 function* loginSaga(action: PayloadAction<LoginParams>) {
   try {
     const res: LoginDataReturn = yield call(() =>
@@ -40,7 +45,7 @@ function* loginSaga(action: PayloadAction<LoginParams>) {
         loginSuccess({
           accessToken: res.headers.authorization,
           loginMessage: 'Login success, you will be redirected to Home',
-          loginStatus: true,
+          loginStatus: res.statusCode,
           refreshToken: res.body.authorization,
         })
       );
@@ -60,7 +65,7 @@ function* loginSaga(action: PayloadAction<LoginParams>) {
     yield put(
       loginReject({
         loginMessage: resErr.data.message,
-        loginStatus: false,
+        loginStatus: resErr.status,
       })
     );
   }
@@ -70,21 +75,20 @@ function* logoutSaga() {
   try {
     destroyCookie('token');
     destroyLocalStorageItem('token');
-    yield put(logOut());
-    setTimeout(() => {
-      window.location.reload();
-    }, 400);
+    yield put({ type: AuthActionType.LOGOUT, payload: logOut() });
   } catch (error) {
-    loginReject({
-      loginMessage: 'Something went wrong please try again',
-      loginStatus: false,
-    });
+    yield put(
+      loginReject({
+        loginMessage: 'Something went wrong please try again',
+        loginStatus: 500,
+      })
+    );
   }
 }
 
 export default function* LoginSaga() {
   yield all([
-    takeLatest(login.toString(), loginSaga),
-    takeLatest(logOut.toString(), logoutSaga),
+    takeLatest(AuthActionType.LOGIN, loginSaga),
+    takeLatest(AuthActionType.LOGOUT, logoutSaga),
   ]);
 }

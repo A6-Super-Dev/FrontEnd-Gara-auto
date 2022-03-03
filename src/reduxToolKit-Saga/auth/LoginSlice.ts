@@ -6,29 +6,28 @@ interface LoginParams {
 }
 
 export interface LoginReturn {
-  loginStatus?: boolean;
-  loginMessage?: string;
+  loginStatus?: number;
+  loginMessage: string;
 }
 
 export interface LoginSuccessReturn extends LoginReturn {
-  refreshToken?: string;
-  accessToken?: string;
+  refreshToken: string;
+  accessToken: string;
 }
 
 export interface LoginRejectReturn extends LoginReturn {}
 
 export interface LoginInitialState extends LoginSuccessReturn {
-  isLoggedIn?: boolean;
-  isLoggingIn?: boolean;
+  isLoggedIn: boolean;
+  isLoggingIn: boolean;
 }
 
 const initialState: LoginInitialState = {
-  isLoggedIn: undefined,
-  isLoggingIn: undefined,
-  accessToken: undefined,
-  loginMessage: undefined,
-  loginStatus: undefined,
-  refreshToken: undefined,
+  isLoggedIn: false,
+  isLoggingIn: false,
+  accessToken: '',
+  loginMessage: '',
+  refreshToken: '',
 };
 
 export const loginSlice = createSlice({
@@ -59,16 +58,16 @@ export const loginSlice = createSlice({
       state.loginMessage = action.payload.loginMessage;
     },
     logOut: (state: LoginInitialState) => {
-      state.isLoggedIn = undefined;
-      state.isLoggingIn = undefined;
-      state.accessToken = undefined;
-      state.loginMessage = undefined;
+      state.isLoggedIn = false;
+      state.isLoggingIn = false;
+      state.accessToken = '';
+      state.loginMessage = '';
       state.loginStatus = undefined;
-      state.refreshToken = undefined;
+      state.refreshToken = '';
     },
     reset: (state: LoginInitialState) => {
-      state.isLoggingIn = undefined;
-      state.loginMessage = undefined;
+      state.isLoggingIn = false;
+      state.loginMessage = '';
     },
   },
 });

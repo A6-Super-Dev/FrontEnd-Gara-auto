@@ -8,20 +8,21 @@ import loginSlice from './auth/LoginSlice';
 
 const sagaMiddleware = createSagaMiddleware();
 
-const persistConfig = {
-  key: 'root',
+const authPersistConfig = {
+  key: 'auth',
   storage,
-  whitelist: ['counter', 'login'],
+};
+
+const counterPersistConfig = {
+  key: 'counter',
+  storage,
 };
 
 export const store = configureStore({
-  reducer: persistReducer(
-    persistConfig,
-    combineReducers({
-      counter: counterSlice,
-      login: loginSlice,
-    })
-  ),
+  reducer: combineReducers({
+    counter: persistReducer(counterPersistConfig, counterSlice),
+    login: persistReducer(authPersistConfig, loginSlice),
+  }),
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: false,
