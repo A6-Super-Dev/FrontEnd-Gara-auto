@@ -20,8 +20,8 @@ class ServiceTypes {
     this.environment = 'develop';
     this.BASE_URL =
       this.environment === 'develop'
-        ? 'http://localhost:6000/'
-        : 'https://back-end-compu-mobile.herokuapp.com/';
+        ? 'http://localhost:5000/'
+        : 'https://garaauto-backend-service.herokuapp.com/';
   }
 
   public setEnvironment(env: EnvironmentType) {
