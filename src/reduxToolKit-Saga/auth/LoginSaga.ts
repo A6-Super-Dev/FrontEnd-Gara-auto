@@ -57,7 +57,7 @@ function* loginSaga(action: PayloadAction<LoginParams>) {
       setLocalStorageItem('token', String(res.headers.authorization));
       setTimeout(() => {
         window.location.pathname = routerPath.client.common.HOME;
-      }, 600);
+      }, 400);
       yield put(reset());
     }
   } catch (error: any) {
@@ -75,7 +75,10 @@ function* logoutSaga() {
   try {
     destroyCookie('token');
     destroyLocalStorageItem('token');
-    yield put({ type: AuthActionType.LOGOUT, payload: logOut() });
+    yield put(logOut());
+    setTimeout(() => {
+      window.location.reload();
+    }, 400);
   } catch (error) {
     yield put(
       loginReject({

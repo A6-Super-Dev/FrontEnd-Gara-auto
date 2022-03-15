@@ -36,3 +36,15 @@ export const getCookie = (name: string) => {
 export const destroyCookie = (key: string, option?: CookieAttributes) => {
   Cookies.remove(key, option || undefined);
 };
+
+export const getRefreshToken = () => {
+  try {
+    const refreshToken = getCookie('token');
+    if (refreshToken) {
+      return refreshToken.split('%')[1];
+    }
+    return null;
+  } catch (error) {
+    console.error(`error at getRefreshToken(): ${error}`);
+  }
+};

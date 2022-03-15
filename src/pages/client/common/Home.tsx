@@ -17,7 +17,10 @@ export const Home = () => {
   }
 
   function DispatchLogout() {
-    dispatch(logOut());
+    dispatch({
+      type: AuthActionType.LOGOUT,
+      payload: {},
+    });
   }
 
   return (
