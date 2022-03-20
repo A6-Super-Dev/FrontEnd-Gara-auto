@@ -1,15 +1,21 @@
 import createSagaMiddleware from '@redux-saga/core';
-import storage from 'redux-persist/lib/storage';
-import rootSaga from './rootsaga';
 import { persistStore } from 'redux-persist';
-import { combineReducers, configureStore } from '@reduxjs/toolkit';
+import { combineReducers, configureStore, Reducer, Store } from '@reduxjs/toolkit';
 
+import rootSaga from './rootSaga';
 import persistConfig from './persistConfig';
+import CounterSlice from './common/Counter/CounterSlice';
+import loginSlice from './auth/LoginSlice';
 
 const sagaMiddleware = createSagaMiddleware();
 
-export const store = configureStore({
-  reducer: combineReducers(persistConfig),
+const combinedReducer = combineReducers({
+  counter: CounterSlice,
+  login: loginSlice,
+});
+
+export const store: Store = configureStore({
+  reducer: combineReducers(persistConfig) as Reducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: false,
@@ -19,5 +25,5 @@ export const store = configureStore({
 sagaMiddleware.run(rootSaga);
 
 export const persistor = persistStore(store);
-export type RootState = ReturnType<typeof store.getState>;
+export type RootState = ReturnType<typeof combinedReducer>;
 export type AppDispatch = typeof store.dispatch;

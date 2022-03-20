@@ -33,12 +33,6 @@ export const counterSlice = createSlice({
   },
 });
 
-export const {
-  increment,
-  decrement,
-  incrementByAmount,
-  incrementSaga,
-  incrementSagaSuccess,
-} = counterSlice.actions;
+export const { increment, decrement, incrementByAmount, incrementSaga, incrementSagaSuccess } = counterSlice.actions;
 
 export default counterSlice.reducer;

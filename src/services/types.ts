@@ -1,31 +1,16 @@
-export interface ErrorTypes {
-  statusCode: number;
-  name: string;
-  message: string | object;
-}
-
-export interface TestHookReturn {
-  _id: string;
-  headline: string;
-}
-
-export type EnvironmentType = 'production' | 'develop' | 'test';
+import env, { Environment } from '../common/config/interface/env';
 
 class ServiceTypes {
-  public environment: EnvironmentType;
+  public environment: Environment;
   public BASE_URL: string;
-  public END_POINT: string = 'blogs/';
 
   constructor() {
-    this.environment = 'develop';
-    this.BASE_URL =
-      this.environment === 'develop'
-        ? 'http://localhost:5000/'
-        : 'https://garaauto-backend-service.herokuapp.com/';
+    this.environment = env.environment as Environment;
+    this.BASE_URL = this.environment === Environment.Develop ? env.developAPI : env.productionAPI;
   }
 
-  public setEnvironment(env: EnvironmentType) {
-    this.environment = env;
+  public setEnvironment(environment: Environment) {
+    this.environment = environment;
   }
 }
 

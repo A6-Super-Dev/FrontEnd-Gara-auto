@@ -1,10 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { PersistGate } from 'redux-persist/lib/integration/react';
 import { Provider } from 'react-redux';
+
+import { persistor, store } from './reduxToolKit-Saga/store';
 import '../src/common/sass/index.css';
 import App from './App';
-import { PersistGate } from 'redux-persist/lib/integration/react';
-import { persistor, store } from './reduxToolKit-Saga/store';
 
 ReactDOM.render(
   <React.StrictMode>
@@ -14,5 +15,5 @@ ReactDOM.render(
       </PersistGate>
     </Provider>
   </React.StrictMode>,
-  document.getElementById('root')
+  document.getElementById('root'),
 );

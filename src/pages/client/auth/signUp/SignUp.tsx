@@ -1,5 +1,7 @@
 import React, { useRef } from 'react';
 import ReCAPTCHA from 'react-google-recaptcha';
+
+import env from '../../../../common/config/interface/env';
 import { useLocalStorage } from '../../../../common/hooks/LocalStorage';
 
 export const SignUp = () => {
@@ -16,19 +18,8 @@ export const SignUp = () => {
     <div>
       <form action="submit" onSubmit={(e) => onSubmitWithReCAPTCHA(e)}>
         <button type="submit">Click me</button>
-        <input
-          type="text"
-          aria-label="input"
-          value={localValue}
-          onChange={(e) => setLocalValue(e.target.value)}
-        />
-        <ReCAPTCHA
-          ref={captchaRef}
-          sitekey="6Lf6oXEeAAAAADGrUvbcZJaIvw21bx1qoyyHFHgY"
-          size="invisible"
-          badge="bottomleft"
-          theme="light"
-        />
+        <input type="text" aria-label="input" value={localValue} onChange={(e) => setLocalValue(e.target.value)} />
+        <ReCAPTCHA ref={captchaRef} sitekey={env.captchaSiteKey} size="invisible" badge="bottomleft" theme="light" />
       </form>
     </div>
   );

@@ -1,12 +1,15 @@
 import axios, { AxiosRequestConfig } from 'axios';
+
 import { getLocalStorageItem, getRefreshToken } from '../common/helper/storage';
-import ServiceTypes from './types';
 import ClientMessages from '../common/constants/messages';
+
+import ServiceTypes from './types';
 
 enum TokenPrefix {
   BEARER = 'Bearer',
 }
 
+//NOTE: This is for testing purpose
 export const AxiosClient = axios.create({
   baseURL: ServiceTypes.BASE_URL,
   timeout: 15000,
@@ -15,6 +18,7 @@ export const AxiosClient = axios.create({
   },
 });
 
+//NOTE: This for client with accessToken
 export const AxiosClientAPI = axios.create({
   baseURL: ServiceTypes.BASE_URL,
   timeout: 15000,
@@ -23,6 +27,7 @@ export const AxiosClientAPI = axios.create({
   },
 });
 
+//NOTE: This for client with refreshToken
 export const AxiosClientRequestAccessTokenAPI = axios.create({
   baseURL: ServiceTypes.BASE_URL,
   timeout: 15000,
@@ -31,8 +36,16 @@ export const AxiosClientRequestAccessTokenAPI = axios.create({
   },
 });
 
+export const AxiosDirectAPI = axios.create({
+  baseURL: ServiceTypes.BASE_URL,
+  timeout: 15000,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
 AxiosClientAPI.interceptors.request.use(
-  (request: AxiosRequestConfig<any>) => {
+  (request: AxiosRequestConfig) => {
     request.timeoutErrorMessage = ClientMessages.ClientTimeOut;
     request.headers = {
       Authorization: getLocalStorageItem('token') as string,
@@ -41,11 +54,11 @@ AxiosClientAPI.interceptors.request.use(
   },
   (exception) => {
     return exception;
-  }
+  },
 );
 
 AxiosClientRequestAccessTokenAPI.interceptors.request.use(
-  (request: AxiosRequestConfig<any>) => {
+  (request: AxiosRequestConfig) => {
     request.timeoutErrorMessage = ClientMessages.ClientTimeOut;
     request.headers = {
       Authorization: TokenPrefix.BEARER + getRefreshToken(),
@@ -54,5 +67,18 @@ AxiosClientRequestAccessTokenAPI.interceptors.request.use(
   },
   (exception) => {
     return exception;
-  }
+  },
+);
+
+AxiosDirectAPI.interceptors.request.use(
+  (request: AxiosRequestConfig) => {
+    request.timeoutErrorMessage = ClientMessages.ClientTimeOut;
+    request.headers = {
+      'web-engine-directly': true,
+    };
+    return request;
+  },
+  (exception) => {
+    return exception;
+  },
 );

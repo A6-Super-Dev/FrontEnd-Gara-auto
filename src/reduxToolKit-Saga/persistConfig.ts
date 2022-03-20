@@ -1,14 +1,16 @@
-import { persistReducer } from 'redux-persist';
+import { PersistConfig, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
+
 import counterSlice from './common/Counter/CounterSlice';
 import loginSlice from './auth/LoginSlice';
 
-const authPersistConfig = {
+const authPersistConfig: PersistConfig<any, unknown, unknown, unknown> = {
   key: 'auth',
   storage,
+  whitelist: ['isLoggedIn', 'isLoggingIn'],
 };
 
-const counterPersistConfig = {
+const counterPersistConfig: PersistConfig<any, unknown, unknown, unknown> = {
   key: 'counter',
   storage,
 };

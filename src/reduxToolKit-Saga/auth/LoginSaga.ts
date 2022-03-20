@@ -1,45 +1,18 @@
 import { PayloadAction } from '@reduxjs/toolkit';
 import { all, call, put, takeLatest } from 'redux-saga/effects';
+
 import { routerPath } from '../../common/constants/routerPath';
-import {
-  destroyCookie,
-  destroyLocalStorageItem,
-  setCookie,
-  setLocalStorageItem,
-} from '../../common/helper/storage';
+import { destroyCookie, destroyLocalStorageItem, setCookie, setLocalStorageItem } from '../../common/helper/storage';
 import { LoginDataReturn } from '../../common/interfaces/Client';
 import ClientService from '../../services/clientService';
-import { loginReject, loginSuccess, logOut, reset } from './LoginSlice';
 import TimeHelper from '../../common/helper/time';
+import { AuthActionType, ErrorResponse, LoginParams } from '../types/auth';
 
-interface LoginParams {
-  email: string;
-  password: string;
-}
-
-interface ErrorResponseData {
-  code: number;
-  data: any;
-  message: string;
-  success: boolean;
-}
-
-interface ErrorResponse {
-  status: number;
-  statusText: string;
-  data: ErrorResponseData;
-}
-
-export enum AuthActionType {
-  LOGIN = 'LOGIN',
-  LOGOUT = 'LOGOUT',
-}
+import { loginReject, loginSuccess, logOut, reset } from './LoginSlice';
 
 function* loginSaga(action: PayloadAction<LoginParams>) {
   try {
-    const res: LoginDataReturn = yield call(() =>
-      ClientService.login(action.payload)
-    );
+    const res: LoginDataReturn = yield call(() => ClientService.login(action.payload));
     if (res.statusCode === 200) {
       yield put(
         loginSuccess({
@@ -47,7 +20,7 @@ function* loginSaga(action: PayloadAction<LoginParams>) {
           loginMessage: 'Login success, you will be redirected to Home',
           loginStatus: res.statusCode,
           refreshToken: res.body.authorization,
-        })
+        }),
       );
 
       const expiredTime = TimeHelper.addTime(new Date(), 'days', 7);
@@ -66,7 +39,7 @@ function* loginSaga(action: PayloadAction<LoginParams>) {
       loginReject({
         loginMessage: resErr.data.message,
         loginStatus: resErr.status,
-      })
+      }),
     );
   }
 }
@@ -84,14 +57,11 @@ function* logoutSaga() {
       loginReject({
         loginMessage: 'Something went wrong please try again',
         loginStatus: 500,
-      })
+      }),
     );
   }
 }
 
 export default function* LoginSaga() {
-  yield all([
-    takeLatest(AuthActionType.LOGIN, loginSaga),
-    takeLatest(AuthActionType.LOGOUT, logoutSaga),
-  ]);
+  yield all([takeLatest(AuthActionType.LOGIN, loginSaga), takeLatest(AuthActionType.LOGOUT, logoutSaga)]);
 }

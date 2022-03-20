@@ -37,10 +37,7 @@ export const loginSlice = createSlice({
     login: (state: LoginInitialState, action: PayloadAction<LoginParams>) => {
       state.isLoggingIn = true;
     },
-    loginSuccess: (
-      state: LoginInitialState,
-      action: PayloadAction<LoginSuccessReturn>
-    ) => {
+    loginSuccess: (state: LoginInitialState, action: PayloadAction<LoginSuccessReturn>) => {
       state.isLoggedIn = true;
       state.isLoggingIn = false;
       state.accessToken = action.payload.accessToken;
@@ -48,10 +45,7 @@ export const loginSlice = createSlice({
       state.loginMessage = action.payload.loginMessage;
       state.loginStatus = action.payload.loginStatus;
     },
-    loginReject: (
-      state: LoginInitialState,
-      action: PayloadAction<LoginRejectReturn>
-    ) => {
+    loginReject: (state: LoginInitialState, action: PayloadAction<LoginRejectReturn>) => {
       state.isLoggedIn = false;
       state.isLoggingIn = false;
       state.loginStatus = action.payload.loginStatus;
@@ -72,7 +66,6 @@ export const loginSlice = createSlice({
   },
 });
 
-export const { login, logOut, loginReject, loginSuccess, reset } =
-  loginSlice.actions;
+export const { login, logOut, loginReject, loginSuccess, reset } = loginSlice.actions;
 
 export default loginSlice.reducer;
