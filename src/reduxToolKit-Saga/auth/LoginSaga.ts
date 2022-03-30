@@ -6,7 +6,7 @@ import { destroyCookie, destroyLocalStorageItem, setCookie, setLocalStorageItem 
 import { LoginDataReturn } from '../../common/interfaces/Client';
 import ClientService from '../../services/clientService';
 import TimeHelper from '../../common/helper/time';
-import { AuthActionType, ErrorResponse, LoginParams } from '../types/auth';
+import { AuthActionType, LoginErrorResponse, LoginParams } from '../types/auth';
 
 import { loginReject, loginSuccess, logOut, reset } from './LoginSlice';
 
@@ -34,7 +34,7 @@ function* loginSaga(action: PayloadAction<LoginParams>) {
       yield put(reset());
     }
   } catch (error: any) {
-    const resErr: ErrorResponse = error.response;
+    const resErr: LoginErrorResponse = error.response;
     yield put(
       loginReject({
         loginMessage: resErr.data.message,

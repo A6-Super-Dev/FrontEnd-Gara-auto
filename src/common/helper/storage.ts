@@ -21,11 +21,7 @@ export const destroyLocalStorageItem = (key: string) => {
   localStorage.removeItem(key);
 };
 
-export const setCookie = (
-  name: string,
-  value: string,
-  option: CookieAttributes
-) => {
+export const setCookie = (name: string, value: string, option: CookieAttributes) => {
   Cookies.set(name, value, option);
 };
 
@@ -38,13 +34,9 @@ export const destroyCookie = (key: string, option?: CookieAttributes) => {
 };
 
 export const getRefreshToken = () => {
-  try {
-    const refreshToken = getCookie('token');
-    if (refreshToken) {
-      return refreshToken.split('%')[1];
-    }
-    return null;
-  } catch (error) {
-    console.error(`error at getRefreshToken(): ${error}`);
+  const refreshToken = getCookie('token');
+  if (refreshToken) {
+    return refreshToken.split(' ')[1];
   }
+  return null;
 };

@@ -63,9 +63,19 @@ export const loginSlice = createSlice({
       state.isLoggingIn = false;
       state.loginMessage = '';
     },
+    reAssignToken: (
+      state: LoginInitialState,
+      action: PayloadAction<{
+        newAccessToken: string;
+        newRefreshToken: string;
+      }>,
+    ) => {
+      state.accessToken = action.payload.newAccessToken;
+      state.refreshToken = action.payload.newRefreshToken;
+    },
   },
 });
 
-export const { login, logOut, loginReject, loginSuccess, reset } = loginSlice.actions;
+export const { login, logOut, loginReject, loginSuccess, reset, reAssignToken } = loginSlice.actions;
 
 export default loginSlice.reducer;

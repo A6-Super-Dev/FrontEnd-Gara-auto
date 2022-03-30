@@ -27,23 +27,6 @@ export const AxiosClientAPI = axios.create({
   },
 });
 
-//NOTE: This for client with refreshToken
-export const AxiosClientRequestAccessTokenAPI = axios.create({
-  baseURL: ServiceTypes.BASE_URL,
-  timeout: 15000,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
-
-export const AxiosDirectAPI = axios.create({
-  baseURL: ServiceTypes.BASE_URL,
-  timeout: 15000,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
-
 AxiosClientAPI.interceptors.request.use(
   (request: AxiosRequestConfig) => {
     request.timeoutErrorMessage = ClientMessages.ClientTimeOut;
@@ -57,11 +40,19 @@ AxiosClientAPI.interceptors.request.use(
   },
 );
 
+//NOTE: This for client with refreshToken
+export const AxiosClientRequestAccessTokenAPI = axios.create({
+  baseURL: ServiceTypes.BASE_URL,
+  timeout: 15000,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
 AxiosClientRequestAccessTokenAPI.interceptors.request.use(
   (request: AxiosRequestConfig) => {
-    request.timeoutErrorMessage = ClientMessages.ClientTimeOut;
     request.headers = {
-      Authorization: TokenPrefix.BEARER + getRefreshToken(),
+      Authorization: TokenPrefix.BEARER + ' ' + getRefreshToken(),
     };
     return request;
   },
@@ -69,6 +60,15 @@ AxiosClientRequestAccessTokenAPI.interceptors.request.use(
     return exception;
   },
 );
+
+//NOTE: Direct API
+export const AxiosDirectAPI = axios.create({
+  baseURL: ServiceTypes.BASE_URL,
+  timeout: 15000,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
 
 AxiosDirectAPI.interceptors.request.use(
   (request: AxiosRequestConfig) => {

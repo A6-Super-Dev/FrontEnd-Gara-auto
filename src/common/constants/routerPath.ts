@@ -1,10 +1,4 @@
 export const routerPath = {
-  admin: {
-    auth: {
-      PASSCODE_RECOVER: '/auth/admin/passcode-recover',
-      SIGN_IN: '/auth/admin/sign-in',
-    },
-  },
   client: {
     auth: {
       PASSWORD_RECOVER: '/auth/user/password-recover',

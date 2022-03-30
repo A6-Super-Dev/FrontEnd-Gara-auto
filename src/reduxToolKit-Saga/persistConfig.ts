@@ -7,7 +7,6 @@ import loginSlice from './auth/LoginSlice';
 const authPersistConfig: PersistConfig<any, unknown, unknown, unknown> = {
   key: 'auth',
   storage,
-  whitelist: ['isLoggedIn', 'isLoggingIn'],
 };
 
 const counterPersistConfig: PersistConfig<any, unknown, unknown, unknown> = {
