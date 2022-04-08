@@ -13,13 +13,11 @@ import { loginReject, loginSuccess, logOut, reset } from './LoginSlice';
 function* loginSaga(action: PayloadAction<LoginParams>) {
   try {
     const res: LoginDataReturn = yield call(() => ClientService.login(action.payload));
+    console.log('res: ', res);
     if (res.statusCode === 200) {
       yield put(
         loginSuccess({
-          accessToken: res.headers.authorization,
           loginMessage: 'Login success, you will be redirected to Home',
-          loginStatus: res.statusCode,
-          refreshToken: res.body.authorization,
         }),
       );
 
@@ -29,7 +27,7 @@ function* loginSaga(action: PayloadAction<LoginParams>) {
       });
       setLocalStorageItem('token', String(res.headers.authorization));
       setTimeout(() => {
-        window.location.pathname = routerPath.client.common.HOME;
+        window.location.pathname = routerPath.common.HOME;
       }, 400);
       yield put(reset());
     }
@@ -38,7 +36,6 @@ function* loginSaga(action: PayloadAction<LoginParams>) {
     yield put(
       loginReject({
         loginMessage: resErr.data.message,
-        loginStatus: resErr.status,
       }),
     );
   }
@@ -56,7 +53,6 @@ function* logoutSaga() {
     yield put(
       loginReject({
         loginMessage: 'Something went wrong please try again',
-        loginStatus: 500,
       }),
     );
   }

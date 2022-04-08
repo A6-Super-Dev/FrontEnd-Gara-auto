@@ -1,81 +1,58 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
+import { AuthenticationStatus } from '../types/auth';
+
 interface LoginParams {
   email: string;
   [key: string]: string;
 }
 
 export interface LoginReturn {
-  loginStatus?: number;
-  loginMessage: string;
-}
-
-export interface LoginSuccessReturn extends LoginReturn {
-  refreshToken: string;
-  accessToken: string;
+  loginMessage: string | null;
 }
 
 export interface LoginRejectReturn extends LoginReturn {}
 
-export interface LoginInitialState extends LoginSuccessReturn {
-  isLoggedIn: boolean;
+export interface LoginInitialState extends LoginReturn {
   isLoggingIn: boolean;
+  status: AuthenticationStatus;
 }
 
 const initialState: LoginInitialState = {
-  isLoggedIn: false,
   isLoggingIn: false,
-  accessToken: '',
-  loginMessage: '',
-  refreshToken: '',
+  loginMessage: null,
+  status: AuthenticationStatus.UnAuthorized,
 };
 
 export const loginSlice = createSlice({
   name: 'login',
   initialState,
   reducers: {
-    login: (state: LoginInitialState, action: PayloadAction<LoginParams>) => {
+    login: (state: LoginInitialState, _action: PayloadAction<LoginParams>) => {
       state.isLoggingIn = true;
     },
-    loginSuccess: (state: LoginInitialState, action: PayloadAction<LoginSuccessReturn>) => {
-      state.isLoggedIn = true;
+    loginSuccess: (state: LoginInitialState, action: PayloadAction<LoginReturn>) => {
       state.isLoggingIn = false;
-      state.accessToken = action.payload.accessToken;
-      state.refreshToken = action.payload.refreshToken;
       state.loginMessage = action.payload.loginMessage;
-      state.loginStatus = action.payload.loginStatus;
+      state.status = AuthenticationStatus.Authorized;
     },
-    loginReject: (state: LoginInitialState, action: PayloadAction<LoginRejectReturn>) => {
-      state.isLoggedIn = false;
+    loginReject: (state: LoginInitialState, action: PayloadAction<LoginReturn>) => {
       state.isLoggingIn = false;
-      state.loginStatus = action.payload.loginStatus;
       state.loginMessage = action.payload.loginMessage;
+      state.status = AuthenticationStatus.UnAuthorized;
     },
     logOut: (state: LoginInitialState) => {
-      state.isLoggedIn = false;
       state.isLoggingIn = false;
-      state.accessToken = '';
       state.loginMessage = '';
-      state.loginStatus = undefined;
-      state.refreshToken = '';
+      state.status = AuthenticationStatus.UnAuthorized;
     },
     reset: (state: LoginInitialState) => {
       state.isLoggingIn = false;
       state.loginMessage = '';
     },
-    reAssignToken: (
-      state: LoginInitialState,
-      action: PayloadAction<{
-        newAccessToken: string;
-        newRefreshToken: string;
-      }>,
-    ) => {
-      state.accessToken = action.payload.newAccessToken;
-      state.refreshToken = action.payload.newRefreshToken;
-    },
   },
 });
 
-export const { login, logOut, loginReject, loginSuccess, reset, reAssignToken } = loginSlice.actions;
+export const { login, logOut, loginReject, loginSuccess, reset } = loginSlice.actions;
 
 export default loginSlice.reducer;

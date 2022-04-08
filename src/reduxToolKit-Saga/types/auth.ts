@@ -1,3 +1,5 @@
+import { AxiosResponse } from 'axios';
+
 export interface LoginParams {
   email: string;
   password: string;
@@ -21,6 +23,19 @@ export enum AuthActionType {
   LOGOUT = 'LOGOUT',
 }
 
-export type LoginErrorResponse = ErrorResponse<ErrorResponseData>;
-export type RequestForRefreshTokenErrorResponse = ErrorResponse<ErrorResponseData>;
-export type TestErrorResponse = ErrorResponse<ErrorResponseData>;
+interface ClientRequestAccessTokenReturn {
+  statusCode: number;
+  headers: {
+    authorization: string;
+  };
+}
+
+export enum AuthenticationStatus {
+  Idle = 'Idle',
+  UnAuthorized = 'Unauthorized',
+  Authorized = 'Authorized',
+}
+
+export type LoginErrorResponse = AxiosResponse<ErrorResponseData>;
+export type InterceptorErrorResponse = AxiosResponse<ErrorResponseData>;
+export type ClientRequestAccessToken = AxiosResponse<ClientRequestAccessTokenReturn>;

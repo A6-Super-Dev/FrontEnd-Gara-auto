@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
 
-export interface Route {
+export interface RouteAttributes {
   path: string;
   element: ReactNode;
+  authorized: boolean;
 }

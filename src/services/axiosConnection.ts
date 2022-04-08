@@ -1,8 +1,11 @@
 import axios, { AxiosRequestConfig } from 'axios';
 
 import { getLocalStorageItem, getRefreshToken } from '../common/helper/storage';
+import { InterceptorErrorResponse } from '../reduxToolKit-Saga/types/auth';
+import { httpStatus } from '../common/constants/httpsStatus';
 import ClientMessages from '../common/constants/messages';
 
+import axiosHandler from './axiosHandler';
 import ServiceTypes from './types';
 
 enum TokenPrefix {
@@ -36,6 +39,22 @@ AxiosClientAPI.interceptors.request.use(
     return request;
   },
   (exception) => {
+    return exception;
+  },
+);
+
+AxiosClientAPI.interceptors.response.use(
+  (response: AxiosRequestConfig) => {
+    return response;
+  },
+  async (exception) => {
+    const { data }: InterceptorErrorResponse = exception.response;
+    const { code, message } = data;
+
+    if (code === httpStatus.Unauthorized && message.includes(ClientMessages.AccessTokenExpiry)) {
+      await axiosHandler.reNewAccessToken();
+    }
+
     return exception;
   },
 );
