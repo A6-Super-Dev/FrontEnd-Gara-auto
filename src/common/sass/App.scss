@@ -7,6 +7,12 @@
 .App {
   width: 100vw;
   height: 100vh;
-  
-  @apply bg-slate-100 m-0 p-0 box-border flex justify-center items-center
+
+  @apply bg-slate-100 m-0 p-0 box-border flex justify-center items-center;
+}
+
+.separator {
+  height: 0.8px;
+  background-color: #989898;
+  @apply w-full my-8;
 }

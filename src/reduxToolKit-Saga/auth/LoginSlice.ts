@@ -4,11 +4,12 @@ import { AuthenticationStatus } from '../types/auth';
 
 interface LoginParams {
   email: string;
-  [key: string]: string;
+  password: string;
 }
 
 export interface LoginReturn {
   loginMessage: string | null;
+  loginStatus: number | null;
 }
 
 export interface LoginRejectReturn extends LoginReturn {}
@@ -21,6 +22,7 @@ export interface LoginInitialState extends LoginReturn {
 const initialState: LoginInitialState = {
   isLoggingIn: false,
   loginMessage: null,
+  loginStatus: null,
   status: AuthenticationStatus.UnAuthorized,
 };
 
@@ -35,11 +37,13 @@ export const loginSlice = createSlice({
       state.isLoggingIn = false;
       state.loginMessage = action.payload.loginMessage;
       state.status = AuthenticationStatus.Authorized;
+      state.loginStatus = action.payload.loginStatus;
     },
     loginReject: (state: LoginInitialState, action: PayloadAction<LoginReturn>) => {
       state.isLoggingIn = false;
       state.loginMessage = action.payload.loginMessage;
       state.status = AuthenticationStatus.UnAuthorized;
+      state.loginStatus = action.payload.loginStatus;
     },
     logOut: (state: LoginInitialState) => {
       state.isLoggingIn = false;
@@ -49,6 +53,7 @@ export const loginSlice = createSlice({
     reset: (state: LoginInitialState) => {
       state.isLoggingIn = false;
       state.loginMessage = '';
+      state.loginStatus = null;
     },
   },
 });

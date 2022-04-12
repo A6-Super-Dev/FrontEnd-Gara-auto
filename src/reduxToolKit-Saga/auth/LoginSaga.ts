@@ -8,16 +8,17 @@ import ClientService from '../../services/clientService';
 import TimeHelper from '../../common/helper/time';
 import { AuthActionType, LoginErrorResponse, LoginParams } from '../types/auth';
 
-import { loginReject, loginSuccess, logOut, reset } from './LoginSlice';
+import { login, loginReject, loginSuccess, logOut, reset } from './LoginSlice';
 
 function* loginSaga(action: PayloadAction<LoginParams>) {
   try {
+    yield put(login(action.payload));
     const res: LoginDataReturn = yield call(() => ClientService.login(action.payload));
-    console.log('res: ', res);
     if (res.statusCode === 200) {
       yield put(
         loginSuccess({
           loginMessage: 'Login success, you will be redirected to Home',
+          loginStatus: res.statusCode,
         }),
       );
 
@@ -36,6 +37,7 @@ function* loginSaga(action: PayloadAction<LoginParams>) {
     yield put(
       loginReject({
         loginMessage: resErr.data.message,
+        loginStatus: resErr.status,
       }),
     );
   }
@@ -53,6 +55,7 @@ function* logoutSaga() {
     yield put(
       loginReject({
         loginMessage: 'Something went wrong please try again',
+        loginStatus: 500,
       }),
     );
   }

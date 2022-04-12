@@ -5,14 +5,18 @@ import { PasswordRecover } from '../../../pages/client/auth/passwordRecover/Pass
 import { SignUp } from '../../../pages/client/auth/signUp/SignUp';
 import { Home } from '../../../pages/client/common/Home';
 import { routerPath } from '../../constants/routerPath';
+import { getRefreshToken } from '../../helper/storage';
 import { RouteAttributes } from '../interface/route';
 
-export const RenderRoute: RouteAttributes[] = [
+export const staticRoute: RouteAttributes[] = [
   {
     authorized: false,
     element: <Home />,
     path: routerPath.common.HOME,
   },
+];
+
+const deletedRoute: RouteAttributes[] = [
   {
     authorized: false,
     element: <LogIn />,
@@ -29,3 +33,12 @@ export const RenderRoute: RouteAttributes[] = [
     path: routerPath.auth.SIGN_UP,
   },
 ];
+
+const token = getRefreshToken();
+
+export const RenderRoute = (): RouteAttributes[] => {
+  if (token) {
+    return [...staticRoute];
+  }
+  return [...staticRoute, ...deletedRoute];
+};

@@ -16,7 +16,7 @@ function App() {
   return (
     <BrowserRouter>
       <Switch>
-        {RenderRoute.map((route, index) => {
+        {RenderRoute().map((route, index) => {
           if (route.authorized) {
             return (
               <Channel path={route.path} key={index} element={<ProtectedRouting />}>
