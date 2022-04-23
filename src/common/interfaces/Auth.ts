@@ -87,15 +87,6 @@ class AuthInterfaces {
         .min(10, 'Your email is too short')
         .max(30, 'Your email is too long')
         .required('This field can not be empty'),
-      password: Yup.string()
-        .min(6, 'Incorrect password length')
-        .max(20, 'Incorrect password length')
-        .required('This field can not be empty'),
-      reTypePassword: Yup.string()
-        .min(6, 'Incorrect password length')
-        .max(20, 'Incorrect password length')
-        .required('This field can not be empty')
-        .oneOf([Yup.ref('password')], "Password retype doesn't match "),
     });
 
     this.adminAccountCreateSchema = Yup.object().shape({
@@ -105,13 +96,8 @@ class AuthInterfaces {
         .max(30, 'Your email is too long')
         .required('This field can not be empty'),
       roles: Yup.string().notOneOf(
-        [
-          Yup.ref(UserRoles.CLIENT),
-          Yup.ref(UserRoles.ADMIN),
-          Yup.ref(UserRoles.SALE),
-          Yup.ref(UserRoles.EXPERT),
-        ],
-        `Account roles must be one of ${UserRoles.CLIENT}, ${UserRoles.ADMIN},${UserRoles.EXPERT},${UserRoles.SALE}, `
+        [Yup.ref(UserRoles.CLIENT), Yup.ref(UserRoles.ADMIN), Yup.ref(UserRoles.SALE), Yup.ref(UserRoles.EXPERT)],
+        `Account roles must be one of ${UserRoles.CLIENT}, ${UserRoles.ADMIN},${UserRoles.EXPERT},${UserRoles.SALE}, `,
       ),
     });
 
@@ -134,13 +120,8 @@ class AuthInterfaces {
         .max(30, 'Your email is too long')
         .required('This field can not be empty'),
       roles: Yup.string().notOneOf(
-        [
-          Yup.ref(UserRoles.CLIENT),
-          Yup.ref(UserRoles.ADMIN),
-          Yup.ref(UserRoles.SALE),
-          Yup.ref(UserRoles.EXPERT),
-        ],
-        `Account roles must be one of ${UserRoles.CLIENT}, ${UserRoles.ADMIN},${UserRoles.EXPERT},${UserRoles.SALE}, `
+        [Yup.ref(UserRoles.CLIENT), Yup.ref(UserRoles.ADMIN), Yup.ref(UserRoles.SALE), Yup.ref(UserRoles.EXPERT)],
+        `Account roles must be one of ${UserRoles.CLIENT}, ${UserRoles.ADMIN},${UserRoles.EXPERT},${UserRoles.SALE}, `,
       ),
     });
   }
