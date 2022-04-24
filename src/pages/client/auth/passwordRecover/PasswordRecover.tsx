@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Formik as FormValidation } from 'formik';
+import { CircularProgress } from '@mui/material';
 
 import './PasswordRecover.scss';
 import { AuthForm, ImageSide } from '../../../../components/AuthForm/AuthForm';
@@ -16,10 +17,6 @@ export const PasswordRecover: React.FC = () => {
     <AuthForm imageSide={ImageSide.LEFT}>
       <div className="password_recover-container">
         <h1 className="password_recover-heading">Password Recover</h1>
-
-        <h3 className="password_recover-heading_h3">Send to Gara Auto Email Address</h3>
-
-        <h5 className="password_recover-heading_h5">Please enter your email address which you want to recover</h5>
 
         <FormValidation
           initialValues={{ email: '' }}
@@ -46,7 +43,7 @@ export const PasswordRecover: React.FC = () => {
               />
 
               <MuiButton variant="contained" type="submit" disabled={loading} style={SubmitButtonStyle}>
-                {!loading ? 'Start' : 'Loading...'}
+                {!loading ? 'Start' : <CircularProgress sx={{ color: '#fff', padding: '6px' }} />}
               </MuiButton>
             </form>
           )}

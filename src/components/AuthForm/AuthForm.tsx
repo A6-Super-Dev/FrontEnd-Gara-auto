@@ -26,7 +26,12 @@ export const AuthForm: React.FC<AuthFormProps> = ({ children, imageSide }) => {
         <div
           className={`auth-img_side ${imageSide === ImageSide.LEFT ? 'auth-img_side-left' : 'auth-img_side-right'} `}
         >
-          <img src="/imgs/sign-in.svg" alt="" style={{ width: '100%', height: '100%', objectFit: 'contain', paddingInline: "2rem" }} />
+          <img
+            src="/imgs/sign-in.svg"
+            alt=""
+            style={{ width: '100%', height: '100%', objectFit: 'contain', paddingInline: '2rem' }}
+            loading="eager"
+          />
         </div>
         <div className="auth-form_side">{children}</div>
       </div>

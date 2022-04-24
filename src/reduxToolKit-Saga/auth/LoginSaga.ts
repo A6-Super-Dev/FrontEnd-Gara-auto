@@ -33,7 +33,6 @@ function* loginSaga(action: PayloadAction<LoginParams>) {
       yield put(reset());
     }
   } catch (error: any) {
-    console.log('error', error.response);
     const resErr: LoginErrorResponse = error.response;
 
     yield put(

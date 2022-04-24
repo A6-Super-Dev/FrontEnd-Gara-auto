@@ -37,5 +37,6 @@ export enum AuthenticationStatus {
 }
 
 export type LoginErrorResponse = AxiosResponse<ErrorResponseData>;
+export type UserSignUpErrorResponse = AxiosResponse<ErrorResponseData>;
 export type InterceptorErrorResponse = AxiosResponse<ErrorResponseData>;
 export type ClientRequestAccessToken = AxiosResponse<ClientRequestAccessTokenReturn>;
