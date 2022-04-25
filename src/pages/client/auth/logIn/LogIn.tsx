@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Checkbox, FormControlLabel } from '@mui/material';
+import { Checkbox, CircularProgress, FormControlLabel } from '@mui/material';
 import { AirlineStops } from '@mui/icons-material/';
 import { Formik as FormValidation } from 'formik';
 import { Link } from 'react-router-dom';
@@ -123,8 +123,9 @@ export const LogIn: React.FC = () => {
                 </Link>
               </div>
               <MuiButton variant="contained" type="submit" disabled={loading} style={SubmitButtonStyle}>
-                {loading === false ? 'Sign In' : 'Loading...'}
+                {loading === false ? 'Sign In' : <CircularProgress sx={{ color: '#fff', padding: '6px' }} />}
               </MuiButton>
+
               <div className="separator"></div>
               <div className="text-center mb-4 text-sm">
                 <span className="opacity-80">Dont have an account?</span> {'   '}

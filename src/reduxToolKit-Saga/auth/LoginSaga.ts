@@ -34,6 +34,7 @@ function* loginSaga(action: PayloadAction<LoginParams>) {
     }
   } catch (error: any) {
     const resErr: LoginErrorResponse = error.response;
+
     yield put(
       loginReject({
         loginMessage: resErr.data.message,

@@ -16,9 +16,10 @@ export interface AdminPasscodeRecover {
 }
 
 export interface ClientSignUp {
+  firstName: string;
+  lastName: string;
   email: string;
   password: string;
-  reTypePassword: string;
   gCaptcha: string;
   roles: string;
 }
@@ -42,6 +43,7 @@ export enum UserRoles {
 }
 
 class AuthInterfaces {
+  private validateRegEx = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/;
   public clientLoginSchema;
   public clientSignUpSchema;
   public clientPasswordRecoverSchema;
@@ -63,6 +65,8 @@ class AuthInterfaces {
     });
 
     this.clientSignUpSchema = Yup.object().shape({
+      firstName: Yup.string(),
+      lastName: Yup.string(),
       email: Yup.string()
         .email()
         .min(10, 'Your email is too short')
@@ -71,14 +75,18 @@ class AuthInterfaces {
       password: Yup.string()
         .min(6, 'Incorrect password length')
         .max(20, 'Incorrect password length')
-        .required('This field can not be empty'),
+        .required('This field can not be empty')
+        .matches(
+          this.validateRegEx,
+          'Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and One Special Case Character',
+        ),
       reTypePassword: Yup.string()
         .min(6, 'Incorrect password length')
         .max(20, 'Incorrect password length')
         .required('This field can not be empty')
         .oneOf([Yup.ref('password')], "Password retype doesn't match "),
-      gCaptcha: Yup.string().required(),
-      roles: Yup.string().notOneOf([Yup.ref(UserRoles.CLIENT)]),
+      gCaptcha: Yup.string(),
+      roles: Yup.string(),
     });
 
     this.clientPasswordRecoverSchema = Yup.object().shape({
@@ -87,15 +95,6 @@ class AuthInterfaces {
         .min(10, 'Your email is too short')
         .max(30, 'Your email is too long')
         .required('This field can not be empty'),
-      password: Yup.string()
-        .min(6, 'Incorrect password length')
-        .max(20, 'Incorrect password length')
-        .required('This field can not be empty'),
-      reTypePassword: Yup.string()
-        .min(6, 'Incorrect password length')
-        .max(20, 'Incorrect password length')
-        .required('This field can not be empty')
-        .oneOf([Yup.ref('password')], "Password retype doesn't match "),
     });
 
     this.adminAccountCreateSchema = Yup.object().shape({
@@ -105,13 +104,8 @@ class AuthInterfaces {
         .max(30, 'Your email is too long')
         .required('This field can not be empty'),
       roles: Yup.string().notOneOf(
-        [
-          Yup.ref(UserRoles.CLIENT),
-          Yup.ref(UserRoles.ADMIN),
-          Yup.ref(UserRoles.SALE),
-          Yup.ref(UserRoles.EXPERT),
-        ],
-        `Account roles must be one of ${UserRoles.CLIENT}, ${UserRoles.ADMIN},${UserRoles.EXPERT},${UserRoles.SALE}, `
+        [Yup.ref(UserRoles.CLIENT), Yup.ref(UserRoles.ADMIN), Yup.ref(UserRoles.SALE), Yup.ref(UserRoles.EXPERT)],
+        `Account roles must be one of ${UserRoles.CLIENT}, ${UserRoles.ADMIN},${UserRoles.EXPERT},${UserRoles.SALE}, `,
       ),
     });
 
@@ -134,13 +128,8 @@ class AuthInterfaces {
         .max(30, 'Your email is too long')
         .required('This field can not be empty'),
       roles: Yup.string().notOneOf(
-        [
-          Yup.ref(UserRoles.CLIENT),
-          Yup.ref(UserRoles.ADMIN),
-          Yup.ref(UserRoles.SALE),
-          Yup.ref(UserRoles.EXPERT),
-        ],
-        `Account roles must be one of ${UserRoles.CLIENT}, ${UserRoles.ADMIN},${UserRoles.EXPERT},${UserRoles.SALE}, `
+        [Yup.ref(UserRoles.CLIENT), Yup.ref(UserRoles.ADMIN), Yup.ref(UserRoles.SALE), Yup.ref(UserRoles.EXPERT)],
+        `Account roles must be one of ${UserRoles.CLIENT}, ${UserRoles.ADMIN},${UserRoles.EXPERT},${UserRoles.SALE}, `,
       ),
     });
   }

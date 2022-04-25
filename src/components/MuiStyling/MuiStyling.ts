@@ -35,9 +35,9 @@ export const SubmitButtonStyle: React.CSSProperties = {
 };
 
 export const MuiButton = styled(Button)({
-  background: '#008c7a',
+  background: '#008c7a !important', //(bug) should not use important in this situation
   border: 0,
-  borderRadius: 40,
+  borderRadius: '40px !important', //(bug) should not use important in this situation
   color: 'white',
   fontSize: '18px !important',
   height: '56px',
