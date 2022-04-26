@@ -1,8 +1,10 @@
 import React from 'react';
-import { BrowserRouter, Route as Channel, Routes as Switch } from 'react-router-dom';
+import { Route as Channel, Routes as Switch } from 'react-router-dom';
 import '../src/common/sass/App.scss';
+import { withProfiler } from '@sentry/react';
 
 import { ProtectedRouting } from './common/config/routers/ProtectedRouting';
+import { RouteAttributes } from './common/config/interface/route';
 import { RenderRoute } from './common/config/routers/RenderRoute';
 import { pathArrayName, routerPath } from './common/constants/routerPath';
 
@@ -14,21 +16,19 @@ function App() {
   }
 
   return (
-    <BrowserRouter>
-      <Switch>
-        {RenderRoute().map((route, index) => {
-          if (route.authorized) {
-            return (
-              <Channel path={route.path} key={index} element={<ProtectedRouting />}>
-                <Channel path={route.path} element={route.element} />
-              </Channel>
-            );
-          }
-          return <Channel path={route.path} element={route.element} key={index} />;
-        })}
-      </Switch>
-    </BrowserRouter>
+    <Switch>
+      {RenderRoute().map((route: RouteAttributes, index: number) => {
+        if (route.authorized) {
+          return (
+            <Channel path={route.path} key={index} element={<ProtectedRouting />}>
+              <Channel path={route.path} element={route.element} />
+            </Channel>
+          );
+        }
+        return <Channel path={route.path} element={route.element} key={index} />;
+      })}
+    </Switch>
   );
 }
 
-export default App;
+export default withProfiler(App);

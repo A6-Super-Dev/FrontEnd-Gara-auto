@@ -6,6 +6,7 @@ export const routerPath = {
   },
   common: {
     HOME: '/home',
+    ERROR: '/error',
   },
 };
 
