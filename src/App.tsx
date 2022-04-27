@@ -9,11 +9,25 @@ import { RenderRoute } from './common/config/routers/RenderRoute';
 import { pathArrayName, routerPath } from './common/constants/routerPath';
 
 function App() {
-  const location = window.location.pathname;
-  const allPath = pathArrayName();
-  if (!allPath.includes(location)) {
-    window.location.pathname = routerPath.common.HOME;
-  }
+  //TODO: if can reduce the complexity
+  React.useEffect(() => {
+    const location = window.location.pathname;
+    let maxError = 0;
+    const allPath = pathArrayName();
+    if (!allPath.includes(location)) {
+      maxError = 1;
+    }
+    const paramPath = allPath.filter((each) => each.includes('/:'));
+    const trimParam = paramPath.map((each) => each.substring(0, each.indexOf(':')));
+    const current = location.substring(0, location.lastIndexOf('/')) + '/';
+    if (!trimParam.includes(current)) {
+      maxError += 1;
+    }
+
+    if (maxError === 2) {
+      window.location.pathname = routerPath.common.HOME;
+    }
+  }, []);
 
   return (
     <Switch>

@@ -14,6 +14,11 @@ class ClientService {
     const { data } = await AxiosClient.post(clientAPI.signUp, params);
     return data;
   }
+
+  async userSignUpSuccess(token: string) {
+    const { data } = await AxiosClient.post(clientAPI.signUpSuccess(token));
+    return data;
+  }
 }
 
 export default new ClientService();
