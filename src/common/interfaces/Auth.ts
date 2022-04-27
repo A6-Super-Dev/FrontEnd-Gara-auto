@@ -55,8 +55,8 @@ class AuthInterfaces {
     this.clientLoginSchema = Yup.object().shape({
       email: Yup.string()
         .email()
-        .min(10, 'Your email is too short')
-        .max(30, 'Your email is too long')
+        .min(16, 'Your email is too short')
+        .max(40, 'Your email is too long')
         .required('This field can not be empty'),
       password: Yup.string()
         .min(6, 'Incorrect password length')
@@ -69,12 +69,12 @@ class AuthInterfaces {
       lastName: Yup.string(),
       email: Yup.string()
         .email()
-        .min(10, 'Your email is too short')
-        .max(30, 'Your email is too long')
+        .min(16, 'Your email is too short')
+        .max(40, 'Your email is too long')
         .required('This field can not be empty'),
       password: Yup.string()
         .min(6, 'Incorrect password length')
-        .max(20, 'Incorrect password length')
+        .max(30, 'Incorrect password length')
         .required('This field can not be empty')
         .matches(
           this.validateRegEx,
@@ -82,7 +82,7 @@ class AuthInterfaces {
         ),
       reTypePassword: Yup.string()
         .min(6, 'Incorrect password length')
-        .max(20, 'Incorrect password length')
+        .max(30, 'Incorrect password length')
         .required('This field can not be empty')
         .oneOf([Yup.ref('password')], "Password retype doesn't match "),
       gCaptcha: Yup.string(),
@@ -92,16 +92,16 @@ class AuthInterfaces {
     this.clientPasswordRecoverSchema = Yup.object().shape({
       email: Yup.string()
         .email()
-        .min(10, 'Your email is too short')
-        .max(30, 'Your email is too long')
+        .min(16, 'Your email is too short')
+        .max(40, 'Your email is too long')
         .required('This field can not be empty'),
     });
 
     this.adminAccountCreateSchema = Yup.object().shape({
       email: Yup.string()
         .email()
-        .min(10, 'Your email is too short')
-        .max(30, 'Your email is too long')
+        .min(16, 'Your email is too short')
+        .max(40, 'Your email is too long')
         .required('This field can not be empty'),
       roles: Yup.string().notOneOf(
         [Yup.ref(UserRoles.CLIENT), Yup.ref(UserRoles.ADMIN), Yup.ref(UserRoles.SALE), Yup.ref(UserRoles.EXPERT)],
@@ -112,8 +112,8 @@ class AuthInterfaces {
     this.adminLoginSchema = Yup.object().shape({
       email: Yup.string()
         .email()
-        .min(10, 'Your email is too short')
-        .max(30, 'Your email is too long')
+        .min(16, 'Your email is too short')
+        .max(40, 'Your email is too long')
         .required('This field can not be empty'),
       passcode: Yup.string()
         .required('This field can not be empty')
@@ -124,8 +124,8 @@ class AuthInterfaces {
     this.adminPasscodeRecoverSchema = Yup.object().shape({
       email: Yup.string()
         .email()
-        .min(10, 'Your email is too short')
-        .max(30, 'Your email is too long')
+        .min(16, 'Your email is too short')
+        .max(40, 'Your email is too long')
         .required('This field can not be empty'),
       roles: Yup.string().notOneOf(
         [Yup.ref(UserRoles.CLIENT), Yup.ref(UserRoles.ADMIN), Yup.ref(UserRoles.SALE), Yup.ref(UserRoles.EXPERT)],

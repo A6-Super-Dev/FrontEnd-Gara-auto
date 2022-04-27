@@ -3,6 +3,7 @@ import React from 'react';
 import { LogIn } from '../../../pages/client/auth/logIn/LogIn';
 import { PasswordRecover } from '../../../pages/client/auth/passwordRecover/PasswordRecover';
 import { SignUp } from '../../../pages/client/auth/signUp/SignUp';
+import { SignUpSuccess } from '../../../pages/client/auth/signUpSuccess/SignUpSuccess';
 import { Home } from '../../../pages/client/common/Home';
 import ErrorPages from '../../../pages/Error/ErrorPages';
 import { routerPath } from '../../constants/routerPath';
@@ -37,6 +38,11 @@ const deletedRoute: RouteAttributes[] = [
     authorized: false,
     element: <SignUp />,
     path: routerPath.auth.SIGN_UP,
+  },
+  {
+    authorized: false,
+    element: <SignUpSuccess />,
+    path: routerPath.auth.SIGN_UP_SUCCESS,
   },
 ];
 
