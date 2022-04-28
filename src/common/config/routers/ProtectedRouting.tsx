@@ -16,8 +16,9 @@ export const ProtectedRouting: React.FunctionComponent = () => {
   useLayoutEffect(() => {
     if (token && token !== '' && authorizedState === AuthenticationStatus.Authorized) {
       setIsAuthorized(true);
+    } else {
+      dispatch(logOut());
     }
-    dispatch(logOut());
   }, [isAuthorized, authorizedState, token]);
 
   return isAuthorized ? (
