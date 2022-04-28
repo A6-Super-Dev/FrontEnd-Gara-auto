@@ -10,16 +10,18 @@ import { routerPath } from '../../constants/routerPath';
 import { getRefreshToken } from '../../helper/storage';
 import { RouteAttributes } from '../interface/route';
 
-export const staticRoute: RouteAttributes[] = [
+const staticRoute: RouteAttributes[] = [
   {
     authorized: false,
     element: <Home />,
     path: routerPath.common.HOME,
+    needNavigator: true,
   },
   {
     authorized: false,
     element: <ErrorPages />,
     path: routerPath.common.ERROR,
+    needNavigator: false,
   },
 ];
 
@@ -28,21 +30,25 @@ const deletedRoute: RouteAttributes[] = [
     authorized: false,
     element: <LogIn />,
     path: routerPath.auth.LOG_IN,
+    needNavigator: false,
   },
   {
-    authorized: true,
+    authorized: false,
     element: <PasswordRecover />,
     path: routerPath.auth.PASSWORD_RECOVER,
+    needNavigator: false,
   },
   {
     authorized: false,
     element: <SignUp />,
     path: routerPath.auth.SIGN_UP,
+    needNavigator: false,
   },
   {
     authorized: false,
     element: <SignUpSuccess />,
     path: routerPath.auth.SIGN_UP_SUCCESS,
+    needNavigator: false,
   },
 ];
 

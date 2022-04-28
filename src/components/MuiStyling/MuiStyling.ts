@@ -43,3 +43,11 @@ export const MuiButton = styled(Button)({
   height: '56px',
   letterSpacing: '1px !important',
 });
+
+export const MuiNavBarButton = styled(Button)({
+  background: 'white !important', //(bug) should not use important in this situation
+  fontSize: '16px !important',
+  letterSpacing: '1px !important',
+  paddingInline: '30px !important',
+  paddingBlock: 'auto !important',
+});

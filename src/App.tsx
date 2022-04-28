@@ -7,6 +7,7 @@ import { ProtectedRouting } from './common/config/routers/ProtectedRouting';
 import { RouteAttributes } from './common/config/interface/route';
 import { RenderRoute } from './common/config/routers/RenderRoute';
 import { pathArrayName, routerPath } from './common/constants/routerPath';
+import Navbar from './components/Navbar/Navbar';
 
 function App() {
   //TODO: if can reduce the complexity
@@ -29,17 +30,29 @@ function App() {
     }
   }, []);
 
+  const renderWithNav = (navigator: boolean, path: string, element: React.ReactNode, index?: number) => {
+    if (navigator) {
+      return (
+        <Channel path={path} key={index} element={<Navbar />}>
+          <Channel path={path} element={element} />
+        </Channel>
+      );
+    }
+
+    return <Channel path={path} element={element} />;
+  };
+
   return (
     <Switch>
       {RenderRoute().map((route: RouteAttributes, index: number) => {
         if (route.authorized) {
           return (
             <Channel path={route.path} key={index} element={<ProtectedRouting />}>
-              <Channel path={route.path} element={route.element} />
+              {renderWithNav(route.needNavigator, route.path, route.element, index)}
             </Channel>
           );
         }
-        return <Channel path={route.path} element={route.element} key={index} />;
+        return <>{renderWithNav(route.needNavigator, route.path, route.element, index)}</>;
       })}
     </Switch>
   );
