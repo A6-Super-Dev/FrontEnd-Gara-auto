@@ -28,11 +28,12 @@ export interface ClientLogin {
   email: string;
   password: string;
 }
-
 export interface ClientPasswordRecover {
   email: string;
+}
+
+export interface ClientNewPassword {
   password: string;
-  reTypePassword: string;
 }
 
 export enum UserRoles {
@@ -47,6 +48,7 @@ class AuthInterfaces {
   public clientLoginSchema;
   public clientSignUpSchema;
   public clientPasswordRecoverSchema;
+  public clientNewPasswordSchema;
   public adminLoginSchema;
   public adminAccountCreateSchema;
   public adminPasscodeRecoverSchema;
@@ -60,7 +62,7 @@ class AuthInterfaces {
         .required('This field can not be empty'),
       password: Yup.string()
         .min(6, 'Incorrect password length')
-        .max(20, 'Incorrect password length')
+        .max(30, 'Incorrect password length')
         .required('This field can not be empty'),
     });
 
@@ -95,6 +97,22 @@ class AuthInterfaces {
         .min(16, 'Your email is too short')
         .max(40, 'Your email is too long')
         .required('This field can not be empty'),
+    });
+
+    this.clientNewPasswordSchema = Yup.object().shape({
+      password: Yup.string()
+        .min(6, 'Incorrect password length')
+        .max(30, 'Incorrect password length')
+        .required('This field can not be empty')
+        .matches(
+          this.validateRegEx,
+          'Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and One Special Case Character',
+        ),
+      retypePassword: Yup.string()
+        .min(6, 'Incorrect password length')
+        .max(30, 'Incorrect password length')
+        .required('This field can not be empty')
+        .oneOf([Yup.ref('password')], "Password retype doesn't match "),
     });
 
     this.adminAccountCreateSchema = Yup.object().shape({
