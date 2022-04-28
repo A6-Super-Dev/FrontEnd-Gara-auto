@@ -2,6 +2,7 @@ import { Formik as FormValidation } from 'formik';
 import React from 'react';
 import ReCAPTCHA from 'react-google-recaptcha';
 import { AlertColor, CircularProgress } from '@mui/material';
+import { Link } from 'react-router-dom';
 
 import './SignUp.scss';
 import Auth, { UserRoles } from '../../../../common/interfaces/Auth';
@@ -11,6 +12,7 @@ import { CustomTextField, MuiButton, SubmitButtonStyle } from '../../../../compo
 import clientService from '../../../../services/clientService';
 import { CustomSnackbar } from '../../../../components/Snackbar/CustomSnackbar';
 import { UserSignUpErrorResponse } from '../../../../reduxToolKit-Saga/types/auth';
+import { routerPath } from '../../../../common/constants/routerPath';
 interface SignUpFormInitValue {
   firstName: string;
   lastName: string;
@@ -158,8 +160,16 @@ export const SignUp = () => {
               />
 
               <MuiButton variant="contained" type="submit" disabled={loading} style={SubmitButtonStyle}>
-                {loading === false ? 'Sign In' : <CircularProgress sx={{ color: '#fff', padding: '6px' }} />}
+                {loading === false ? 'Sign up' : <CircularProgress sx={{ color: '#fff', padding: '6px' }} />}
               </MuiButton>
+
+              <div className="separator"></div>
+              <div className="text-center mb-4 text-sm">
+                <span className="opacity-80">You have had an account?</span> {'   '}
+                <Link to={routerPath.auth.LOG_IN} className="text-redirect" color="#008c7a">
+                  Sign in
+                </Link>
+              </div>
             </form>
           )}
         </FormValidation>

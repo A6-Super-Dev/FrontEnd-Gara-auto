@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { LogIn } from '../../../pages/client/auth/logIn/LogIn';
+import { NewPassword } from '../../../pages/client/auth/newPassword/NewPassword';
 import { PasswordRecover } from '../../../pages/client/auth/passwordRecover/PasswordRecover';
 import { SignUp } from '../../../pages/client/auth/signUp/SignUp';
 import { SignUpSuccess } from '../../../pages/client/auth/signUpSuccess/SignUpSuccess';
@@ -36,6 +37,12 @@ const deletedRoute: RouteAttributes[] = [
     authorized: false,
     element: <PasswordRecover />,
     path: routerPath.auth.PASSWORD_RECOVER,
+    needNavigator: false,
+  },
+  {
+    authorized: true,
+    element: <NewPassword />,
+    path: routerPath.auth.NEW_PASSWORD,
     needNavigator: false,
   },
   {
