@@ -1,5 +1,11 @@
-import { TextField, Button } from '@mui/material';
+import { TextField, Button, Container } from '@mui/material';
 import { withStyles, styled } from '@mui/styles';
+
+export enum ColorSchema {
+  LightGreen = '#008c7a',
+  Black = '#000000',
+  White = '#ffffff',
+}
 
 export const CustomTextField = withStyles({
   root: {
@@ -50,4 +56,35 @@ export const MuiNavBarButton = styled(Button)({
   letterSpacing: '1px !important',
   paddingInline: '30px !important',
   paddingBlock: 'auto !important',
+});
+
+export const TransparentButton = styled(Button)({
+  color: 'white',
+  borderColor: 'white',
+  textTransform: 'capitalize',
+  fontWeight: '700',
+  fontSize: '1.25rem',
+  letterSpacing: '2px',
+  paddingInline: '3rem',
+});
+
+export const ContainerGrey = styled(Container)({
+  paddingBlock: '10vh',
+  backgroundColor: '#f6f6f6',
+  maxWidth: '100%',
+  paddingInline: '10vw',
+});
+
+export const ContainerWhite = styled(Container)({
+  paddingBlock: '10vh',
+  backgroundColor: '#ffffff',
+});
+
+export const LightGreenButton = styled(Button)({
+  color: ColorSchema.LightGreen,
+  borderColor: ColorSchema.LightGreen,
+  textTransform: 'capitalize',
+  fontSize: '1.25rem',
+  letterSpacing: '2px',
+  paddingInline: '3rem',
 });

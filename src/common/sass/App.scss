@@ -20,3 +20,7 @@
 .footer-text {
   color: #d2d1d1;
 }
+
+.flex-center-horizontal-vertical {
+  @apply flex justify-center items-center;
+}

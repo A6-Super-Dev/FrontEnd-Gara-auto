@@ -94,7 +94,7 @@ const Navbar = () => {
 
   return (
     <div>
-      <AppBar position="static" sx={{ backgroundColor: '#fff' }}>
+      <AppBar position="fixed" sx={{ backgroundColor: '#fff' }}>
         <Toolbar variant="regular" sx={{ width: '100%', paddingBlock: '20px' }}>
           <Typography variant="h6" color="inherit" sx={{ letterSpacing: '2px', color: 'black', fontWeight: 600 }}>
             Gara-Auto

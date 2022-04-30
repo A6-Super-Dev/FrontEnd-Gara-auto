@@ -30,7 +30,7 @@ function App() {
     }
   }, []);
 
-  const renderWithNav = (navigator: boolean, path: string, element: React.ReactNode, index?: number) => {
+  const renderWithNav = (navigator: boolean, path: string, element: React.ReactNode, index: number) => {
     if (navigator) {
       return (
         <Channel path={path} key={index} element={<Navbar />}>
@@ -39,7 +39,7 @@ function App() {
       );
     }
 
-    return <Channel path={path} element={element} />;
+    return <Channel path={path} element={element} key={index} />;
   };
 
   return (
