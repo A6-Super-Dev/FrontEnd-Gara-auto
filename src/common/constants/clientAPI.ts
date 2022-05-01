@@ -9,6 +9,7 @@ class ClientAPI {
   genNewToken = `${this.auth}/gen-new-token`;
   apiCheck = `${this.auth}/api-check`;
   checkValid = `${this.auth}/check-valid`;
+  getCar = (id: string) => `client/car/get-one/${id}`;
 }
 
 export default new ClientAPI();

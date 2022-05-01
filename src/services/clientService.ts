@@ -29,6 +29,11 @@ class ClientService {
     const { data } = await AxiosClient.post(clientAPI.newPassword(token), params);
     return data;
   }
+
+  async getCar(id: string) {
+    const { data } = await AxiosClient.get(clientAPI.getCar(id));
+    return data;
+  }
 }
 
 export default new ClientService();

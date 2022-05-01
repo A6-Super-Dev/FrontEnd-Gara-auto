@@ -1,10 +1,11 @@
-import { TextField, Button, Container } from '@mui/material';
+import { TextField, Button, Container, Accordion } from '@mui/material';
 import { withStyles, styled } from '@mui/styles';
 
 export enum ColorSchema {
   LightGreen = '#008c7a',
   Black = '#000000',
   White = '#ffffff',
+  LightBlack = '#21222D',
 }
 
 export const CustomTextField = withStyles({
@@ -87,4 +88,9 @@ export const LightGreenButton = styled(Button)({
   fontSize: '1.25rem',
   letterSpacing: '2px',
   paddingInline: '3rem',
+});
+
+export const DarkAccordion = styled(Accordion)({
+  backgroundColor: ColorSchema.LightBlack,
+  color: 'white',
 });
