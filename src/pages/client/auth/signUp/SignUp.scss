@@ -1,12 +1,10 @@
-@import '../../../../common/sass/variable';
-
 .sign_up {
   &-container {
     @apply xl:px-28 py-10;
   }
 
   &-heading {
-    color: $second-color;
+    color: #008c7a;
     @apply font-bold text-5xl text-center tracking-wide mt-4;
   }
 
@@ -19,7 +17,7 @@
 
     .first-name,
     .last-name {
-      @apply w-[48%];
+      width: 48%;
     }
   }
 }

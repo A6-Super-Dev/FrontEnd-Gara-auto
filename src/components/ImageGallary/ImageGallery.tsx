@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { FreeMode, Navigation, Thumbs, Pagination, Scrollbar } from 'swiper';
+import { FreeMode, Navigation, Thumbs, Pagination } from 'swiper';
 
 import 'swiper/css';
 import 'swiper/css/free-mode';

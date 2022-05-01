@@ -51,6 +51,15 @@ export const MuiButton = styled(Button)({
   letterSpacing: '1px !important',
 });
 
+export const MuiBrandButton = styled(Button)({
+  background: '#008c7a !important', //(bug) should not use important in this situation
+  color: 'white',
+  fontSize: '1rem !important',
+  letterSpacing: '1px !important',
+  marginInline: '1rem',
+  width: '100%',
+});
+
 export const MuiNavBarButton = styled(Button)({
   background: 'white !important', //(bug) should not use important in this situation
   fontSize: '16px !important',

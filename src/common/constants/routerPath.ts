@@ -11,6 +11,7 @@ export const routerPath = {
     HOME: '/home',
     ERROR: '/error',
     BRAND: '/brand',
+    BRAND_ITEM: '/brand/:brandName',
     BLOG: '/blog/all-blog',
     CAR_DETAIL: '/car-detail/:car',
   },
