@@ -13,4 +13,8 @@ interface LoginReturn {
   data: LoginDataReturn;
 }
 
-export type { LoginReturn, LoginDataReturn };
+interface UndefinedObject {
+  [key: string]: any;
+}
+
+export type { LoginReturn, LoginDataReturn, UndefinedObject };

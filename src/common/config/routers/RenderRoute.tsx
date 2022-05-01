@@ -1,5 +1,6 @@
 import React from 'react';
 
+import CarDetail from '../../../pages/client/auth/carDetail/CarDetail';
 import { LogIn } from '../../../pages/client/auth/logIn/LogIn';
 import { NewPassword } from '../../../pages/client/auth/newPassword/NewPassword';
 import { PasswordRecover } from '../../../pages/client/auth/passwordRecover/PasswordRecover';
@@ -23,6 +24,12 @@ const staticRoute: RouteAttributes[] = [
     element: <ErrorPages />,
     path: routerPath.common.ERROR,
     needNavigator: false,
+  },
+  {
+    authorized: false,
+    element: <CarDetail />,
+    path: routerPath.common.CAR_DETAIL,
+    needNavigator: true,
   },
 ];
 

@@ -1,0 +1,86 @@
+.car-main-params-wrapper {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: -5%;
+  @media (max-width: 900px) {
+    margin-top: 5%;
+    height: auto;
+    margin-bottom: 5%;
+  }
+}
+.car-main-params {
+  margin-left: 5%;
+  height: 70%;
+  width: 90%;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  @media (max-width: 900px) {
+    height: 100%;
+    width: 90%;
+    margin: auto;
+  }
+}
+
+.car {
+  &-title {
+    font-size: 24px;
+  }
+  &-price {
+    font-size: 20px;
+    color: red;
+  }
+  &-table-main-param {
+    width: (100%);
+    font-size: 14px;
+    & tr {
+      border: 1px solid #dee2e6 !important;
+    }
+    & .table-first-el {
+      width: 30% !important;
+      padding: 5px 10px;
+    }
+  }
+  &-swiper-2 {
+    border: 1px solid black;
+    border-radius: 5px;
+  }
+  &-descriptions {
+    min-height: 100px;
+  }
+  &-others {
+    background-color: green;
+    min-height: 100px;
+  }
+}
+.img-gallary {
+  height: 100%;
+}
+
+.table-title {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  font-size: 24px;
+  color: red;
+}
+
+.car-p-strong {
+  padding: 1rem 0 1rem 0;
+}
+.introImg-wrapper {
+  margin-top: 2rem;
+  width: 100%;
+  height: 280px;
+  display: flex;
+  justify-content: space-between;
+}
+.img-2{
+  width: 49.5%;
+}
+.img-3{
+  width: 33%;
+}

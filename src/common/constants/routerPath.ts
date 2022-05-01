@@ -12,6 +12,7 @@ export const routerPath = {
     ERROR: '/error',
     BRAND: '/brand',
     BLOG: '/blog/all-blog',
+    CAR_DETAIL: '/car-detail/:car',
   },
 };
 
