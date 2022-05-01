@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Container, Grid, Typography, Button } from '@mui/material';
+import { Box, Container, Grid, Typography } from '@mui/material';
 import { ShoppingCart, Book, Forum, Category, FacebookOutlined } from '@mui/icons-material';
 import SimpleImageSlider from 'react-simple-image-slider';
 import { Link } from 'react-router-dom';

@@ -34,7 +34,7 @@ function App() {
     if (navigator) {
       return (
         <Channel path={path} key={index} element={<Navbar />}>
-          <Channel path={path} element={element} />
+          <Channel key={index} path={path} element={element} />
         </Channel>
       );
     }

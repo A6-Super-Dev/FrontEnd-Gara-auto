@@ -6,6 +6,8 @@ import { NewPassword } from '../../../pages/client/auth/newPassword/NewPassword'
 import { PasswordRecover } from '../../../pages/client/auth/passwordRecover/PasswordRecover';
 import { SignUp } from '../../../pages/client/auth/signUp/SignUp';
 import { SignUpSuccess } from '../../../pages/client/auth/signUpSuccess/SignUpSuccess';
+import { Brand } from '../../../pages/client/brand/Brand';
+import { BrandItem } from '../../../pages/client/brandItem/BrandItem';
 import { Home } from '../../../pages/client/common/Home';
 import ErrorPages from '../../../pages/Error/ErrorPages';
 import { routerPath } from '../../constants/routerPath';
@@ -29,6 +31,18 @@ const staticRoute: RouteAttributes[] = [
     authorized: false,
     element: <CarDetail />,
     path: routerPath.common.CAR_DETAIL,
+    needNavigator: true,
+  },
+  {
+    authorized: false,
+    element: <Brand />,
+    path: routerPath.common.BRAND,
+    needNavigator: true,
+  },
+  {
+    authorized: false,
+    element: <BrandItem />,
+    path: routerPath.common.BRAND_ITEM,
     needNavigator: true,
   },
 ];

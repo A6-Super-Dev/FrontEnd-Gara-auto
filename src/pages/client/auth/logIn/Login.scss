@@ -1,12 +1,10 @@
-@import '../../../../common/sass/variable';
-
 .login {
   &-container {
     @apply xl:px-28 py-10;
   }
 
   &-heading {
-    color: $second-color;
+    color: #008c7a;
     @apply font-bold text-5xl text-center tracking-wide mt-4;
   }
 
@@ -31,7 +29,7 @@
 }
 
 .text-redirect {
-  color: $second-color;
+  color: #008c7a;
   @apply text-base font-semibold;
 }
 

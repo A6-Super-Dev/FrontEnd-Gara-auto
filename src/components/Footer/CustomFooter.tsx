@@ -12,7 +12,7 @@ interface CustomFooterProps {
 const CustomFooter: React.FC<CustomFooterProps> = ({ windowWidth }) => {
   return (
     <footer>
-      <Container sx={{ marginTop: '2rem', backgroundColor: '#2b2f31', paddingBlock: '3rem' }} maxWidth={false}>
+      <Container sx={{ backgroundColor: '#2b2f31', paddingBlock: '3rem' }} maxWidth={false}>
         <Grid container>
           <Grid
             sm={3}
