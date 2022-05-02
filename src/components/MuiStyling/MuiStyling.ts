@@ -78,6 +78,15 @@ export const TransparentButton = styled(Button)({
   paddingInline: '3rem',
 });
 
+export const TransparentBrandButton = styled(Button)({
+  color: 'black',
+  borderColor: 'black',
+  textTransform: 'capitalize',
+  fontWeight: '700',
+  letterSpacing: '2px',
+  paddingInline: '3rem',
+});
+
 export const ContainerGrey = styled(Container)({
   paddingBlock: '10vh',
   backgroundColor: '#f6f6f6',
@@ -88,6 +97,13 @@ export const ContainerGrey = styled(Container)({
 export const ContainerWhite = styled(Container)({
   paddingBlock: '10vh',
   backgroundColor: '#ffffff',
+});
+
+export const SecondContainerWhite = styled(Container)({
+  paddingBlock: '10vh',
+  backgroundColor: '#ffffff',
+  maxWidth: '100%',
+  paddingInline: '20vw',
 });
 
 export const LightGreenButton = styled(Button)({
