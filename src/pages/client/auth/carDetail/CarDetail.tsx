@@ -146,7 +146,12 @@ const CarDetail: React.FC = () => {
                                   <div className="introImg-wrapper">
                                     {imgObj.introImgs?.map((img) => {
                                       return (
-                                        <img className={`img-${imgObj.introImgs.length}`} key={img} src={img} alt="" />
+                                        <img
+                                          className={`img-${imgObj?.introImgs?.length}`}
+                                          key={img}
+                                          src={img}
+                                          alt=""
+                                        />
                                       );
                                     })}
                                   </div>

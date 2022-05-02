@@ -23,13 +23,45 @@
     @apply rounded-xl;
 
     .render-detail {
+      // img {
+      //   @apply w-screen mt-4;
+      // }
+      table {
+        width: 100% !important;
+        table-layout: auto !important;
+      }
+      tbody {
+        display: table-row-group;
+        vertical-align: middle;
+        border-color: inherit;
+      }
+      tr {
+        display: table-row;
+        vertical-align: inherit;
+        border-color: inherit;
+      }
+      th {
+        width: 10%;
+        padding: 0.75rem;
+        vertical-align: top;
+        border-top: 1px solid #dee2e6;
+        text-align: inherit;
+      }
+      figure {
+        max-width: 100%;
+      }
       img {
-        @apply w-screen mt-4;
+        max-width: 100%;
+      }
+      p {
+        max-width: 100%;
       }
 
-      strong em {
-        @apply leading-10;
-      }
+      // strong em {
+      //   @apply leading-10;
+      // }
     }
   }
+}
+.brand-detail-description {
 }

@@ -9,34 +9,42 @@ type UndefinedUrlObject = {
 };
 
 type CarDetailImgs = {
-  imgs: Array<string>;
-  introImgs: Array<string>;
-  exteriorReviewImgs: Array<string>;
-  interiorReviewImgs: Array<string>;
+  imgs?: Array<string>;
+  introImgs?: Array<string>;
+  exteriorReviewImgs?: Array<string>;
+  interiorReviewImgs?: Array<string>;
+  [key: string]: any;
 };
 
 export function useFetchImgs() {
-  const [imgObj, setImgObj] = useState<CarDetailImgs | UndefinedUrlObject>({});
+  const [imgObj, setImgObj] = useState<CarDetailImgs>({});
 
   const listItem = (starsRef: any) => {
     return getDownloadURL(starsRef);
   };
 
   const downloadImgsFromFirebase = useCallback<any>(async (urlObject: CarDetailImgs | UndefinedUrlObject) => {
-    Object.entries(urlObject).map(async ([key, imgUrls]) => {
-      imgUrls = imgUrls.map((url: string) => {
-        return url.replaceAll(`\"]`, '').replaceAll(`[\"`, '');
+    try {
+      if (typeof urlObject !== 'object') {
+        return;
+      }
+      Object.entries(urlObject).map(async ([key, imgUrls]) => {
+        imgUrls = imgUrls.map((url: string) => {
+          return url.replaceAll(`\"]`, '').replaceAll(`[\"`, '');
+        });
+        const firebaseUrls = await Promise.all(
+          imgUrls.map((url: string) => {
+            const starsRef = ref(storage, url);
+            return listItem(starsRef);
+          }),
+        );
+        setImgObj((img: any) => {
+          return { ...img, [key]: firebaseUrls };
+        });
       });
-      const firebaseUrls = await Promise.all(
-        imgUrls.map((url) => {
-          const starsRef = ref(storage, url);
-          return listItem(starsRef);
-        }),
-      );
-      setImgObj((img: any) => {
-        return { ...img, [key]: firebaseUrls };
-      });
-    });
+    } catch (error) {
+      console.log('error', error);
+    }
   }, []);
 
   return { imgObj, downloadImgsFromFirebase };
