@@ -149,7 +149,9 @@ export const BrandItem: React.FC = () => {
       .replaceAll(`\\`, '');
     originalImgs.forEach((originalImg, idx) => {
       if (imgObj?.brandImgs?.length > 0) {
-        temp = temp.replaceAll(originalImg, imgObj?.brandImgs[idx]);
+        temp = temp
+          .replaceAll(originalImg, imgObj?.brandImgs[idx])
+          .replaceAll(originalImg.split('..')[1], imgObj?.brandImgs[idx]);
       }
     });
     return temp;
