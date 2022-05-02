@@ -2,4 +2,34 @@
   &-container {
     padding: 0 !important;
   }
+
+  &-introduction {
+    border: 1px solid gray;
+    @apply rounded-xl;
+
+    .all-brand-body_type {
+      @apply flex flex-wrap;
+    }
+  }
+
+  // &-main {
+  //   .price-and-seat {
+  //     @apply;
+  //   }
+  // }
+
+  &-detail {
+    border: 1px solid gray;
+    @apply rounded-xl;
+
+    .render-detail {
+      img {
+        @apply w-screen mt-4;
+      }
+
+      strong em {
+        @apply leading-10;
+      }
+    }
+  }
 }

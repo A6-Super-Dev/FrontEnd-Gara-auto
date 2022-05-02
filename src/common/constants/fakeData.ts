@@ -11,6 +11,13 @@ export interface BrandAttributes {
   description: string;
 }
 
+export interface CarOfBrandAttributes {
+  img: string;
+  name: string;
+  price: string;
+  seat: number;
+}
+
 export const OUR_TEAMS: TeamAttributes[] = [
   {
     name: 'Nguyễn Đức Quang',
@@ -94,5 +101,32 @@ export const OUR_RECOMMENDATIONS: BrandAttributes[] = [
     img: 'https://img.tinbanxe.vn/thumb/250//images/Vinfast/vinfast%20president/CE11.png',
     name: 'Vinfast',
     description: 'Vinfast đều có kiểu dáng sang trọng và đẳng cấp nhưng vẫn giữ được nét Việt Nam rất riêng biệt.',
+  },
+];
+
+export const CAR_OF_BRAND: CarOfBrandAttributes[] = [
+  {
+    img: 'https://img.tinbanxe.vn/webp/images/Bentley/Bentley%20Bentayga/khac/an-toan-bentley-bentayga.jpg',
+    name: 'Bentley Bentayga',
+    price: '183,425 USD',
+    seat: 5,
+  },
+  {
+    img: 'https://img.tinbanxe.vn/webp/images/Bentley/Bentley%20Continental%20GT/khac/an-toan-bentley-continental-gt.jpg',
+    name: 'Bentley Continental GT',
+    price: '23,000,000,000 VND',
+    seat: 4,
+  },
+  {
+    img: 'https://img.tinbanxe.vn/webp/images/Bentley/Bentley%20Flying%20Spur/khac/an-toan-bentley-flying-spur.jpg',
+    name: 'Bentley Flying Spur',
+    price: '16,868,000,000 VND',
+    seat: 5,
+  },
+  {
+    img: 'https://img.tinbanxe.vn/webp/images/Bentley/Bentley%20Mulsanne/khac/an-toan-bentley-mulsanne.jpg',
+    name: 'Bentley Mulsanne',
+    price: '307,000 USD',
+    seat: 5,
   },
 ];
