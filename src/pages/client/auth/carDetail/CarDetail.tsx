@@ -4,8 +4,6 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useParams } from 'react-router-dom';
-import 'firebase/compat/storage';
-import { ref, getDownloadURL } from 'firebase/storage';
 
 import './CarDetail.scss';
 import 'swiper/css';
@@ -17,7 +15,7 @@ import { DarkAccordion } from '../../../../components/MuiStyling/MuiStyling';
 import { ImageGallary } from '../../../../components/ImageGallary/ImageGallery';
 import clientService from '../../../../services/clientService';
 import { UndefinedObject } from '../../../../common/interfaces/Client';
-import { storage } from '../../../../common/config/firebase/config';
+import { useFetchImgs } from '../../../../common/hooks/useFetchImgs';
 
 const accordionProps: Array<UndefinedObject> = [
   {
@@ -40,30 +38,8 @@ const mainParams: UndefinedObject = {
 
 const CarDetail: React.FC = () => {
   const [carInfo, setCarInfo] = useState<any>(undefined);
-  const [carMainImgs, setCarMainImgs] = useState<Array<string>>([]);
-  const [carIntroImgs, setCarIntroImgs] = useState<Array<string>>([]);
-  const [carInternalReviewImgs, setCarInternalReviewImgs] = useState<Array<string>>([]);
-  const [carExteriorReviewImgs, setCarExteriorReviewImgs] = useState<Array<string>>([]);
+  const { imgObj, downloadImgsFromFirebase } = useFetchImgs();
   const params = useParams();
-
-  const listItem = (starsRef: any) => {
-    return getDownloadURL(starsRef);
-  };
-  const downloadImgsFromFirebase = async (urls: Array<string>) => {
-    const responses = await Promise.allSettled(
-      urls.map((url: any) => {
-        url = url.replaceAll(`\"]`, '').replaceAll(`[\"`, '');
-        const starsRef = ref(storage, url);
-        return listItem(starsRef);
-      }),
-    );
-    const firebaseUrls = responses.map((res: any) => {
-      return res.value;
-    });
-    return firebaseUrls;
-  };
-
-  console.log('carInfo', carInfo);
 
   useEffect(() => {
     const fetchCar = async () => {
@@ -71,24 +47,20 @@ const CarDetail: React.FC = () => {
       setCarInfo(carInfo.result);
     };
     fetchCar();
-  }, []);
+  }, [params.car]);
   useEffect(() => {
     const fetchAllImgs = async () => {
       if (carInfo !== undefined) {
-        const [mainImgs, introImgs, internalImgs, exteriorReviewImgs] = await Promise.all([
-          downloadImgsFromFirebase(carInfo.carAppearance.newImgs.split(`","`)),
-          downloadImgsFromFirebase(carInfo.carAppearance.newIntroImgs.split(`","`)),
-          downloadImgsFromFirebase(carInfo.carAppearance.newInteriorReviewImgs.split(`","`)),
-          downloadImgsFromFirebase(carInfo.carAppearance.newExteriorReviewImgs.split(`","`)),
-        ]);
-        setCarMainImgs(mainImgs);
-        setCarInternalReviewImgs(internalImgs as any);
-        setCarIntroImgs(introImgs);
-        setCarExteriorReviewImgs(exteriorReviewImgs);
+        downloadImgsFromFirebase({
+          imgs: carInfo.carAppearance.newImgs.split(`","`),
+          introImgs: carInfo.carAppearance.newIntroImgs.split(`","`),
+          exteriorReviewImgs: carInfo.carAppearance.newExteriorReviewImgs.split(`","`),
+          interiorReviewImgs: carInfo.carAppearance.newInteriorReviewImgs.split(`","`),
+        });
       }
     };
     fetchAllImgs();
-  }, [carInfo]);
+  }, [carInfo, downloadImgsFromFirebase]);
   return (
     <Container maxWidth={false}>
       <Box sx={{ marginTop: '154px' }}>
@@ -98,7 +70,7 @@ const CarDetail: React.FC = () => {
             sx={{ height: '500px', borderColor: '#C3CAD8', borderWidth: '1px', borderRadius: '5px', padding: '15px' }}
           >
             <Grid item sm={12} md={7}>
-              <ImageGallary urls={carMainImgs} />
+              <ImageGallary urls={imgObj.imgs} />
             </Grid>
             <Grid item sm={12} md={5}>
               <div className="car-main-params-wrapper">
@@ -112,7 +84,7 @@ const CarDetail: React.FC = () => {
                   </div>
                   <table className="car-table-main-param">
                     <tbody>
-                      {Object.keys(mainParams).map((carParam) => {
+                      {Object.keys(mainParams)?.map((carParam) => {
                         return (
                           <>
                             <tr key={carParam}>
@@ -137,7 +109,7 @@ const CarDetail: React.FC = () => {
               <div className="car-descriptions">
                 {carInfo !== undefined && (
                   <>
-                    {accordionProps.map((element, idx) => {
+                    {accordionProps?.map((element, idx) => {
                       return (
                         <DarkAccordion disableGutters={true} defaultExpanded key={idx}>
                           <AccordionSummary
@@ -148,7 +120,7 @@ const CarDetail: React.FC = () => {
                             <Typography>{element.title}</Typography>
                           </AccordionSummary>
                           <AccordionDetails>
-                            {carInfo?.[element.propName]?.split(`","`).map((el: string) => {
+                            {carInfo?.[element.propName]?.split(`","`)?.map((el: string) => {
                               return (
                                 <p
                                   key={el}
@@ -163,8 +135,8 @@ const CarDetail: React.FC = () => {
                                 <ImageGallary
                                   urls={
                                     accordionProps[idx].propName === 'interiorReview'
-                                      ? carInternalReviewImgs
-                                      : carExteriorReviewImgs
+                                      ? imgObj.interiorReviewImgs
+                                      : imgObj.exteriorReviewImgs
                                   }
                                 />
                               </div>
@@ -172,14 +144,8 @@ const CarDetail: React.FC = () => {
                               <>
                                 {accordionProps[idx].propName === 'introReview' && (
                                   <div className="introImg-wrapper">
-                                    {carIntroImgs.map((img) => {
-                                      return (
-                                        <img
-                                          className={`${carIntroImgs.length === 2 ? 'img-2' : 'img-3'}`}
-                                          key={img}
-                                          src={img}
-                                        />
-                                      );
+                                    {imgObj.introImgs?.map((img) => {
+                                      return <img className={`img-${imgObj.introImgs.length}`} key={img} src={img} />;
                                     })}
                                   </div>
                                 )}
@@ -194,7 +160,15 @@ const CarDetail: React.FC = () => {
               </div>
             </Grid>
             <Grid item sm={12} md={4} sx={{ borderColor: '#C3CAD8', borderWidth: '1px', borderRadius: '5px' }}>
-              <div className="car-others"></div>
+              <div className="car-staring">
+                <div className="starring-text">
+                  <p>Diem danh gia</p>
+                  <p>1 sao</p>
+                </div>
+                <div className="starring-number">
+                  <p>8.6</p> <p> / 10</p>
+                </div>
+              </div>
             </Grid>
           </Grid>
         </Container>
