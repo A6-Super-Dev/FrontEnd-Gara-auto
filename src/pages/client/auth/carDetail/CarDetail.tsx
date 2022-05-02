@@ -145,7 +145,9 @@ const CarDetail: React.FC = () => {
                                 {accordionProps[idx].propName === 'introReview' && (
                                   <div className="introImg-wrapper">
                                     {imgObj.introImgs?.map((img) => {
-                                      return <img className={`img-${imgObj.introImgs.length}`} key={img} src={img} />;
+                                      return (
+                                        <img className={`img-${imgObj.introImgs.length}`} key={img} src={img} alt="" />
+                                      );
                                     })}
                                   </div>
                                 )}
