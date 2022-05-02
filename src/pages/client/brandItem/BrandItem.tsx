@@ -27,6 +27,7 @@ import {
   TransparentBrandButton,
 } from '../../../components/MuiStyling/MuiStyling';
 import { CAR_OF_BRAND } from '../../../common/constants/fakeData';
+import clientService from '../../../services/clientService';
 
 const allBrand = [
   { label: 'Bentley' },
@@ -66,8 +67,43 @@ const SHORT_DESCRIPTION = [
   },
 ];
 
+interface BrandItemAttributes {
+  id: string;
+  name: string;
+  descriptions: string;
+  shortDescriptions: string;
+  brandImg: string;
+  descriptionImgs: string;
+}
+
 export const BrandItem: React.FC = () => {
   const { brandName } = useParams<string>();
+  const [brandItemAPI, setBrandItemAPI] = React.useState<BrandItemAttributes>();
+  console.log('brandItemAPI', brandItemAPI);
+
+  React.useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  React.useEffect(() => {
+    const getBrandApi = async (brand: string) => {
+      try {
+        const response = await clientService.getBrand(brand);
+        setBrandItemAPI(response.brandInfo);
+      } catch (error: any) {
+        console.log(error.response);
+      }
+    };
+
+    getBrandApi(brandName as string);
+  }, [brandName]);
+
+  const handleBrandDescription = (description: string) => {
+    const newBrandDescription1 = description?.slice(1, -1);
+    const newBrandDescription2 = newBrandDescription1?.replaceAll('\n', '');
+    return newBrandDescription2;
+  };
+  console.log('handleBrandDescription', handleBrandDescription(brandItemAPI?.descriptions as string));
 
   function capitalizeFirstLetter(string: string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
@@ -80,17 +116,14 @@ export const BrandItem: React.FC = () => {
   };
 
   const shortcutDescription = (des: string) => {
-    if (des.length >= 400) return des.slice(0, 400) + '...';
-    return des + '...';
+    const newDes = handleBrandDescription(des);
+    if (newDes?.length >= 400) return newDes?.slice(0, 400) + '...';
+    return newDes + '...';
   };
 
   const handleDelete = () => {
     console.info('You clicked the delete icon.');
   };
-
-  React.useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
 
   // const myRef = useRef<HTMLElement>(null);
 
@@ -121,13 +154,13 @@ export const BrandItem: React.FC = () => {
             {SHORT_DESCRIPTION.map((item, index) => (
               <Grid container key={index} spacing={4}>
                 <Grid item xs={4}>
-                  <img src={item.img} alt="" />
+                  <img src={brandItemAPI?.brandImg} alt="" />
                   {/* <button onClick={executeScroll}> Click to scroll </button> */}
                 </Grid>
                 <Grid item xs={8}>
                   <div
                     className="mb-4 text-justify leading-6"
-                    dangerouslySetInnerHTML={{ __html: shortcutDescription(item.des) }}
+                    dangerouslySetInnerHTML={{ __html: shortcutDescription(brandItemAPI?.descriptions as string) }}
                   ></div>
                   <TransparentBrandButton className="see-more" href="#brand-detail" variant="outlined">
                     See more
@@ -143,7 +176,7 @@ export const BrandItem: React.FC = () => {
         <div className="brand_item-main">
           <Typography
             variant="h3"
-            sx={{ textAlign: 'left', color: ColorSchema.Black, marginBottom: '2rem', marginTop: '3rem' }}
+            sx={{ textAlign: 'left', color: ColorSchema.Black, marginBottom: '2rem' }}
             fontFamily="ui-serif"
           >
             {handleBrandName()}
@@ -209,7 +242,7 @@ export const BrandItem: React.FC = () => {
               <div
                 key={index}
                 className="render-detail mb-4 text-justify leading-7"
-                dangerouslySetInnerHTML={{ __html: item.des }}
+                dangerouslySetInnerHTML={{ __html: handleBrandDescription(brandItemAPI?.descriptions as string) }}
               ></div>
             ))}
           </div>

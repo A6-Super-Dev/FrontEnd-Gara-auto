@@ -30,8 +30,13 @@ class ClientService {
     return data;
   }
 
-  async getCar(id: string) {
-    const { data } = await AxiosClient.get(clientAPI.getCar(id));
+  async getCar(name: string) {
+    const { data } = await AxiosClient.get(clientAPI.getCar(name));
+    return data;
+  }
+
+  async getBrand(brand: string) {
+    const { data } = await AxiosClient.get(clientAPI.getBrand(brand));
     return data;
   }
 }
