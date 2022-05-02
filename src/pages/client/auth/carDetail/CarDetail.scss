@@ -51,10 +51,7 @@
   &-descriptions {
     min-height: 100px;
   }
-  &-others {
-    background-color: green;
-    min-height: 100px;
-  }
+ 
 }
 .img-gallary {
   height: 100%;
@@ -78,9 +75,25 @@
   display: flex;
   justify-content: space-between;
 }
+.img-1{
+  width: 100%;
+}
 .img-2{
   width: 49.5%;
 }
 .img-3{
   width: 33%;
+}
+.car-staring {
+  background-color: green;
+  height: 72px;
+  display: flex;
+}
+.starring-text {
+  width: 50%;
+  height: 100%;
+  display: flex;
+  background-color: red;
+  flex-direction: column;
+  justify-content: space-between;
 }
