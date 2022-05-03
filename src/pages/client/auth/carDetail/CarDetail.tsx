@@ -42,7 +42,6 @@ const CarDetail: React.FC = () => {
   const [carInfo, setCarInfo] = useState<any>(undefined);
   const { imgObj, downloadImgsFromFirebase } = useFetchImgs();
   const params = useParams();
-  console.log('params', params);
 
   useEffect(() => {
     const fetchCar = async () => {
@@ -146,9 +145,12 @@ const CarDetail: React.FC = () => {
                             ) : (
                               <>
                                 {accordionProps[idx].propName === 'introReview' && (
-                                  <Grid container>
+                                  <Grid container spacing={1}>
                                     {imgObj.introImgs?.map((img, idx) => {
-                                      const gridSize = 12 / imgObj.introImgs.length;
+                                      let gridSize = undefined;
+                                      if (imgObj.introImgs) {
+                                        gridSize = 12 / imgObj?.introImgs?.length;
+                                      }
                                       return (
                                         <Grid key={idx} item sm={12} md={gridSize}>
                                           <img className={`img-intro-item`} key={img} src={img} alt="" />
