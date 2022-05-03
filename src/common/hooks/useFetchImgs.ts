@@ -19,8 +19,12 @@ type CarDetailImgs = {
 export function useFetchImgs() {
   const [imgObj, setImgObj] = useState<CarDetailImgs>({});
 
-  const listItem = (starsRef: any) => {
-    return getDownloadURL(starsRef);
+  const listItem = async (starsRef: any, tinbanxeImg?: string) => {
+    try {
+      return await getDownloadURL(starsRef);
+    } catch (error) {
+      return Promise.resolve(tinbanxeImg);
+    }
   };
 
   const downloadImgsFromFirebase = useCallback<any>(async (urlObject: CarDetailImgs | UndefinedUrlObject) => {
@@ -47,5 +51,11 @@ export function useFetchImgs() {
     }
   }, []);
 
-  return { imgObj, downloadImgsFromFirebase };
+  const getImgFromFirebase = useCallback((originUrl: string, tinbanxeImg) => {
+    const starsRef = ref(storage, originUrl);
+    const img = listItem(starsRef, tinbanxeImg);
+    return img;
+  }, []);
+
+  return { imgObj, downloadImgsFromFirebase, getImgFromFirebase };
 }

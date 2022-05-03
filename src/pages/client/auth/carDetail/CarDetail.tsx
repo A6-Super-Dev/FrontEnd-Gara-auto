@@ -44,6 +44,9 @@ const CarDetail: React.FC = () => {
   const params = useParams();
 
   useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+  useEffect(() => {
     const fetchCar = async () => {
       const carInfo = await clientService.getCar(params.car as string);
       setCarInfo(carInfo.result);

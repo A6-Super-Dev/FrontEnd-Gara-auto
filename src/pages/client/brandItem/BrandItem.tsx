@@ -18,7 +18,7 @@ import {
   Box,
   CardActions,
 } from '@mui/material';
-import React, { useMemo, useEffect } from 'react';
+import React, { useMemo, useState, useEffect, useCallback } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
 import './BrandItem.scss';
@@ -101,9 +101,9 @@ export const BrandItem: React.FC = () => {
     descriptionImgs: '',
   });
   const [carInfoAPI, setCarInfoAPI] = React.useState<Array<CarAttributes>>([]);
-  console.log('carInfoAPI', carInfoAPI);
+  const [imgFromFirebase, setImgFromFirebase] = useState<Array<any>>([]);
 
-  const { imgObj, downloadImgsFromFirebase } = useFetchImgs();
+  const { imgObj, downloadImgsFromFirebase, getImgFromFirebase } = useFetchImgs();
   const originalImgs = useMemo(() => {
     return replaceDirtyImgUrls(brandItemAPI.descriptionImgs.split(`","`)).map((url: string) => {
       return '..' + url;
@@ -120,6 +120,42 @@ export const BrandItem: React.FC = () => {
     };
     fetchImgs();
   }, [downloadImgsFromFirebase, brandImgUrls]);
+
+  const carFirebaseImgs = useCallback(async () => {
+    const newImgs = await Promise.allSettled(
+      carInfoAPI.map((car: any) => {
+        let carImg;
+        let tinbanxeImg;
+        if (car.carAppearance.newIntroImgs.length < 5) {
+          const carIntroImgs = replaceDirtyImgUrls(car.carAppearance.imgs.split(`","`));
+          return Promise.resolve(carIntroImgs[0]);
+        }
+        const originalImgs = replaceDirtyImgUrls(car.carAppearance.newIntroImgs.split(`","`));
+        const tinbanxeImgs = replaceDirtyImgUrls(car.carAppearance.introImgs.split(`","`));
+        if (originalImgs.length === 1) {
+          carImg = originalImgs[0];
+          tinbanxeImg = tinbanxeImgs[0];
+        } else {
+          carImg = originalImgs[1];
+          tinbanxeImg = tinbanxeImgs[1];
+        }
+        carImg = getImgFromFirebase(carImg, tinbanxeImg);
+        return carImg;
+      }),
+    );
+    const availableImgs = newImgs.reduce((acc: any, promise: any) => {
+      if (promise.status === 'fulfilled' && promise.value !== '') {
+        acc.push(promise.value);
+        return acc;
+      }
+      return acc;
+    }, []) as any;
+    setImgFromFirebase(availableImgs);
+  }, [getImgFromFirebase, carInfoAPI]) as any;
+
+  useEffect(() => {
+    carFirebaseImgs();
+  }, [carFirebaseImgs]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -304,7 +340,6 @@ export const BrandItem: React.FC = () => {
           <Grid container>
             {carInfoAPI.map((item, index) => {
               const cutBrandName = item.name.split(' ')[0].toLowerCase();
-              console.log('cutBrandName', cutBrandName);
 
               return (
                 <Grid item xs={12} sm={6} md={4} lg={3} xl={12 / 5} sx={{ padding: '0.5rem' }} key={index}>
@@ -314,9 +349,10 @@ export const BrandItem: React.FC = () => {
                         className="h-36 object-fill"
                         component="img"
                         image={
-                          item.carAppearance.introImgs.length > 5
-                            ? getImgFromAPI(item.carAppearance.introImgs)
-                            : getImgFromAPI(item.carAppearance.imgs)
+                          // item.carAppearance.introImgs.length > 5
+                          //   ? getImgFromAPI(item.carAppearance.introImgs)
+                          //   : getImgFromAPI(item.carAppearance.imgs)
+                          imgFromFirebase[index]
                         }
                         alt="green iguana"
                       />

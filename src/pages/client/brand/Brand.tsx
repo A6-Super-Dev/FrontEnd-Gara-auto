@@ -28,6 +28,7 @@ export const Brand: React.FC = () => {
     const fetchBrandFromAPI = async () => {
       try {
         const response = await clientService.getAllBrand();
+        console.log('response', response);
         setAllBrandAPI(response.allBrand);
       } catch (error: any) {
         console.log(error);
@@ -80,7 +81,7 @@ export const Brand: React.FC = () => {
           Our brands
         </Typography>
         <Grid container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-          {allBrandAPI.map((item, index) => (
+          {allBrandAPI?.map((item, index) => (
             <Grid item xs={12} sm={6} md={4} lg={3} xl={12 / 5} sx={{ padding: '0.5rem' }} key={index}>
               <Card className="pb-8">
                 <CardActionArea>

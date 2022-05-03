@@ -54,9 +54,7 @@
         text-align: center !important;
       }
       td {
-        // width: 10%;
         padding: 0.75rem;
-        // vertical-align: top;
         text-align: inherit;
       }
       p span strong {
@@ -84,5 +82,8 @@
   width: 80%;
   border: 1px solid gray;
 
+  @media (max-width: 1440px) {
+    width: 100%;
+  }
   @apply rounded-xl;
 }
