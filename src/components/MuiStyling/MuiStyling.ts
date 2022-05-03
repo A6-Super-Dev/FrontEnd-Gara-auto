@@ -1,4 +1,4 @@
-import { TextField, Button, Container, Accordion } from '@mui/material';
+import { TextField, Button, Container, Accordion, Avatar } from '@mui/material';
 import { withStyles, styled } from '@mui/styles';
 
 export enum ColorSchema {

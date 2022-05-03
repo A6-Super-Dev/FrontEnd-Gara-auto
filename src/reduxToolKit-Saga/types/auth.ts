@@ -5,6 +5,55 @@ export interface LoginParams {
   password: string;
 }
 
+export enum UserStatus {
+  INITIAL = 'INITIAL',
+  ACTIVE = 'ACTIVE',
+  ON_HOLD = 'ON-HOLD',
+  SUSPEND = 'SUSPEND',
+  INACTIVE = 'IN-ACTIVE',
+}
+export interface WishList {
+  cars: {
+    name: string;
+    price: string;
+    carAppearance: { imgs: string };
+    brand: { name: string };
+  };
+}
+
+export interface Coupon {
+  id: string;
+  couponId: string;
+  usedAt: string | Date;
+}
+
+export interface ClientInfoAttributes {
+  firstName: string;
+  lastName: string;
+  gender: string;
+  phoneNumber: string;
+  dob: string;
+  addressCountry: string;
+  addressProvince: number;
+  addressDistrict: number;
+  addressWard: number;
+  addressDetail: string;
+  timezone: string;
+  stripeCustomerId: string;
+  avatar: string;
+  coupons: Coupon[];
+  wishlist: WishList[];
+}
+
+export interface User {
+  roles: string;
+  status: UserStatus;
+  email: string;
+  createdAt: string | Date;
+  lastLoginTime: string | Date;
+  info: ClientInfoAttributes;
+}
+
 interface ErrorResponseData {
   code: number;
   data: any;
@@ -36,9 +85,42 @@ export enum AuthenticationStatus {
   Authorized = 'Authorized',
 }
 
+export interface ProvinceAttributes {
+  province_id: string;
+  province_name: string;
+  province_type: string;
+}
+export interface ProvinceList {
+  results: ProvinceAttributes[];
+}
+
+export interface DistrictAttributes {
+  district_id: string;
+  district_name: string;
+  district_type: string;
+  province_id: string;
+}
+export interface DistrictList {
+  results: DistrictAttributes[];
+}
+
+export interface WardAttributes {
+  district_id: string;
+  ward_id: string;
+  ward_name: string;
+  ward_type: string;
+}
+export interface WardList {
+  results: WardAttributes[];
+}
+
 export type LoginErrorResponse = AxiosResponse<ErrorResponseData>;
 export type UserSignUpErrorResponse = AxiosResponse<ErrorResponseData>;
 export type UserPasswordRecoverResponse = AxiosResponse<ErrorResponseData>;
 export type UserNewPasswordResponse = AxiosResponse<ErrorResponseData>;
 export type InterceptorErrorResponse = AxiosResponse<ErrorResponseData>;
 export type ClientRequestAccessToken = AxiosResponse<ClientRequestAccessTokenReturn>;
+export type ClientInfo = AxiosResponse<User>;
+export type ProvinceInfo = AxiosResponse<ProvinceList>;
+export type DistrictInfo = AxiosResponse<DistrictList>;
+export type WardInfo = AxiosResponse<WardList>;
