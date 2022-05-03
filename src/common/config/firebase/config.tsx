@@ -2,13 +2,13 @@ import { initializeApp } from 'firebase/app';
 import { getStorage } from 'firebase/storage';
 
 const firebaseConfig = {
-  apiKey: 'AIzaSyAYELMe6mZGH9XD3Fs8jfUWi1E9IP_ZcIQ',
-  authDomain: 'oto-a6-superdev.firebaseapp.com',
-  projectId: 'oto-a6-superdev',
-  storageBucket: 'oto-a6-superdev.appspot.com',
-  messagingSenderId: '140730947564',
-  appId: '1:140730947564:web:8a940c2dbc0dcae03212c9',
-  measurementId: 'G-KZYE5V6G8E',
+  apiKey: 'AIzaSyA-gPxOZqgsKwFf8Xb1bsbS83q2DvQWYKE',
+  authDomain: 'garage-a6-dev.firebaseapp.com',
+  projectId: 'garage-a6-dev',
+  storageBucket: 'garage-a6-dev.appspot.com',
+  messagingSenderId: '804820270375',
+  appId: '1:804820270375:web:3c39ec96a60c61ecc1bd02',
+  measurementId: 'G-W0NVR0FN4D',
 };
 const firebaseApp = initializeApp(firebaseConfig);
 
