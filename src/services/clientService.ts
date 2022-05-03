@@ -1,8 +1,21 @@
+import axios from 'axios';
+
 import clientAPI from '../common/constants/clientAPI';
+import thirdPartyAPI from '../common/constants/thirdPartyAPI';
 import { ClientLogin, ClientNewPassword, ClientPasswordRecover, ClientSignUp } from '../common/interfaces/Auth';
 import { LoginDataReturn } from '../common/interfaces/Client';
+import {
+  ClientInfo,
+  DistrictAttributes,
+  DistrictInfo,
+  ProvinceAttributes,
+  ProvinceInfo,
+  User,
+  WardAttributes,
+  WardInfo,
+} from '../reduxToolKit-Saga/types/auth';
 
-import { AxiosClient } from './axiosConnection';
+import { AxiosClient, AxiosClientAPI } from './axiosConnection';
 
 class ClientService {
   async login(params: ClientLogin): Promise<LoginDataReturn> {
@@ -48,6 +61,26 @@ class ClientService {
   async getBrand(brand: string) {
     const { data } = await AxiosClient.get(clientAPI.getBrand(brand));
     return data;
+  }
+
+  async getClientData(): Promise<User> {
+    const response: ClientInfo = await AxiosClientAPI.get(clientAPI.getClientData);
+    return response.data;
+  }
+
+  async getListProvince(): Promise<ProvinceAttributes[]> {
+    const response: ProvinceInfo = await axios.get(thirdPartyAPI.getProvince);
+    return response.data.results;
+  }
+
+  async getListDistrict(provinceId: string): Promise<DistrictAttributes[]> {
+    const response: DistrictInfo = await axios.get(thirdPartyAPI.getDistrict(provinceId));
+    return response.data.results;
+  }
+
+  async getListWard(districtId: string): Promise<WardAttributes[]> {
+    const response: WardInfo = await axios.get(thirdPartyAPI.getWard(districtId));
+    return response.data.results;
   }
 }
 
