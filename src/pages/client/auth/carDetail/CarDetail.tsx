@@ -4,6 +4,8 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useParams } from 'react-router-dom';
+import Rating from '@mui/material/Rating';
+import Stack from '@mui/material/Stack';
 
 import './CarDetail.scss';
 import 'swiper/css';
@@ -64,10 +66,10 @@ const CarDetail: React.FC = () => {
   return (
     <Container maxWidth={false}>
       <Box sx={{ marginTop: '154px' }}>
-        <Container maxWidth="lg">
+        <Container maxWidth="lg" className="car-container">
           <Grid
             container
-            sx={{ height: '500px', borderColor: '#C3CAD8', borderWidth: '1px', borderRadius: '5px', padding: '15px' }}
+            sx={{ height: '100%', borderColor: '#C3CAD8', borderWidth: '1px', borderRadius: '5px', padding: '15px' }}
           >
             <Grid item sm={12} md={7}>
               <ImageGallary urls={imgObj.imgs} />
@@ -143,18 +145,19 @@ const CarDetail: React.FC = () => {
                             ) : (
                               <>
                                 {accordionProps[idx].propName === 'introReview' && (
-                                  <div className="introImg-wrapper">
-                                    {imgObj.introImgs?.map((img) => {
+                                  <Grid container spacing={1}>
+                                    {imgObj.introImgs?.map((img, idx) => {
+                                      let gridSize = undefined;
+                                      if (imgObj.introImgs) {
+                                        gridSize = 12 / imgObj?.introImgs?.length;
+                                      }
                                       return (
-                                        <img
-                                          className={`img-${imgObj?.introImgs?.length}`}
-                                          key={img}
-                                          src={img}
-                                          alt=""
-                                        />
+                                        <Grid key={idx} item sm={12} md={gridSize}>
+                                          <img className={`img-intro-item`} key={img} src={img} alt="" />
+                                        </Grid>
                                       );
                                     })}
-                                  </div>
+                                  </Grid>
                                 )}
                               </>
                             )}
@@ -166,14 +169,22 @@ const CarDetail: React.FC = () => {
                 )}
               </div>
             </Grid>
-            <Grid item sm={12} md={4} sx={{ borderColor: '#C3CAD8', borderWidth: '1px', borderRadius: '5px' }}>
-              <div className="car-staring">
-                <div className="starring-text">
-                  <p>Diem danh gia</p>
-                  <p>1 sao</p>
+            <Grid item sm={12} md={4}>
+              <div className="starring-container">
+                <div className="car-staring">
+                  <div className="starring-text">
+                    <p>ĐIỂM ĐÁNH GIÁ</p>
+                    <Rating name="half-rating" value={4.6} precision={0.5} readOnly />
+                  </div>
+                  <div className="starring-number">
+                    <p className="text-lg text-red-500">4.6</p>
+                    <p> / 10</p>
+                  </div>
                 </div>
-                <div className="starring-number">
-                  <p>8.6</p> <p> / 10</p>
+              </div>
+              <div className="related-cars-container">
+                <div className="related-cars-text-wrapper">
+                  <span className="related-cars-text">Xe liên quan</span>
                 </div>
               </div>
             </Grid>

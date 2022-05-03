@@ -16,7 +16,7 @@ import {
   Stack,
   Chip,
 } from '@mui/material';
-import React, { useMemo, useRef } from 'react';
+import React, { useMemo, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
 import './BrandItem.scss';
@@ -90,17 +90,9 @@ export const BrandItem: React.FC = () => {
     });
   }, [brandItemAPI.descriptionImgs]);
 
-  const brandImgUrls = useMemo(() => {
-    return brandItemAPI.descriptionImgs.split(`","`);
-  }, [brandItemAPI.descriptionImgs]);
-
-  React.useEffect(() => {
+  useEffect(() => {
     window.scrollTo(0, 0);
-    const fetchImgs = async () => {
-      await downloadImgsFromFirebase({ brandImgs: brandImgUrls });
-    };
-    fetchImgs();
-  }, [downloadImgsFromFirebase, brandImgUrls]);
+  }, []);
 
   React.useEffect(() => {
     const getBrandApi = async (brand: string) => {
@@ -111,9 +103,19 @@ export const BrandItem: React.FC = () => {
         console.log(error.response);
       }
     };
-
     getBrandApi(brandName as string);
   }, [brandName]);
+
+  const brandImgUrls = useMemo(() => {
+    return brandItemAPI.descriptionImgs.split(`","`);
+  }, [brandItemAPI.descriptionImgs]);
+
+  React.useEffect(() => {
+    const fetchImgs = async () => {
+      await downloadImgsFromFirebase({ brandImgs: brandImgUrls });
+    };
+    fetchImgs();
+  }, [downloadImgsFromFirebase, brandImgUrls]);
 
   const handleBrandName = () => {
     if (brandName === 'bmw') return 'BMW';
@@ -136,16 +138,13 @@ export const BrandItem: React.FC = () => {
     newDes = newDes.split('\\n').map((el: any) => {
       return el;
     });
-    newDes = newDes.filter((el: string) => {
-      return el.length > 10;
-    });
     const temp = newDes.splice(0, newDes.length / 2);
     return [...temp, ...newDes].join();
   };
 
   const modifiedDescription = useMemo(() => {
     let temp = handleBrandDescription(brandItemAPI?.descriptions as string)
-      .replaceAll(',', '')
+      .replaceAll('>,', '>')
       .replaceAll(`\\`, '');
     originalImgs.forEach((originalImg, idx) => {
       if (imgObj?.brandImgs?.length > 0) {
@@ -154,6 +153,10 @@ export const BrandItem: React.FC = () => {
           .replaceAll(originalImg.split('..')[1], imgObj?.brandImgs[idx]);
       }
     });
+    temp = temp.slice(1, -1);
+    if (temp[temp.length - 1] === `"`) {
+      temp = temp.slice(0, -1);
+    }
     return temp;
   }, [brandItemAPI.descriptions, imgObj.brandImgs, originalImgs]);
 

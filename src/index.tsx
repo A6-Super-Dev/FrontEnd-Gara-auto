@@ -24,13 +24,13 @@ function Application() {
       tracesSampleRate: 1.0,
       normalizeDepth: 10,
       environment: env.environment,
-      beforeSend(event) {
-        if (event.exception) {
-          Sentry.showReportDialog({ eventId: event.event_id });
-        }
+      // beforeSend(event) {
+      //   if (event.exception) {
+      //     Sentry.showReportDialog({ eventId: event.event_id });
+      //   }
 
-        return event;
-      },
+      //   return event;
+      // },
     });
   }, [routingInstrumentation]);
 
