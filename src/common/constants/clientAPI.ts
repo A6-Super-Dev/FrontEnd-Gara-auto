@@ -1,6 +1,7 @@
 class ClientAPI {
   private auth = '/auth';
   private user = '/user';
+  private client = 'client';
   login = `${this.auth}/log-in`;
   signUp = `${this.auth}${this.user}/sign-up`;
   signUpSuccess = (token: string) => `${this.auth}${this.user}/sign-up/${token}`;
@@ -9,8 +10,10 @@ class ClientAPI {
   genNewToken = `${this.auth}/gen-new-token`;
   apiCheck = `${this.auth}/api-check`;
   checkValid = `${this.auth}/check-valid`;
-  getCar = (name: string) => `client/car/get-one/${name}`;
-  getBrand = (brand: string) => `client/brand/${brand}`;
+  getAllBrand = `${this.client}/brand/get-all`;
+  getCar = (name: string) => `${this.client}/car/get-one/${name}`;
+  getCarByBrandName = (brand: string) => `${this.client}/car/brand/${brand}`;
+  getBrand = (brand: string) => `${this.client}/brand/${brand}`;
 }
 
 export default new ClientAPI();

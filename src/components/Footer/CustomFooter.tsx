@@ -15,6 +15,7 @@ const CustomFooter: React.FC<CustomFooterProps> = ({ windowWidth }) => {
       <Container sx={{ backgroundColor: '#2b2f31', paddingBlock: '3rem' }} maxWidth={false}>
         <Grid container>
           <Grid
+            item
             sm={3}
             xs={12}
             display={'flex'}
@@ -54,6 +55,7 @@ const CustomFooter: React.FC<CustomFooterProps> = ({ windowWidth }) => {
             </Box>
           </Grid>
           <Grid
+            item
             sm={3}
             display={'flex'}
             flexDirection="column"
@@ -93,6 +95,7 @@ const CustomFooter: React.FC<CustomFooterProps> = ({ windowWidth }) => {
             </Box>
           </Grid>
           <Grid
+            item
             sm={3}
             display={'flex'}
             flexDirection="column"
@@ -132,6 +135,7 @@ const CustomFooter: React.FC<CustomFooterProps> = ({ windowWidth }) => {
             </Box>
           </Grid>
           <Grid
+            item
             sm={3}
             display={'flex'}
             flexDirection="column"

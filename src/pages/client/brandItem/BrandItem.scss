@@ -3,6 +3,11 @@
     padding: 0 !important;
   }
 
+  &-background {
+    background-image: url('https://www.mercedes-benz.com.vn/content/vietnam/en/passengercars/_jcr_content/root/responsivegrid/simple_stage_1564354.component.damq6.3302624503610.png/c-class-w206-simple-teaser.png');
+    background-size: cover;
+  }
+
   &-introduction {
     border: 1px solid gray;
     @apply rounded-xl;
@@ -48,20 +53,14 @@
         text-align: inherit;
       }
       figure {
-        max-width: 100%;
+        width: 100%;
       }
       img {
-        max-width: 100%;
+        width: 100%;
       }
       p {
-        max-width: 100%;
+        text-align: justify !important;
       }
-
-      // strong em {
-      //   @apply leading-10;
-      // }
     }
   }
-}
-.brand-detail-description {
 }
