@@ -9,7 +9,8 @@ class ClientAPI {
   genNewToken = `${this.auth}/gen-new-token`;
   apiCheck = `${this.auth}/api-check`;
   checkValid = `${this.auth}/check-valid`;
-  getCar = (id: string) => `client/car/get-one/${id}`;
+  getCar = (name: string) => `client/car/get-one/${name}`;
+  getBrand = (brand: string) => `client/brand/${brand}`;
 }
 
 export default new ClientAPI();
