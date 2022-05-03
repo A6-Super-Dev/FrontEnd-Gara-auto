@@ -18,7 +18,7 @@ import {
   Box,
   CardActions,
 } from '@mui/material';
-import React, { useMemo } from 'react';
+import React, { useMemo, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
 import './BrandItem.scss';
@@ -101,6 +101,7 @@ export const BrandItem: React.FC = () => {
     descriptionImgs: '',
   });
   const [carInfoAPI, setCarInfoAPI] = React.useState<Array<CarAttributes>>([]);
+  console.log('carInfoAPI', carInfoAPI);
 
   const { imgObj, downloadImgsFromFirebase } = useFetchImgs();
   const originalImgs = useMemo(() => {
@@ -114,12 +115,15 @@ export const BrandItem: React.FC = () => {
   }, [brandItemAPI.descriptionImgs]);
 
   React.useEffect(() => {
-    window.scrollTo(0, 0); //scroll to top when convert form brand page to brand item page
     const fetchImgs = async () => {
       await downloadImgsFromFirebase({ brandImgs: brandImgUrls });
     };
     fetchImgs();
   }, [downloadImgsFromFirebase, brandImgUrls]);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   React.useEffect(() => {
     const getBrandApi = async (brand: string) => {
@@ -143,6 +147,13 @@ export const BrandItem: React.FC = () => {
     getBrandApi(brandName as string);
     getCarByBrandNameApi(brandName as string);
   }, [brandName]);
+
+  React.useEffect(() => {
+    const fetchImgs = async () => {
+      await downloadImgsFromFirebase({ brandImgs: brandImgUrls });
+    };
+    fetchImgs();
+  }, [downloadImgsFromFirebase, brandImgUrls]);
 
   const handleBrandName = () => {
     if (brandName === 'bmw') return 'BMW';
@@ -170,7 +181,7 @@ export const BrandItem: React.FC = () => {
 
   const modifiedDescription = useMemo(() => {
     let temp = handleBrandDescription(brandItemAPI?.descriptions as string)
-      .replaceAll(',', '')
+      .replaceAll('>,', '>')
       .replaceAll(`\\`, '');
     originalImgs.forEach((originalImg, idx) => {
       if (imgObj?.brandImgs?.length > 0) {
@@ -179,6 +190,10 @@ export const BrandItem: React.FC = () => {
           .replaceAll(originalImg.split('..')[1], imgObj?.brandImgs[idx]);
       }
     });
+    temp = temp.slice(1, -1);
+    if (temp[temp.length - 1] === `"`) {
+      temp = temp.slice(0, -1);
+    }
     return temp;
   }, [brandItemAPI.descriptions, imgObj.brandImgs, originalImgs]);
 
@@ -288,7 +303,8 @@ export const BrandItem: React.FC = () => {
 
           <Grid container>
             {carInfoAPI.map((item, index) => {
-              console.log(item.name.toLocaleLowerCase());
+              const cutBrandName = item.name.split(' ')[0].toLowerCase();
+              console.log('cutBrandName', cutBrandName);
 
               return (
                 <Grid item xs={12} sm={6} md={4} lg={3} xl={12 / 5} sx={{ padding: '0.5rem' }} key={index}>
@@ -315,7 +331,7 @@ export const BrandItem: React.FC = () => {
                     </CardActionArea>
                     <CardActions>
                       <MuiBrandButton variant="contained" type="button" style={SubmitButtonStyle}>
-                        <Link to={`/car-detail/${item.name.toLocaleLowerCase()}`} className="text-center">
+                        <Link to={`/brand/${cutBrandName}/${item.name.toLocaleLowerCase()}`} className="text-center">
                           Discover more
                         </Link>
                       </MuiBrandButton>

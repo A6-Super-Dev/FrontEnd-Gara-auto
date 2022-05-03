@@ -1,3 +1,9 @@
+.car-container {
+  height: 500px;
+  @media (max-width: 900px) {
+    height: auto;
+  }
+}
 .car-main-params-wrapper {
   height: 100%;
   width: 100%;
@@ -51,7 +57,6 @@
   &-descriptions {
     min-height: 100px;
   }
- 
 }
 .img-gallary {
   height: 100%;
@@ -75,25 +80,51 @@
   display: flex;
   justify-content: space-between;
 }
-.img-1{
+
+.img-intro-item {
   width: 100%;
+  height: 100%;
 }
-.img-2{
-  width: 49.5%;
-}
-.img-3{
-  width: 33%;
+.starring-container {
+  max-width: 100%;
+  height: auto;
 }
 .car-staring {
-  background-color: green;
   height: 72px;
+  width: 95%;
   display: flex;
+  margin: auto;
+  border-color: #dee2e6;
+  @apply px-2 py-2 border-2 rounded-xl;
 }
 .starring-text {
   width: 50%;
   height: 100%;
-  display: flex;
-  background-color: red;
-  flex-direction: column;
-  justify-content: space-between;
+  @apply flex  flex-col justify-evenly;
+}
+.starring-number {
+  width: 50%;
+  height: 100%;
+  @apply flex flex-row justify-center align-middle items-center;
+}
+
+.related-cars-container {
+  width: 100%;
+  height: 500px;
+}
+.related-cars-text-wrapper {
+  height: 30px;
+  width: 100%;
+  border-color: black;
+  text-align: center;
+  @apply border-t-2 mt-10;
+}
+.related-cars-text {
+  position: relative;
+  background-color: white;
+  padding: 15px;
+  bottom: 50%;
+  line-height: 30px;
+  font-size: 30px;
+  color: red;
 }
