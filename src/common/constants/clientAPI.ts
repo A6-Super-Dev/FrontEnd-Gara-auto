@@ -14,6 +14,8 @@ class ClientAPI {
   getCar = (name: string) => `${this.client}/car/get-one/${name}`;
   getCarByBrandName = (brand: string) => `${this.client}/car/brand/${brand}`;
   getBrand = (brand: string) => `${this.client}/brand/${brand}`;
+  getClientData = `/client/client-data`;
+  updateProfile = `/client/update-client-info`;
 }
 
 export default new ClientAPI();
