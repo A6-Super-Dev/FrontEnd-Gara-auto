@@ -1,4 +1,4 @@
-import { TextField, Button, Container, Accordion } from '@mui/material';
+import { TextField, Button, Container, Accordion, Step } from '@mui/material';
 import { withStyles, styled } from '@mui/styles';
 
 export enum ColorSchema {
@@ -119,3 +119,11 @@ export const DarkAccordion = styled(Accordion)({
   backgroundColor: ColorSchema.LightBlack,
   color: 'white',
 });
+
+export const CustomStep = withStyles({
+  root: {
+    '&-MuiStepIcon-root .Mui-active': {
+      color: '#008c7a !important',
+    },
+  },
+})(Step);

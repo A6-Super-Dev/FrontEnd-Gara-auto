@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { Account } from '../../../pages/client/Account/Account';
 import CarDetail from '../../../pages/client/auth/carDetail/CarDetail';
 import { LogIn } from '../../../pages/client/auth/logIn/LogIn';
 import { NewPassword } from '../../../pages/client/auth/newPassword/NewPassword';
@@ -43,6 +44,12 @@ const staticRoute: RouteAttributes[] = [
     authorized: false,
     element: <BrandItem />,
     path: routerPath.common.BRAND_ITEM,
+    needNavigator: true,
+  },
+  {
+    authorized: true,
+    element: <Account />,
+    path: routerPath.auth.MY_ACCOUNT,
     needNavigator: true,
   },
 ];

@@ -52,7 +52,7 @@ function* logoutSaga() {
     destroyLocalStorageItem('token');
     yield put(logOut());
     setTimeout(() => {
-      window.location.reload();
+      window.location.pathname = routerPath.common.HOME;
     }, 400);
   } catch (error) {
     yield put(

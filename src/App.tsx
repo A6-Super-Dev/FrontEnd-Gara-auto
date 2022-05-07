@@ -15,7 +15,6 @@ function App() {
       return (
         <Channel path={path} key={index} element={<Navbar />}>
           <Channel key={index} path={path} element={element} />
-          <Channel path="*" element={<Navigate to={routerPath.common.HOME} />} />
         </Channel>
       );
     }
@@ -23,7 +22,6 @@ function App() {
     return (
       <>
         <Channel path={path} element={element} key={index} />;
-        <Channel path="*" element={<Navigate to={routerPath.common.HOME} />} />
       </>
     );
   };
@@ -40,6 +38,7 @@ function App() {
         }
         return <>{renderWithNav(route.needNavigator, route.path, route.element, index)}</>;
       })}
+      <Channel path="*" element={<Navigate to={routerPath.common.HOME} />} />
     </Switch>
   );
 }
