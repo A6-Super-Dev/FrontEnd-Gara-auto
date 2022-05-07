@@ -47,7 +47,7 @@ const staticRoute: RouteAttributes[] = [
     needNavigator: true,
   },
   {
-    authorized: false,
+    authorized: true,
     element: <Account />,
     path: routerPath.auth.MY_ACCOUNT,
     needNavigator: true,
