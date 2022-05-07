@@ -25,6 +25,7 @@ export const Account = () => {
   const [client, setClient] = React.useState<User | null>(null);
   const [loading, setLoading] = React.useState<boolean>(false);
   const [tab, setTab] = React.useState<Tab>(Tab.PROFILE);
+  const smoothScrollDiv = React.useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
     async function fetchClient() {
@@ -43,13 +44,22 @@ export const Account = () => {
   }, []);
 
   const renderTab = () =>
-    tabExist.map((each) => {
+    tabExist.map((each, key) => {
       return (
         <>
           {each === tab ? (
-            <div className="account-tab account-tab-active">{each}</div>
+            <div className="account-tab account-tab-active" key={key}>
+              {each}
+            </div>
           ) : (
-            <div className="account-tab" onClick={() => setTab(each)}>
+            <div
+              className="account-tab"
+              key={key}
+              onClick={() => {
+                setTab(each);
+                smoothScrollDiv.current?.scrollIntoView({ behavior: 'smooth' });
+              }}
+            >
               {each}
             </div>
           )}
@@ -59,7 +69,7 @@ export const Account = () => {
 
   const renderView = () => {
     if (tab === Tab.PROFILE) {
-      return <Profile info={client?.info} />;
+      return <Profile info={client?.info} loadingState={loading} setLoadingState={setLoading} />;
     }
     if (tab === Tab.COUPON) {
       return <Coupon />;
@@ -72,8 +82,15 @@ export const Account = () => {
     }
   };
 
+  const renderLoginTime = () => {
+    if (client?.lastLoginTime === null) {
+      return TimeHelper.formatDate(new Date());
+    }
+    return TimeHelper.formatDate(String(client?.lastLoginTime));
+  };
+
   return (
-    <ContainerGrey>
+    <ContainerGrey ref={smoothScrollDiv}>
       <Grid container className="pt-20">
         <Grid item sm={12} md={4}>
           <div className="flex px-6 pt-2 flex-col items-center">
@@ -104,9 +121,7 @@ export const Account = () => {
                           <span className="font-poppin font-semibold">Last Seen:</span>
                         </TableCell>
                         <TableCell component="th" scope="row">
-                          {client?.lastLoginTime === null
-                            ? TimeHelper.formatDate(new Date())
-                            : TimeHelper.formatDate(String(client?.lastLoginTime))}
+                          {renderLoginTime()}
                         </TableCell>
                       </TableRow>
                       <TableRow>
@@ -145,7 +160,7 @@ export const Account = () => {
           {renderTab()}
         </Grid>
         <Grid item sm={12} md={8}>
-          <div className="px-16 ">{renderView()}</div>
+          <div className="px-16 scroll-smooth">{renderView()}</div>
         </Grid>
       </Grid>
     </ContainerGrey>

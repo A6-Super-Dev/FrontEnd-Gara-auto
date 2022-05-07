@@ -10,6 +10,7 @@ import {
   DistrictInfo,
   ProvinceAttributes,
   ProvinceInfo,
+  UpdateClientInfoAttributes,
   User,
   WardAttributes,
   WardInfo,
@@ -81,6 +82,10 @@ class ClientService {
   async getListWard(districtId: string): Promise<WardAttributes[]> {
     const response: WardInfo = await axios.get(thirdPartyAPI.getWard(districtId));
     return response.data.results;
+  }
+
+  async updateCLientInfo(data: UpdateClientInfoAttributes): Promise<void> {
+    await AxiosClient.patch(clientAPI.updateProfile, data);
   }
 }
 
