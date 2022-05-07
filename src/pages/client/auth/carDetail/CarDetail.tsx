@@ -5,7 +5,6 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useParams } from 'react-router-dom';
 import Rating from '@mui/material/Rating';
-import Stack from '@mui/material/Stack';
 
 import './CarDetail.scss';
 import 'swiper/css';
