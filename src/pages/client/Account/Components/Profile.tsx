@@ -1,14 +1,16 @@
 import React from 'react';
 import moment from 'moment';
-import { Stepper, Step, StepLabel, StepContent, TextField } from '@mui/material';
+import { Stepper, StepLabel, StepContent, TextField, AlertColor, CircularProgress } from '@mui/material';
 import Select, { SingleValue } from 'react-select';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 import clientService from '../../../../services/clientService';
-import { ColorSchema, MuiButton } from '../../../../components/MuiStyling/MuiStyling';
+import { ColorSchema, CustomStep, MuiButton } from '../../../../components/MuiStyling/MuiStyling';
 import { ClientInfoAttributes } from '../../../../reduxToolKit-Saga/types/auth';
+import { CustomSnackbar } from '../../../../components/Snackbar/CustomSnackbar';
+import { Refresher } from '../Account';
 
 interface ProvinceDisplay {
   value: string;
@@ -20,13 +22,18 @@ type GenderDisplay = ProvinceDisplay;
 
 interface ProfileProps {
   info: ClientInfoAttributes | undefined;
+  loadingState: boolean;
+  setLoadingState: React.Dispatch<React.SetStateAction<boolean>>;
+  setRefresh: React.Dispatch<React.SetStateAction<Refresher>>;
 }
 
 interface AdditionalInfo {
-  firstName: string | null;
-  lastName: string | null;
-  gender: string | null;
+  firstName: string;
+  lastName: string;
+  gender: string;
   dateOfBirth: Date | null;
+  addressDetail: string;
+  phoneNumber: string;
 }
 
 const genderOption: GenderDisplay[] = [
@@ -35,103 +42,159 @@ const genderOption: GenderDisplay[] = [
   { value: 'Other', label: 'Other' },
 ];
 
-const Profile: React.FC<ProfileProps> = ({ info }) => {
-  console.log('info: ', info);
+const Profile: React.FC<ProfileProps> = ({ info, loadingState, setLoadingState, setRefresh }) => {
   const [province, setProvince] = React.useState<ProvinceDisplay[]>([]);
   const [district, setDistrict] = React.useState<DistrictDisplay[]>([]);
   const [ward, setWard] = React.useState<WardDisplay[]>([]);
+  const [message, setMessage] = React.useState<string>('');
+  const [snackBarState, setSnackBarState] = React.useState<boolean>(false);
   const [provinceSelect, setProvinceSelect] = React.useState<SingleValue<ProvinceDisplay>>();
+  const [snackbarType, setSnackbarType] = React.useState<AlertColor>();
   const [districtSelect, setDistrictSelect] = React.useState<SingleValue<DistrictDisplay>>();
   const [wardSelect, setWardSelect] = React.useState<SingleValue<WardDisplay>>();
   const [finalInfo, setFinalInfo] = React.useState<AdditionalInfo>({
-    firstName: info !== undefined && info.firstName ? info.firstName : '',
-    lastName: info !== undefined && info.lastName ? info.lastName : '',
-    gender: info !== undefined && info.gender ? info.gender : '',
-    dateOfBirth: info !== undefined && info.dob !== null ? moment(info?.dob).toDate() : null,
+    firstName: '',
+    lastName: '',
+    gender: '',
+    dateOfBirth: null,
+    addressDetail: '',
+    phoneNumber: '',
   });
-  console.log('finalInfo: ', finalInfo);
+
+  const fetchProvince = async () => {
+    try {
+      const result = await clientService.getListProvince();
+      const converter: ProvinceDisplay[] = result.map((each) => ({
+        value: each.province_id,
+        label: each.province_name,
+      }));
+      setProvince(converter);
+    } catch (error) {
+      console.log('error');
+    }
+  };
+
+  const fetchDistrict = async (id: string) => {
+    try {
+      const result = await clientService.getListDistrict(id);
+      const converter: ProvinceDisplay[] = result.map((each) => ({
+        value: each.district_id,
+        label: each.district_name,
+      }));
+      setDistrict(converter);
+    } catch (error) {
+      console.log('error');
+    }
+  };
+
+  const fetchWard = async (id: string) => {
+    try {
+      const result = await clientService.getListWard(id);
+      const converter: WardDisplay[] = result.map((each) => ({
+        value: each.ward_id,
+        label: each.ward_name,
+      }));
+      setWard(converter);
+    } catch (error) {
+      console.log('error');
+    } finally {
+      console.log('done');
+    }
+  };
 
   React.useEffect(() => {
-    const fetchProvince = async () => {
-      try {
-        const result = await clientService.getListProvince();
-        const converter: ProvinceDisplay[] = result.map((each) => ({
-          value: each.province_id,
-          label: each.province_name,
-        }));
-        setProvince(converter);
-      } catch (error) {
-        console.log('error');
-      }
-    };
     fetchProvince();
   }, []);
 
+  const dbProvince = React.useCallback(() => {
+    if (info !== undefined && info.addressProvince) {
+      fetchProvince();
+      if (province !== undefined) {
+        const existedProvince = province.find((each) => each.value === info.addressProvince);
+        setProvinceSelect(existedProvince);
+      }
+    }
+  }, [province, info]);
+
+  const dbDistrict = React.useCallback(() => {
+    if (info !== undefined && info.addressProvince && info.addressDistrict) {
+      fetchDistrict(info.addressProvince);
+      if (district !== undefined) {
+        const existedDistrict = district.find((each) => each.value === info.addressDistrict);
+        setDistrictSelect(existedDistrict);
+      }
+    }
+  }, [district, info]);
+
+  const dbWard = React.useCallback(() => {
+    if (info !== undefined && info.addressProvince && info.addressDistrict && info.addressWard) {
+      fetchWard(info.addressDistrict);
+      if (ward !== undefined) {
+        const existedWard = ward.find((each) => each.value === info.addressWard);
+        setWardSelect(existedWard);
+      }
+    }
+  }, [ward, info]);
+
   React.useEffect(() => {
+    if (!districtSelect) {
+      dbDistrict();
+    }
+    if (!wardSelect) {
+      dbWard();
+    }
+    if (!provinceSelect) {
+      dbProvince();
+    }
     setFinalInfo({
       firstName: info !== undefined && info.firstName ? info.firstName : '',
       lastName: info !== undefined && info.lastName ? info.lastName : '',
       gender: info !== undefined && info.gender ? info.gender : '',
       dateOfBirth: info !== undefined && info.dob !== null ? moment(info?.dob).toDate() : null,
+      addressDetail: info !== undefined && info.addressDetail !== null ? info.addressDetail : '',
+      phoneNumber: info !== undefined && info.phoneNumber ? info.phoneNumber : '',
     });
-  }, [info]);
+  }, [info, dbWard, dbDistrict, dbProvince, wardSelect, districtSelect, provinceSelect]);
 
   React.useEffect(() => {
-    const fetchDistrict = async (id: string) => {
-      try {
-        const result = await clientService.getListDistrict(id);
-        const converter: ProvinceDisplay[] = result.map((each) => ({
-          value: each.district_id,
-          label: each.district_name,
-        }));
-        setDistrict(converter);
-      } catch (error) {
-        console.log('error');
-      }
-    };
     if (provinceSelect) {
       fetchDistrict(provinceSelect.value);
     }
   }, [provinceSelect]);
 
   React.useEffect(() => {
-    const fetchDistrict = async (id: string) => {
-      try {
-        const result = await clientService.getListDistrict(id);
-        const converter: DistrictDisplay[] = result.map((each) => ({
-          value: each.district_id,
-          label: each.district_name,
-        }));
-        setDistrict(converter);
-      } catch (error) {
-        console.log('error');
-      }
-    };
-    if (provinceSelect) {
-      fetchDistrict(provinceSelect.value);
-    }
-  }, [provinceSelect]);
-
-  React.useEffect(() => {
-    const fetchWard = async (id: string) => {
-      try {
-        const result = await clientService.getListWard(id);
-        const converter: WardDisplay[] = result.map((each) => ({
-          value: each.ward_id,
-          label: each.ward_name,
-        }));
-        setWard(converter);
-      } catch (error) {
-        console.log('error');
-      } finally {
-        console.log('done');
-      }
-    };
-
     if (districtSelect) {
       fetchWard(districtSelect.value);
     }
   }, [districtSelect]);
+
+  const submitChangeInfo = async () => {
+    try {
+      setLoadingState(true);
+      await clientService.updateCLientInfo({
+        firstName: finalInfo.firstName,
+        lastName: finalInfo.lastName,
+        country: 'Viet Nam',
+        detail: finalInfo.addressDetail,
+        district: districtSelect ? districtSelect.value : '',
+        dob: finalInfo.dateOfBirth !== null ? moment(finalInfo.dateOfBirth).format('M/D/YYYY') : '',
+        gender: finalInfo.gender ? finalInfo.gender : '',
+        phoneNumber: finalInfo.phoneNumber,
+        province: provinceSelect ? provinceSelect.value : '',
+        ward: wardSelect ? wardSelect.value : '',
+        timezone: 'Asia/Saigon',
+      });
+      setMessage('Update client information successfully');
+      setSnackbarType('success');
+      setRefresh(Refresher.START);
+    } catch (error) {
+      setSnackbarType('error');
+      setMessage('Something went wrong please retype all field');
+    } finally {
+      setSnackBarState(true);
+      setLoadingState(false);
+    }
+  };
 
   return (
     <>
@@ -139,59 +202,63 @@ const Profile: React.FC<ProfileProps> = ({ info }) => {
       <div>
         <p className="text-support">Address</p>
         <Stepper orientation="vertical">
-          <Step active={true}>
+          <CustomStep active={true}>
             <StepLabel color={ColorSchema.LightGreen}>
               <p className="font-semibold">Select your Province</p>
             </StepLabel>
             <StepContent>
               <Select
-                defaultValue={provinceSelect}
                 onChange={(newValue: SingleValue<ProvinceDisplay>) => setProvinceSelect(newValue)}
                 options={province}
-                placeholder="Province"
+                value={provinceSelect}
               />
             </StepContent>
-          </Step>
-          <Step active={provinceSelect ? true : false}>
+          </CustomStep>
+          <CustomStep active={provinceSelect ? true : false}>
             <StepLabel>
               <p className="font-semibold">Select your District</p>
             </StepLabel>
             <StepContent>
               <Select
-                defaultValue={districtSelect}
+                value={districtSelect}
                 onChange={(newValue: SingleValue<DistrictDisplay>) => setDistrictSelect(newValue)}
                 options={district}
                 placeholder="District"
               />
             </StepContent>
-          </Step>
-          <Step active={districtSelect ? true : false}>
+          </CustomStep>
+          <CustomStep active={districtSelect ? true : false}>
             <StepLabel>
               <p className="font-semibold">Select your Ward</p>
             </StepLabel>
             <StepContent>
               <Select
-                defaultValue={wardSelect}
+                value={wardSelect}
                 onChange={(newValue: SingleValue<WardDisplay>) => setWardSelect(newValue)}
                 options={ward}
                 placeholder="Ward"
               />
             </StepContent>
-          </Step>
-          <Step active={wardSelect ? true : false}>
+          </CustomStep>
+          <CustomStep active={wardSelect ? true : false}>
             <StepLabel>
               <p className="font-semibold">Input your detail address</p>
             </StepLabel>
             <StepContent>
-              <TextField fullWidth sx={{ backgroundColor: '#ffffff' }} />
+              <TextField
+                fullWidth
+                sx={{ backgroundColor: '#ffffff' }}
+                value={finalInfo?.addressDetail}
+                onChange={(e) => setFinalInfo({ ...finalInfo, addressDetail: e.target.value })}
+              />
             </StepContent>
-          </Step>
+          </CustomStep>
         </Stepper>
       </div>
       <div className="mt-8">
         <p className="text-support">Info</p>
         <Stepper orientation="vertical">
-          <Step active={true}>
+          <CustomStep active={true}>
             <StepLabel color={ColorSchema.LightGreen}>
               <p className="font-semibold">Enter your first name</p>
             </StepLabel>
@@ -203,8 +270,8 @@ const Profile: React.FC<ProfileProps> = ({ info }) => {
                 onChange={(e) => setFinalInfo({ ...finalInfo, firstName: e.target.value })}
               />
             </StepContent>
-          </Step>
-          <Step active={true}>
+          </CustomStep>
+          <CustomStep active={true}>
             <StepLabel color={ColorSchema.LightGreen}>
               <p className="font-semibold">Enter your last name</p>
             </StepLabel>
@@ -216,28 +283,23 @@ const Profile: React.FC<ProfileProps> = ({ info }) => {
                 onChange={(e) => setFinalInfo({ ...finalInfo, lastName: e.target.value })}
               />
             </StepContent>
-          </Step>
-          <Step active={true}>
+          </CustomStep>
+          <CustomStep active={true}>
             <StepLabel color={ColorSchema.LightGreen}>
-              <p className="font-semibold">What is your gender</p>
+              <p className="font-semibold">Enter your phone number</p>
             </StepLabel>
             <StepContent>
-              <Select
-                defaultValue={
-                  {
-                    value: finalInfo.gender,
-                    label: finalInfo.gender,
-                  } as SingleValue<GenderDisplay>
-                }
-                onChange={(newValue: SingleValue<GenderDisplay>) =>
-                  setFinalInfo({ ...finalInfo, gender: newValue?.value as string })
-                }
-                options={genderOption}
-                placeholder="Gender"
+              <TextField
+                fullWidth
+                sx={{ backgroundColor: '#ffffff' }}
+                value={finalInfo?.phoneNumber}
+                placeholder="9 to 12 digit"
+                onChange={(e) => setFinalInfo({ ...finalInfo, phoneNumber: e.target.value })}
               />
             </StepContent>
-          </Step>
-          <Step active={true}>
+          </CustomStep>
+
+          <CustomStep active={true}>
             <StepLabel color={ColorSchema.LightGreen}>
               <p className="font-semibold">Select your birthday</p>
             </StepLabel>
@@ -252,11 +314,35 @@ const Profile: React.FC<ProfileProps> = ({ info }) => {
                 />
               </LocalizationProvider>
             </StepContent>
-          </Step>
+          </CustomStep>
+          <CustomStep active={true}>
+            <StepLabel color={ColorSchema.LightGreen}>
+              <p className="font-semibold">What is your gender</p>
+            </StepLabel>
+            <StepContent>
+              <Select
+                value={
+                  {
+                    value: finalInfo.gender,
+                    label: finalInfo.gender,
+                  } as SingleValue<GenderDisplay>
+                }
+                onChange={(newValue: SingleValue<GenderDisplay>) =>
+                  setFinalInfo({ ...finalInfo, gender: newValue?.value as string })
+                }
+                options={genderOption}
+                placeholder="Gender"
+              />
+            </StepContent>
+          </CustomStep>
         </Stepper>
       </div>
 
-      <MuiButton sx={{ width: '100%', marginTop: '3rem' }}>Submit</MuiButton>
+      <MuiButton sx={{ width: '100%', marginTop: '3rem' }} onClick={submitChangeInfo}>
+        {loadingState === true ? <CircularProgress sx={{ color: '#fff', padding: '6px' }} /> : 'Submit'}
+      </MuiButton>
+
+      <CustomSnackbar snackbarColor={snackbarType} res={message} open={snackBarState} setOpen={setSnackBarState} />
     </>
   );
 };

@@ -34,9 +34,9 @@ export interface ClientInfoAttributes {
   phoneNumber: string;
   dob: string;
   addressCountry: string;
-  addressProvince: number;
-  addressDistrict: number;
-  addressWard: number;
+  addressProvince: string;
+  addressDistrict: string;
+  addressWard: string;
   addressDetail: string;
   timezone: string;
   stripeCustomerId: string;
@@ -112,6 +112,20 @@ export interface WardAttributes {
 }
 export interface WardList {
   results: WardAttributes[];
+}
+
+export interface UpdateClientInfoAttributes {
+  firstName: string;
+  lastName: string;
+  gender: string;
+  phoneNumber: string;
+  dob: string;
+  country: string;
+  province: string;
+  district: string;
+  ward: string;
+  detail: string;
+  timezone: string;
 }
 
 export type LoginErrorResponse = AxiosResponse<ErrorResponseData>;
