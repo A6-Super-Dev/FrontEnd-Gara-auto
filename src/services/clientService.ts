@@ -88,7 +88,7 @@ class ClientService {
     await AxiosClientAPI.patch(clientAPI.updateProfile, data);
   }
   async getBlogs(page: number, limit = 10) {
-    await AxiosClient.get(clientAPI.getBlogs(page, limit));
+    return await AxiosClient.get(clientAPI.getBlogs(page, limit));
   }
 }
 
