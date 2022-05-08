@@ -87,6 +87,9 @@ class ClientService {
   async updateCLientInfo(data: UpdateClientInfoAttributes): Promise<void> {
     await AxiosClient.patch(clientAPI.updateProfile, data);
   }
+  async getBlogs(page: number, limit = 10) {
+    await AxiosClient.get(clientAPI.getBlogs(page, limit));
+  }
 }
 
 export default new ClientService();

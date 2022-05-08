@@ -1,14 +1,15 @@
 import React from 'react';
 
 import { Account } from '../../../pages/client/Account/Account';
-import CarDetail from '../../../pages/client/auth/carDetail/CarDetail';
 import { LogIn } from '../../../pages/client/auth/logIn/LogIn';
 import { NewPassword } from '../../../pages/client/auth/newPassword/NewPassword';
 import { PasswordRecover } from '../../../pages/client/auth/passwordRecover/PasswordRecover';
 import { SignUp } from '../../../pages/client/auth/signUp/SignUp';
 import { SignUpSuccess } from '../../../pages/client/auth/signUpSuccess/SignUpSuccess';
+import { Blogs } from '../../../pages/client/blog/Blogs';
 import { Brand } from '../../../pages/client/brand/Brand';
 import { BrandItem } from '../../../pages/client/brandItem/BrandItem';
+import CarDetail from '../../../pages/client/carDetail/CarDetail';
 import { Home } from '../../../pages/client/common/Home';
 import ErrorPages from '../../../pages/Error/ErrorPages';
 import { routerPath } from '../../constants/routerPath';
@@ -44,6 +45,12 @@ const staticRoute: RouteAttributes[] = [
     authorized: false,
     element: <BrandItem />,
     path: routerPath.common.BRAND_ITEM,
+    needNavigator: true,
+  },
+  {
+    authorized: false,
+    element: <Blogs />,
+    path: routerPath.common.BLOGS,
     needNavigator: true,
   },
   {

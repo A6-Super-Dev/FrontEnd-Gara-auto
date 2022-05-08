@@ -16,6 +16,7 @@ class ClientAPI {
   getBrand = (brand: string) => `${this.client}/brand/${brand}`;
   getClientData = `/client/client-data`;
   updateProfile = `/client/update-client-info`;
+  getBlogs = (page: number, limit: number) => `${this.client}/blog?page=${page}&limit=${limit}`;
 }
 
 export default new ClientAPI();

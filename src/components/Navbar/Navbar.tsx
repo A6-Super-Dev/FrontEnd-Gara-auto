@@ -54,7 +54,7 @@ const Navbar = () => {
               <Link to={routerPath.common.BRAND}>Brand</Link>
             </MenuItem>
             <MenuItem>
-              <Link to={routerPath.common.BLOG}>Blog</Link>
+              <Link to={routerPath.common.BLOGS}>Blog</Link>
             </MenuItem>
             <MenuItem>
               <Link to={routerPath.auth.LOG_IN}>Sign In</Link>
@@ -82,7 +82,7 @@ const Navbar = () => {
           <Link to={routerPath.common.BRAND}>Brand</Link>
         </MenuItem>
         <MenuItem>
-          <Link to={routerPath.common.BLOG}>Blog</Link>
+          <Link to={routerPath.common.BLOGS}>Blog</Link>
         </MenuItem>
         <MenuItem onClick={handleLogout}>Log out</MenuItem>
         <MenuItem>
@@ -109,7 +109,7 @@ const Navbar = () => {
                   <Link to={routerPath.common.BRAND}>Brand</Link>
                 </MuiNavBarButton>
                 <MuiNavBarButton sx={{ color: `${pathname.includes('blog') ? 'black' : '#C4C4C4'}` }}>
-                  <Link to={routerPath.common.BLOG}>Blog</Link>
+                  <Link to={routerPath.common.BLOGS}>Blog</Link>
                 </MuiNavBarButton>
                 <IconButton sx={{ color: 'black' }} onClick={handleClick}>
                   <AccountCircle fontSize="large" />
