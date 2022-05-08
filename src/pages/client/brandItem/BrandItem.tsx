@@ -35,6 +35,19 @@ import clientService from '../../../services/clientService';
 import { useFetchImgs } from '../../../common/hooks/useFetchImgs';
 import { replaceDirtyImgUrls } from '../../../common/helper/image';
 
+const brandWallpapers = {
+  bentley: 'https://wallpaperaccess.com/full/4099993.jpg',
+  bmw: 'https://wallpaperaccess.com/full/1125033.jpg',
+  mercedes: 'https://wallpaperaccess.com/full/797996.jpg',
+  porsche: 'https://wallpaperaccess.com/full/1217137.jpg',
+  'rolls-royce': 'https://www.hdcarwallpapers.com/walls/rolls_royce_wraith_2014-wide.jpg',
+  bugatti: 'https://wallpaper.dog/large/20505665.jpg',
+  lamborghini: 'https://wallpaperaccess.com/full/1214161.jpg',
+  tesla: 'https://wallpaperaccess.com/full/486595.jpg',
+  ferrari: 'https://wallpaperaccess.com/full/35833.jpg',
+  vinfast: 'https://wallpapercave.com/wp/wp8806155.jpg',
+};
+
 const allBrand = [
   { label: 'Bentley' },
   { label: 'BMW' },
@@ -90,6 +103,19 @@ interface CarAttributes {
   carAppearance: CarImgAttributes;
 }
 
+const mainImgStyle = (brand: string | undefined) => {
+  if (!brand) return;
+  const temp: any = brandWallpapers;
+  const carBrand: string = brand;
+  const img = temp[carBrand];
+  return {
+    'min-height': '100vh',
+    width: '100%',
+    'background-image': `url(${img})`,
+    'background-size': 'cover',
+  };
+};
+
 export const BrandItem: React.FC = () => {
   const { brandName } = useParams<string>();
   const [brandItemAPI, setBrandItemAPI] = React.useState<BrandItemAttributes>({
@@ -102,10 +128,11 @@ export const BrandItem: React.FC = () => {
   });
   const [carInfoAPI, setCarInfoAPI] = React.useState<Array<CarAttributes>>([]);
   const [imgFromFirebase, setImgFromFirebase] = useState<Array<any>>([]);
-
   const { imgObj, downloadImgsFromFirebase, getImgFromFirebase } = useFetchImgs();
+  const params = useParams();
+
   const originalImgs = useMemo(() => {
-    return replaceDirtyImgUrls(brandItemAPI.descriptionImgs.split(`","`)).map((url: string) => {
+    return replaceDirtyImgUrls(brandItemAPI?.descriptionImgs)?.map((url: string) => {
       return '..' + url;
     });
   }, [brandItemAPI.descriptionImgs]);
@@ -124,23 +151,27 @@ export const BrandItem: React.FC = () => {
   const carFirebaseImgs = useCallback(async () => {
     const newImgs = await Promise.allSettled(
       carInfoAPI.map((car: any) => {
-        let carImg;
+        let carImg = '';
         let tinbanxeImg;
         if (car.carAppearance.newIntroImgs.length < 5) {
-          const carIntroImgs = replaceDirtyImgUrls(car.carAppearance.imgs.split(`","`));
-          return Promise.resolve(carIntroImgs[0]);
+          const carIntroImgs = replaceDirtyImgUrls(car.carAppearance.imgs);
+          if (carIntroImgs) {
+            return Promise.resolve(carIntroImgs[0]);
+          }
         }
-        const originalImgs = replaceDirtyImgUrls(car.carAppearance.newIntroImgs.split(`","`));
-        const tinbanxeImgs = replaceDirtyImgUrls(car.carAppearance.introImgs.split(`","`));
-        if (originalImgs.length === 1) {
-          carImg = originalImgs[0];
-          tinbanxeImg = tinbanxeImgs[0];
-        } else {
-          carImg = originalImgs[1];
-          tinbanxeImg = tinbanxeImgs[1];
+        const originalImgs = replaceDirtyImgUrls(car.carAppearance.newIntroImgs);
+        const tinbanxeImgs = replaceDirtyImgUrls(car.carAppearance.introImgs);
+        if (tinbanxeImgs && originalImgs) {
+          if (originalImgs?.length === 1) {
+            carImg = originalImgs[0];
+            tinbanxeImg = tinbanxeImgs[0];
+          } else {
+            carImg = originalImgs[1];
+            tinbanxeImg = tinbanxeImgs[1];
+          }
         }
-        carImg = getImgFromFirebase(carImg, tinbanxeImg);
-        return carImg;
+        const carImgRes = getImgFromFirebase(carImg, tinbanxeImg);
+        return carImgRes;
       }),
     );
     const availableImgs = newImgs.reduce((acc: any, promise: any) => {
@@ -219,7 +250,7 @@ export const BrandItem: React.FC = () => {
     let temp = handleBrandDescription(brandItemAPI?.descriptions as string)
       .replaceAll('>,', '>')
       .replaceAll(`\\`, '');
-    originalImgs.forEach((originalImg, idx) => {
+    originalImgs?.forEach((originalImg, idx) => {
       if (imgObj?.brandImgs?.length > 0) {
         temp = temp
           .replaceAll(originalImg, imgObj?.brandImgs[idx])
@@ -243,7 +274,7 @@ export const BrandItem: React.FC = () => {
 
   return (
     <Container maxWidth={false} className="brand_item-container mt-12">
-      <Box sx={{ minHeight: '100vh' }} className="brand_item-background">
+      <div style={mainImgStyle(params?.brandName)}>
         <Box
           sx={{
             paddingTop: '28vh',
@@ -260,7 +291,7 @@ export const BrandItem: React.FC = () => {
             Discover
           </TransparentButton>
         </Box>
-      </Box>
+      </div>
 
       <SecondContainerWhite maxWidth={false} id="all-car">
         <div className="brand_item-introduction">
@@ -348,12 +379,7 @@ export const BrandItem: React.FC = () => {
                       <CardMedia
                         className="h-36 object-fill"
                         component="img"
-                        image={
-                          // item.carAppearance.introImgs.length > 5
-                          //   ? getImgFromAPI(item.carAppearance.introImgs)
-                          //   : getImgFromAPI(item.carAppearance.imgs)
-                          imgFromFirebase[index]
-                        }
+                        image={imgFromFirebase[index]}
                         alt="green iguana"
                       />
                       <CardContent sx={{ paddingInline: '1.5rem', minHeight: '9rem' }}>

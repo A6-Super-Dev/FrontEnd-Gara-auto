@@ -1,5 +1,12 @@
-export const replaceDirtyImgUrls = (imgs: Array<string>) => {
-  return imgs.map((url) => {
-    return url.replaceAll(`\"]`, '').replaceAll(`[\"`, '');
-  });
+export const replaceDirtyImgUrls = (imgs: string) => {
+  let newImgs: string | Array<string> = imgs;
+  if (typeof imgs !== 'object') {
+    newImgs = imgs.split(`","`);
+  }
+  if (Array.isArray(newImgs)) {
+    return newImgs.map((url) => {
+      return url.replaceAll(`\"]`, '').replaceAll(`[\"`, '');
+    });
+  }
+  return;
 };

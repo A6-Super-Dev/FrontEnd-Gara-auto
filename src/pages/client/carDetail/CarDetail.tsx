@@ -5,7 +5,6 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useParams } from 'react-router-dom';
 import Rating from '@mui/material/Rating';
-import Stack from '@mui/material/Stack';
 
 import './CarDetail.scss';
 import 'swiper/css';
@@ -13,12 +12,11 @@ import 'swiper/css/free-mode';
 import 'swiper/css/navigation';
 import 'swiper/css/thumbs';
 import 'swiper/css/pagination';
-import { DarkAccordion } from '../../../../components/MuiStyling/MuiStyling';
-import { ImageGallary } from '../../../../components/ImageGallary/ImageGallery';
-import clientService from '../../../../services/clientService';
-import { UndefinedObject } from '../../../../common/interfaces/Client';
-import { useFetchImgs } from '../../../../common/hooks/useFetchImgs';
-
+import { UndefinedObject } from '../../../common/interfaces/Client';
+import { DarkAccordion } from '../../../components/MuiStyling/MuiStyling';
+import { useFetchImgs } from '../../../common/hooks/useFetchImgs';
+import clientService from '../../../services/clientService';
+import { ImageGallary } from '../../../components/ImageGallary/ImageGallery';
 const accordionProps: Array<UndefinedObject> = [
   {
     title: '1. Giới thiệu',
