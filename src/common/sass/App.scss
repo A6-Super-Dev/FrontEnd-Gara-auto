@@ -28,3 +28,33 @@
 .font-poppin {
   font-family: 'Poppins', sans-serif !important;
 }
+
+@keyframes rightToLeft {
+  0% {
+    transform: translateX(120px);
+  }
+  100% {
+    transform: translateX(0px);
+  }
+}
+
+.scroll-top-container {
+  animation-name: rightToLeft;
+  animation-duration: 500ms;
+  @apply fixed right-6 bottom-6 z-50 cursor-pointer;
+}
+
+.up-button {
+  padding: 1rem;
+  background-color: #008c7a;
+
+  @apply rounded-full;
+}
+
+.speed-dial > button {
+  background-color: #008c7a !important;
+}
+
+.speed-dial {
+  animation: rightToLeft 500ms;
+}

@@ -338,7 +338,10 @@ const Profile: React.FC<ProfileProps> = ({ info, loadingState, setLoadingState, 
         </Stepper>
       </div>
 
-      <MuiButton sx={{ width: '100%', marginTop: '3rem' }} onClick={submitChangeInfo}>
+      <MuiButton
+        sx={{ width: '100%', marginTop: '3rem', textTransform: 'capitalize', letterSpacing: '2px' }}
+        onClick={submitChangeInfo}
+      >
         {loadingState === true ? <CircularProgress sx={{ color: '#fff', padding: '6px' }} /> : 'Submit'}
       </MuiButton>
 

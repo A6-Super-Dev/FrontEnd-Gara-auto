@@ -6,7 +6,8 @@ import { routerPath } from '../../common/constants/routerPath';
 import { destroyCookie, destroyLocalStorageItem, setCookie, setLocalStorageItem } from '../../common/helper/storage';
 import { LoginDataReturn } from '../../common/interfaces/Client';
 import ClientService from '../../services/clientService';
-import { AuthActionType, LoginErrorResponse, LoginParams } from '../types/auth';
+import { AuthActionType, LoginErrorResponse, LoginParams, User } from '../types/auth';
+import { resetEmpty, setWishList } from '../common/User/WishListSlice';
 
 import { login, loginReject, loginSuccess, logOut, reset } from './LoginSlice';
 
@@ -24,6 +25,9 @@ function* loginSaga(action: PayloadAction<LoginParams>) {
 
       setCookie('token', String(res.body.authorization));
       setLocalStorageItem('token', String(res.headers.authorization));
+
+      const user: User = yield call(() => ClientService.getClientData());
+      yield put(setWishList(user.info.wishlist));
       setTimeout(() => {
         window.location.pathname = routerPath.common.HOME;
       }, 400);
@@ -51,6 +55,7 @@ function* logoutSaga() {
     destroyCookie('token');
     destroyLocalStorageItem('token');
     yield put(logOut());
+    yield put(resetEmpty());
     setTimeout(() => {
       window.location.pathname = routerPath.common.HOME;
     }, 400);

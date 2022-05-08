@@ -53,3 +53,47 @@
   color: #ffffff;
   @apply px-3 py-2 mb-4;
 }
+
+.bought {
+  &-card {
+    @apply bg-white rounded-md shadow-md p-6 mb-6;
+
+    &-image {
+      img {
+        @apply w-full h-36 object-contain;
+      }
+      @apply flex justify-center;
+    }
+
+    &-info {
+      transition: 600ms ease-in;
+
+      p:first-child {
+        color: #008c7a;
+        @apply text-center text-xl mb-3 font-semibold;
+      }
+      p {
+        @apply mb-1;
+      }
+      p:last-child {
+        @apply text-sm cursor-pointer;
+      }
+
+      @apply px-8;
+    }
+  }
+}
+
+.wishlist-image {
+  background-image: url('../../../../public/imgs/wishlist.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  @apply w-3/4 h-80 mt-10;
+}
+
+.bought-history-image {
+  background-image: url('../../../../public/imgs/buy.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  @apply w-3/4 h-80 mt-10;
+}
