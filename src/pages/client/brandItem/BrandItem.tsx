@@ -34,32 +34,8 @@ import {
 import clientService from '../../../services/clientService';
 import { useFetchImgs } from '../../../common/hooks/useFetchImgs';
 import { replaceDirtyImgUrls } from '../../../common/helper/image';
-
-const brandWallpapers = {
-  bentley: 'https://wallpaperaccess.com/full/4099993.jpg',
-  bmw: 'https://wallpaperaccess.com/full/1125033.jpg',
-  mercedes: 'https://wallpaperaccess.com/full/797996.jpg',
-  porsche: 'https://wallpaperaccess.com/full/1217137.jpg',
-  'rolls-royce': 'https://www.hdcarwallpapers.com/walls/rolls_royce_wraith_2014-wide.jpg',
-  bugatti: 'https://wallpaper.dog/large/20505665.jpg',
-  lamborghini: 'https://wallpaperaccess.com/full/1214161.jpg',
-  tesla: 'https://wallpaperaccess.com/full/486595.jpg',
-  ferrari: 'https://wallpaperaccess.com/full/35833.jpg',
-  vinfast: 'https://wallpapercave.com/wp/wp8806155.jpg',
-};
-
-const allBrand = [
-  { label: 'Bentley' },
-  { label: 'BMW' },
-  { label: 'Mercedes' },
-  { label: 'Porsche' },
-  { label: 'Rolls Royce' },
-  { label: 'Bugatti' },
-  { label: 'Lamborghini' },
-  { label: 'Tesla' },
-  { label: 'Ferrari' },
-  { label: 'Vinfast' },
-];
+import { Loading } from '../../../components/loading/Loading';
+import { allBrand, allPrice, allSeat, brandWallpapers } from '../../../common/constants/fakeData';
 
 const allBodyType = [
   { label: 'Convertible' },
@@ -68,18 +44,10 @@ const allBodyType = [
   { label: 'Coupe' },
   { label: 'Hatchback' },
 ];
-const allPrice = [
-  { label: 'Under 1,000,000,000VNĐ' },
-  { label: 'From 1,000,000,000VNĐ to 3,000,000,000VNĐ' },
-  { label: 'From 3,000,000,000VNĐ to 5,000,000,000VNĐ' },
-  { label: 'From 5,000,000,000VNĐ to 10,000,000,000VNĐ' },
-  { label: 'From 10,000,000,000VNĐ to 20,000,000,000VNĐ' },
-  { label: 'Over 20,000,000,000VNĐ' },
-];
+
 function capitalizeFirstLetter(string: string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
-const allSeat = [{ label: '2' }, { label: '4' }, { label: '5' }, { label: '7' }];
 
 interface BrandItemAttributes {
   id: string;
@@ -117,6 +85,8 @@ const mainImgStyle = (brand: string | undefined) => {
 };
 
 export const BrandItem: React.FC = () => {
+  const discoverRef = React.useRef<HTMLDivElement>(null);
+  const brandItemRef = React.useRef<HTMLDivElement>(null);
   const { brandName } = useParams<string>();
   const [brandItemAPI, setBrandItemAPI] = React.useState<BrandItemAttributes>({
     id: '',
@@ -264,13 +234,13 @@ export const BrandItem: React.FC = () => {
     return temp;
   }, [brandItemAPI.descriptions, imgObj.brandImgs, originalImgs]);
 
-  const getImgFromAPI = (img: string) => {
-    const handleImg1 = img.split(',');
-    const handleImg2 = handleImg1.map((item) =>
-      item.replaceAll('"', '').replaceAll('"', '').replace('[', '').replace(']', ''),
-    );
-    return handleImg2[1];
-  };
+  // const getImgFromAPI = (img: string) => {
+  //   const handleImg1 = img.split(',');
+  //   const handleImg2 = handleImg1.map((item) =>
+  //     item.replaceAll('"', '').replaceAll('"', '').replace('[', '').replace(']', ''),
+  //   );
+  //   return handleImg2[1];
+  // };
 
   return (
     <Container maxWidth={false} className="brand_item-container mt-12">
@@ -287,13 +257,16 @@ export const BrandItem: React.FC = () => {
           <Typography sx={{ opacity: '0.8' }} variant="h6" color={'#ffffff'} mb={10}>
             Cares for what matters.
           </Typography>
-          <TransparentButton href="#all-car" variant="outlined">
+          <TransparentButton
+            onClick={() => discoverRef.current?.scrollIntoView({ behavior: 'smooth' })}
+            variant="outlined"
+          >
             Discover
           </TransparentButton>
         </Box>
       </div>
 
-      <SecondContainerWhite maxWidth={false} id="all-car">
+      <SecondContainerWhite maxWidth={false} ref={discoverRef}>
         <div className="brand_item-introduction">
           <div className="all-brand-body_type py-4">
             <Autocomplete
@@ -319,7 +292,11 @@ export const BrandItem: React.FC = () => {
                   className="mb-4 text-justify leading-6"
                   dangerouslySetInnerHTML={{ __html: shortcutDescription(modifiedDescription) }}
                 ></div>
-                <TransparentBrandButton className="see-more" href="#brand-detail" variant="outlined">
+                <TransparentBrandButton
+                  className="see-more"
+                  onClick={() => brandItemRef.current?.scrollIntoView({ behavior: 'smooth' })}
+                  variant="outlined"
+                >
                   See more
                 </TransparentBrandButton>
               </Grid>
@@ -338,76 +315,89 @@ export const BrandItem: React.FC = () => {
             {handleBrandName()}
           </Typography>
 
-          <Grid container>
-            <Autocomplete
-              disablePortal
-              sx={{ paddingRight: '2rem', maxWidth: '17rem', marginBottom: '1rem' }}
-              options={allPrice}
-              renderInput={(params) => <TextField {...params} label="Price" />}
-            />
-            <Autocomplete
-              disablePortal
-              sx={{ paddingRight: '2rem', maxWidth: '17rem', marginBottom: '2rem' }}
-              options={allSeat}
-              renderInput={(params) => <TextField {...params} label="Seat" />}
-            />
-            <FormControl>
-              <FormLabel id="demo-radio-buttons-group-label">Order by</FormLabel>
-              <RadioGroup
-                aria-labelledby="demo-radio-buttons-group-label"
-                defaultValue="female"
-                name="radio-buttons-group"
-              >
-                <FormControlLabel value="asc" control={<Radio />} label="ASC" />
-                <Stack direction="row" spacing={1}>
-                  <Chip label="Car name" variant="outlined" />
-                  <Chip label="Price" variant="outlined" onDelete={handleDelete} />
-                </Stack>
-                <FormControlLabel value="desc" control={<Radio />} label="DESC" />
-              </RadioGroup>
-            </FormControl>
-          </Grid>
+          {carInfoAPI.length === 0 ? (
+            <Loading />
+          ) : (
+            <Grid container>
+              <Grid item lg={12} xl={12 / 5} className="filer-responsive">
+                <div className="filer-select">
+                  <Autocomplete
+                    disablePortal
+                    sx={{ paddingRight: '2rem', maxWidth: '20rem', marginBottom: '1rem' }}
+                    options={allPrice}
+                    renderInput={(params) => <TextField {...params} label="Price" />}
+                  />
+                  <Autocomplete
+                    disablePortal
+                    sx={{ paddingRight: '2rem', maxWidth: '20rem', marginBottom: '2rem' }}
+                    options={allSeat}
+                    renderInput={(params) => <TextField {...params} label="Seat" />}
+                  />
+                </div>
+                <FormControl>
+                  <FormLabel id="demo-radio-buttons-group-label">Order by</FormLabel>
+                  <RadioGroup
+                    aria-labelledby="demo-radio-buttons-group-label"
+                    defaultValue="female"
+                    name="radio-buttons-group"
+                  >
+                    <FormControlLabel value="asc" control={<Radio />} label="ASC" />
+                    <Stack direction="row" spacing={1} className="flex-wrap">
+                      <Chip label="Car name" variant="outlined" />
+                      <Chip label="Price" variant="outlined" onDelete={handleDelete} />
+                      <Chip label="Seat" variant="outlined" onDelete={handleDelete} />
+                    </Stack>
+                    <FormControlLabel value="desc" control={<Radio />} label="DESC" />
+                  </RadioGroup>
+                </FormControl>
+              </Grid>
 
-          <Grid container>
-            {carInfoAPI.map((item, index) => {
-              const cutBrandName = item.name.split(' ')[0].toLowerCase();
-
-              return (
-                <Grid item xs={12} sm={6} md={4} lg={3} xl={12 / 5} sx={{ padding: '0.5rem' }} key={index}>
-                  <Card>
-                    <CardActionArea>
-                      <CardMedia
-                        className="h-36 object-fill"
-                        component="img"
-                        image={imgFromFirebase[index]}
-                        alt="green iguana"
-                      />
-                      <CardContent sx={{ paddingInline: '1.5rem', minHeight: '9rem' }}>
-                        <Typography gutterBottom variant="h6" component="div">
-                          {item.name}
-                        </Typography>
-                        <Typography fontSize="0.875rem" color="text.secondary">
-                          {`From: ${item.price}`}
-                        </Typography>
-                      </CardContent>
-                    </CardActionArea>
-                    <CardActions>
-                      <MuiBrandButton variant="contained" type="button" style={SubmitButtonStyle}>
-                        <Link to={`/brand/${cutBrandName}/${item.name.toLocaleLowerCase()}`} className="text-center">
-                          Discover more
-                        </Link>
-                      </MuiBrandButton>
-                    </CardActions>
-                  </Card>
-                </Grid>
-              );
-            })}
-          </Grid>
+              <Grid container lg={12} xl={(12 / 5) * 4}>
+                {carInfoAPI.map((item, index) => {
+                  const cutBrandName = item.name.split(' ')[0].toLowerCase();
+                  return (
+                    <Grid item xs={12} sm={6} md={4} lg={3} xl={3} sx={{ padding: '0.5rem' }} key={index} spacing={2}>
+                      <Card>
+                        <CardActionArea>
+                          <CardMedia
+                            className="h-36 "
+                            component="img"
+                            image={
+                              // item.carAppearance.introImgs.length > 5
+                              //   ? getImgFromAPI(item.carAppearance.introImgs)
+                              //   : getImgFromAPI(item.carAppearance.imgs)
+                              imgFromFirebase[index]
+                            }
+                            alt="green iguana"
+                          />
+                          <CardContent sx={{ paddingInline: '1.5rem', minHeight: '8rem' }}>
+                            <Typography gutterBottom variant="h6" component="div">
+                              {item.name}
+                            </Typography>
+                            <Typography fontSize="0.875rem" color="text.secondary">
+                              {`From: ${item.price}`}
+                            </Typography>
+                          </CardContent>
+                        </CardActionArea>
+                        <CardActions>
+                          <Link to={`/brand/${cutBrandName}/${item.name.toLocaleLowerCase()}`} className="flex w-full">
+                            <MuiBrandButton variant="contained" type="button" style={SubmitButtonStyle}>
+                              Discover more
+                            </MuiBrandButton>
+                          </Link>
+                        </CardActions>
+                      </Card>
+                    </Grid>
+                  );
+                })}
+              </Grid>
+            </Grid>
+          )}
         </div>
       </ContainerGrey>
 
       <SecondContainerWhite>
-        <div className="brand_item-detail  mt-12" id="brand-detail">
+        <div className="brand_item-detail  mt-12" ref={brandItemRef}>
           <div className="brand-detail-description p-4">
             <div
               className="render-detail mb-4 leading-7"
