@@ -37,3 +37,40 @@ export const OUR_TEAMS: TeamAttributes[] = [
     shortHand: 'Hau',
   },
 ];
+
+export const brandWallpapers = {
+  bentley: 'https://wallpaperaccess.com/full/4099993.jpg',
+  bmw: 'https://wallpaperaccess.com/full/1125033.jpg',
+  mercedes: 'https://wallpaperaccess.com/full/797996.jpg',
+  porsche: 'https://wallpaperaccess.com/full/1217137.jpg',
+  'rolls-royce': 'https://www.hdcarwallpapers.com/walls/rolls_royce_wraith_2014-wide.jpg',
+  bugatti: 'https://wallpaper.dog/large/20505665.jpg',
+  lamborghini: 'https://wallpaperaccess.com/full/1214161.jpg',
+  tesla: 'https://wallpaperaccess.com/full/486595.jpg',
+  ferrari: 'https://wallpaperaccess.com/full/35833.jpg',
+  vinfast: 'https://wallpapercave.com/wp/wp8806155.jpg',
+};
+
+export const allBrand = [
+  'Bentley',
+  'BMW',
+  'Mercedes',
+  'Porsche',
+  'Rolls Royce',
+  'Bugatti',
+  'Lamborghini',
+  'Tesla',
+  'Ferrari',
+  'Vinfast',
+];
+
+export const allPrice = [
+  { label: 'Under 40,000$' },
+  { label: '40,000$ to 120,000$' },
+  { label: '120,000$ to 200,000$' },
+  { label: '200,000$ to 400,000$' },
+  { label: '400,000$ to 800,000$' },
+  { label: 'Over 800,000$' },
+];
+
+export const allSeat = [{ label: '2' }, { label: '4' }, { label: '5' }, { label: '7' }];

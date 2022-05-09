@@ -1,9 +1,10 @@
 import { Card, CardActionArea, CardActions, CardContent, CardMedia, Container, Grid, Typography } from '@mui/material';
 import { Box } from '@mui/system';
-import React from 'react';
+import React, { useRef } from 'react';
 import { Link } from 'react-router-dom';
 
 import { routerPath } from '../../../common/constants/routerPath';
+import { Loading } from '../../../components/loading/Loading';
 import {
   ColorSchema,
   ContainerGrey,
@@ -22,13 +23,13 @@ interface BrandAttributes {
 }
 
 export const Brand: React.FC = () => {
+  const divRef = useRef<HTMLDivElement>(null);
   const [allBrandAPI, setAllBrandAPI] = React.useState<BrandAttributes[]>([]);
 
   React.useEffect(() => {
     const fetchBrandFromAPI = async () => {
       try {
         const response = await clientService.getAllBrand();
-        console.log('response', response);
         setAllBrandAPI(response.allBrand);
       } catch (error: any) {
         console.log(error);
@@ -66,13 +67,13 @@ export const Brand: React.FC = () => {
           <Typography sx={{ opacity: '0.8' }} variant="h6" color={'#ffffff'} mb={10}>
             Cares for what matters.
           </Typography>
-          <TransparentButton href="#all-brand" variant="outlined">
+          <TransparentButton variant="outlined" onClick={() => divRef.current?.scrollIntoView({ behavior: 'smooth' })}>
             Discover
           </TransparentButton>
         </Box>
       </Box>
 
-      <ContainerGrey maxWidth={false} id="all-brand">
+      <ContainerGrey maxWidth={false} ref={divRef}>
         <Typography
           variant="h3"
           sx={{ textAlign: 'left', color: ColorSchema.LightGreen, marginBottom: '2rem', marginTop: '1rem' }}
@@ -80,32 +81,42 @@ export const Brand: React.FC = () => {
         >
           Our brands
         </Typography>
-        <Grid container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-          {allBrandAPI?.map((item, index) => (
-            <Grid item xs={12} sm={6} md={4} lg={3} xl={12 / 5} sx={{ padding: '0.5rem' }} key={index}>
-              <Card className="pb-8">
-                <CardActionArea>
-                  <CardMedia className="object-fill" component="img" image={item.brandImg} alt="green iguana" />
-                  <CardContent sx={{ paddingInline: '1.5rem', minHeight: '10rem' }}>
-                    <Typography gutterBottom variant="h6" component="div">
-                      {item.name}
-                    </Typography>
-                    <Typography fontSize="0.875rem" color="text.secondary">
-                      {item.shortDescriptions}
-                    </Typography>
-                  </CardContent>
-                </CardActionArea>
-                <CardActions>
-                  <MuiBrandButton variant="contained" type="button" style={SubmitButtonStyle}>
-                    <Link to={handleBrandInURL(item.name.toLocaleLowerCase())} className="text-center">
-                      Discover more
+
+        {allBrandAPI.length === 0 ? (
+          <Loading />
+        ) : (
+          <Grid container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} spacing={2}>
+            {allBrandAPI?.map((item, index) => (
+              <Grid item xs={12} sm={6} md={4} lg={3} xl={12 / 5} sx={{ padding: '0.5rem' }} key={index}>
+                <Card>
+                  <CardActionArea>
+                    <CardMedia
+                      className="px-6 py-4 object-fill"
+                      component="img"
+                      image={item.brandImg}
+                      alt="green iguana"
+                    />
+                    <CardContent sx={{ paddingInline: '1.5rem', minHeight: '10rem' }}>
+                      <Typography gutterBottom variant="h6" component="div">
+                        {item.name}
+                      </Typography>
+                      <Typography fontSize="0.875rem" color="text.secondary">
+                        {item.shortDescriptions}
+                      </Typography>
+                    </CardContent>
+                  </CardActionArea>
+                  <CardActions>
+                    <Link to={handleBrandInURL(item.name.toLocaleLowerCase())} className="flex w-full">
+                      <MuiBrandButton variant="contained" type="button" style={SubmitButtonStyle}>
+                        Discover more
+                      </MuiBrandButton>
                     </Link>
-                  </MuiBrandButton>
-                </CardActions>
-              </Card>
-            </Grid>
-          ))}
-        </Grid>
+                  </CardActions>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
+        )}
       </ContainerGrey>
     </Container>
   );

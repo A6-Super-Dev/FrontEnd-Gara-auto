@@ -57,6 +57,7 @@ export const MuiBrandButton = styled(Button)({
   fontSize: '1rem !important',
   letterSpacing: '1px !important',
   marginInline: '1rem',
+  marginBottom: '1rem',
   width: '100%',
 });
 
