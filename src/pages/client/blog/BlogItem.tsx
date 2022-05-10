@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Container, Skeleton, CardActionArea, Box, Grid, Link } from '@mui/material';
+import { Container, Skeleton, CardActionArea, Box, Grid, Link, Modal } from '@mui/material';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 
@@ -15,6 +15,17 @@ export interface BlogItemInterface {
   title: string;
   id?: number;
 }
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  p: 4,
+};
 
 export const BlogItem = () => {
   const urlSearchParams = new URLSearchParams(window.location.search);
@@ -22,9 +33,21 @@ export const BlogItem = () => {
   const totalBlogs = +params.totalBlog || 107;
 
   const [currBlog, setCurrBlog] = useState<BlogItemInterface>();
+  console.log('currBlog', currBlog);
   const [relatedBlogs, setRelatedBlogs] = useState<Array<BlogItemInterface>>([]);
   const { getImgFromFirebase } = useFetchImgs();
   const [loading, setLoading] = useState(false);
+  ////// edit
+  const [open, setOpen] = useState(true);
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  ///// edit
 
   const getRelatedBlogs = useCallback(async () => {
     if (currBlog?.id) {
@@ -131,6 +154,7 @@ export const BlogItem = () => {
               <div
                 className="blogItem-content-container"
                 dangerouslySetInnerHTML={{ __html: currBlog?.descriptions || '' }}
+                onClick={handleOpen}
               ></div>
             ) : (
               <>

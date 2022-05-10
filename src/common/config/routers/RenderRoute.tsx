@@ -16,6 +16,7 @@ import ErrorPages from '../../../pages/Error/ErrorPages';
 import { routerPath } from '../../constants/routerPath';
 import { getRefreshToken } from '../../helper/storage';
 import { RouteAttributes } from '../interface/route';
+import { EditorComponent } from '../../../pages/client/blog/Editor';
 
 const staticRoute: RouteAttributes[] = [
   {
@@ -58,6 +59,12 @@ const staticRoute: RouteAttributes[] = [
     authorized: false,
     element: <BlogItem />,
     path: routerPath.common.BLOG_ITEM,
+    needNavigator: true,
+  },
+  {
+    authorized: false,
+    element: <EditorComponent />,
+    path: routerPath.common.EDIT,
     needNavigator: true,
   },
   {
