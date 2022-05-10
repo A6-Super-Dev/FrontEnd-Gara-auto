@@ -17,6 +17,8 @@ class ClientAPI {
   getClientData = `/client/client-data`;
   updateProfile = `/client/update-client-info`;
   getBlogs = (page: number, limit: number) => `${this.client}/blog?page=${page}&limit=${limit}`;
+  getBlog = (id: number) => `${this.client}/blog/${id}`;
+  getBlogByOffset = (offset: number) => `${this.client}/blog/offset/${offset}`;
 }
 
 export default new ClientAPI();

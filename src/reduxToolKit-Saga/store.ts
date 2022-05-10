@@ -4,7 +4,7 @@ import { combineReducers, configureStore, Reducer, Store } from '@reduxjs/toolki
 
 import env, { Environment } from '../common/config/interface/env';
 
-import rootSaga from './rootsaga';
+import rootSaga from './rootSaga';
 import persistConfig from './persistConfig';
 import CounterSlice from './common/Counter/CounterSlice';
 import loginSlice from './auth/LoginSlice';

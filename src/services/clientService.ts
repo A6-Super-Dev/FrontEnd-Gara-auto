@@ -4,6 +4,7 @@ import clientAPI from '../common/constants/clientAPI';
 import thirdPartyAPI from '../common/constants/thirdPartyAPI';
 import { ClientLogin, ClientNewPassword, ClientPasswordRecover, ClientSignUp } from '../common/interfaces/Auth';
 import { LoginDataReturn } from '../common/interfaces/Client';
+import { BlogItemInterface } from '../pages/client/blog/BlogItem';
 import {
   ClientInfo,
   DistrictAttributes,
@@ -88,7 +89,13 @@ class ClientService {
     await AxiosClientAPI.patch(clientAPI.updateProfile, data);
   }
   async getBlogs(page: number, limit = 10) {
-    return await AxiosClient.get(clientAPI.getBlogs(page, limit));
+    return AxiosClient.get(clientAPI.getBlogs(page, limit));
+  }
+  async getBlog(id: number): Promise<BlogItemInterface> {
+    return AxiosClient.get(clientAPI.getBlog(id));
+  }
+  async getBlogByOffset(offset: number): Promise<BlogItemInterface> {
+    return AxiosClient.get(clientAPI.getBlogByOffset(offset));
   }
 }
 
