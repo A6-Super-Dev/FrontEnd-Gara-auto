@@ -7,6 +7,7 @@ import { PasswordRecover } from '../../../pages/client/auth/passwordRecover/Pass
 import { SignUp } from '../../../pages/client/auth/signUp/SignUp';
 import { SignUpSuccess } from '../../../pages/client/auth/signUpSuccess/SignUpSuccess';
 import { Blogs } from '../../../pages/client/blog/Blogs';
+import { BlogItem } from '../../../pages/client/blog/BlogItem';
 import { Brand } from '../../../pages/client/brand/Brand';
 import { BrandItem } from '../../../pages/client/brandItem/BrandItem';
 import CarDetail from '../../../pages/client/carDetail/CarDetail';
@@ -51,6 +52,12 @@ const staticRoute: RouteAttributes[] = [
     authorized: false,
     element: <Blogs />,
     path: routerPath.common.BLOGS,
+    needNavigator: true,
+  },
+  {
+    authorized: false,
+    element: <BlogItem />,
+    path: routerPath.common.BLOG_ITEM,
     needNavigator: true,
   },
   {

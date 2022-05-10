@@ -1,5 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import { Box, Container, Grid, CardActionArea, Pagination, PaginationItem, CircularProgress } from '@mui/material';
+import React, { useEffect, useState, useMemo } from 'react';
+import {
+  Box,
+  Container,
+  Grid,
+  CardActionArea,
+  Pagination,
+  PaginationItem,
+  CircularProgress,
+  Link,
+  Skeleton,
+} from '@mui/material';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 
@@ -9,22 +19,30 @@ import { removeTagsFromString } from '../../../common/helper/string';
 import { replaceDirtyImgUrls } from '../../../common/helper/image';
 import { useFetchImgs } from '../../../common/hooks/useFetchImgs';
 
-export const Blogs = () => {
-  const [blogs, setBlogs] = useState<any>([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [loading, setLoading] = useState(false);
-  const { getImgFromFirebase } = useFetchImgs();
+import { BlogItemInterface } from './BlogItem';
 
-  const changePage = (event: React.ChangeEvent<unknown>, page: number) => {
-    setCurrentPage(page);
-  };
+export const Blogs = () => {
+  const urlSearchParams = new URLSearchParams(window.location.search);
+  const params = Object.fromEntries(urlSearchParams.entries());
+  const currentPage = params.page || 1;
+
+  const [blogs, setBlogs] = useState<Array<BlogItemInterface>>([]);
+  const [loading, setLoading] = useState(false);
+  const [totalPage, setTotalPage] = useState(11);
+  const [totalBlog, setTotalBlog] = useState(107);
+
+  const { getImgFromFirebase } = useFetchImgs();
 
   useEffect(() => {
     const fetchBlogs = async () => {
       setLoading(() => true);
-      const response = await clientService.getBlogs(currentPage);
-      const res = response.data.result;
-      const reformattingBlogs = await Promise.all(
+      const response = await clientService.getBlogs(+currentPage);
+      const res = response.data.rows || [];
+      const { count } = response.data;
+      setTotalPage(Math.round(count / 10));
+      setTotalBlog(count);
+
+      const reformattingBlogs: any = await Promise.all(
         res.map(async (blog: any) => {
           const regExp = /[a-zA-Z]/g;
           const blogImgs: string = replaceDirtyImgUrls(blog?.descriptionImgs)?.[0];
@@ -47,7 +65,7 @@ export const Blogs = () => {
           return blog;
         }),
       );
-      setBlogs(() => reformattingBlogs);
+      setBlogs(reformattingBlogs);
       setLoading(() => false);
     };
     fetchBlogs();
@@ -59,45 +77,83 @@ export const Blogs = () => {
     }
   }, [loading]);
 
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [currentPage]);
+
   return (
     <>
       <Container maxWidth="md" sx={{ marginTop: '154px', marginBottom: '100px' }}>
         <Box className="blog-news">Tin tức</Box>
         <Box className="blogs-container">
-          {blogs.map((blog: any, idx: number) => {
-            return (
-              <Box key={idx} sx={{ marginBottom: '1rem' }}>
-                <Card className="item-container">
-                  <CardActionArea sx={{ height: '100%' }}>
-                    <CardContent sx={{ height: '100%' }}>
-                      <Grid container sx={{ height: '100%' }}>
-                        <Grid item sm={4} xs={12} sx={{ height: '100%' }}>
-                          <img src={blog.descriptionImgs} />
-                        </Grid>
-                        <Grid item sm={8} xs={12} sx={{ height: '100%' }}>
-                          <Box className="blog-content-container">
-                            <Box className="blog-content-title">{blog.title}</Box>
-                            <Box className="descriptions-container">{blog.descriptions}</Box>
-                          </Box>
-                        </Grid>
-                      </Grid>
-                    </CardContent>
-                  </CardActionArea>
-                </Card>
-              </Box>
-            );
-          })}
+          {!loading ? (
+            <>
+              {blogs?.map((blog: any, idx: number) => {
+                return (
+                  <Link
+                    href={`/blog?title=${blog.title}&id=${blog.id}&total=${totalBlog}`}
+                    key={idx}
+                    sx={{ marginBottom: '1rem' }}
+                    underline="none"
+                  >
+                    <Card className="item-container">
+                      <CardActionArea sx={{ height: '100%' }}>
+                        <CardContent sx={{ height: '100%' }}>
+                          <Grid container sx={{ height: '100%' }}>
+                            <Grid item sm={4} xs={12} sx={{ height: '100%' }}>
+                              <img src={blog.descriptionImgs} loading="eager" />
+                            </Grid>
+                            <Grid item sm={8} xs={12} sx={{ height: '100%' }}>
+                              <Box className="blog-content-container">
+                                <Box className="blog-content-title">{blog.title}</Box>
+                                <Box className="descriptions-container">{blog.descriptions}</Box>
+                              </Box>
+                            </Grid>
+                          </Grid>
+                        </CardContent>
+                      </CardActionArea>
+                    </Card>
+                  </Link>
+                );
+              })}
+            </>
+          ) : (
+            <>
+              {[1, 2, 3, 4, 5, 6].map((num: number) => {
+                return (
+                  <div key={num} className="skeleton-container">
+                    <div className="left">
+                      <Skeleton variant="rectangular" width="100%" height="100%"></Skeleton>
+                    </div>
+                    <div className="right">
+                      <Skeleton variant="rectangular" width="60%" height="20%" className="upper-right"></Skeleton>
+                      <Skeleton variant="rectangular" width="100%" height="75%"></Skeleton>
+                    </div>
+                  </div>
+                );
+              })}
+            </>
+          )}
         </Box>
         <Box className="blogs-pagination-contaier">
           <Pagination
-            count={10}
+            count={totalPage}
             shape="rounded"
-            onChange={changePage}
+            page={+currentPage}
             renderItem={(item: any) => {
-              if (item.selected && loading) {
-                return <CircularProgress key={item.page} sx={{}} size={20}></CircularProgress>;
+              if (item.selected) {
+                return (
+                  <>
+                    <PaginationItem key={item.page} {...item} />
+                  </>
+                );
+              } else {
+                return (
+                  <Link href={`/blogs?page=${item.page}`} underline="none">
+                    <PaginationItem key={item.page} {...item} />
+                  </Link>
+                );
               }
-              return <PaginationItem key={item.page} {...item} />;
             }}
           ></Pagination>
         </Box>
