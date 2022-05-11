@@ -14,19 +14,19 @@ export const counterSlice = createSlice({
   name: 'counter',
   initialState,
   reducers: {
-    increment: (state) => {
+    increment: (state: iCounterState) => {
       state.value += 1;
     },
-    decrement: (state) => {
+    decrement: (state: iCounterState) => {
       state.value -= 1;
     },
-    incrementByAmount: (state, action: PayloadAction<number>) => {
+    incrementByAmount: (state: iCounterState, action: PayloadAction<number>) => {
       state.value += action.payload;
     },
-    incrementSaga: (state) => {
+    incrementSaga: (state: iCounterState) => {
       state.status = 'loading';
     },
-    incrementSagaSuccess: (state, action: PayloadAction<number>) => {
+    incrementSagaSuccess: (state: iCounterState, action: PayloadAction<number>) => {
       state.status = 'idle';
       state.value += action.payload;
     },

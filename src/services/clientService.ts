@@ -9,6 +9,8 @@ import {
   ClientInfo,
   DistrictAttributes,
   DistrictInfo,
+  PaymentInfo,
+  PaymentReceipt,
   ProvinceAttributes,
   ProvinceInfo,
   UpdateClientInfoAttributes,
@@ -96,6 +98,11 @@ class ClientService {
   }
   async getBlogByOffset(offset: number): Promise<BlogItemInterface> {
     return AxiosClient.get(clientAPI.getBlogByOffset(offset));
+  }
+
+  async getPaymentReceipt(): Promise<PaymentReceipt[]> {
+    const response: PaymentInfo = await AxiosClientAPI.get(clientAPI.getPayment);
+    return response.data;
   }
 }
 

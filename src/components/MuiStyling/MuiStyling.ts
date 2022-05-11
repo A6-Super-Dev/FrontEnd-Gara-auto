@@ -6,6 +6,7 @@ export enum ColorSchema {
   Black = '#000000',
   White = '#ffffff',
   LightBlack = '#21222D',
+  Red = '#ff2626',
 }
 
 export const CustomTextField = withStyles({

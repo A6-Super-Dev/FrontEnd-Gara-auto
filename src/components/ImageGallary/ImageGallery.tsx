@@ -23,7 +23,7 @@ export const ImageGallary: React.FC<any> = ({ urls = [] }) => {
         {urls.map((imgUrl: string) => {
           return (
             <SwiperSlide key={imgUrl}>
-              <img className="img-style-1" src={imgUrl} />
+              <img className="img-style-1" src={imgUrl} alt="" />
             </SwiperSlide>
           );
         })}
@@ -42,7 +42,7 @@ export const ImageGallary: React.FC<any> = ({ urls = [] }) => {
           return (
             <SwiperSlide key={imgUrl}>
               <div className="img-2-wrapper">
-                <img className="img-style-2" src={imgUrl} />
+                <img className="img-style-2" src={imgUrl} alt="" />
               </div>
             </SwiperSlide>
           );

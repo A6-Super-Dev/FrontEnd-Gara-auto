@@ -9,12 +9,16 @@ import persistConfig from './persistConfig';
 import CounterSlice from './common/Counter/CounterSlice';
 import loginSlice from './auth/LoginSlice';
 import { sentryReduxEnhancer } from './sentry';
+import WishListSlice from './common/User/WishListSlice';
+import GeneralSlice from './common/General/GeneralSlice';
 
 const sagaMiddleware = createSagaMiddleware();
 
 const combinedReducer = combineReducers({
   counter: CounterSlice,
   login: loginSlice,
+  wishlist: WishListSlice,
+  general: GeneralSlice,
 });
 
 export const store: Store = configureStore({

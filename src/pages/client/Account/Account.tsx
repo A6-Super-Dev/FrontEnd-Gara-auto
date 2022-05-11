@@ -1,6 +1,7 @@
 import { Button, Grid, Skeleton, TableRow, TableCell, Table, TableBody } from '@mui/material';
 import React from 'react';
 import CameraIcon from '@mui/icons-material/Camera';
+import { useLocation } from 'react-router-dom';
 
 import { ContainerGrey } from '../../../components/MuiStyling/MuiStyling';
 import { User } from '../../../reduxToolKit-Saga/types/auth';
@@ -9,11 +10,12 @@ import './Account.scss';
 import TimeHelper from '../../../common/helper/time';
 
 import Profile from './Components/Profile';
-import { Coupon } from './Components/Coupon';
+//TODO: port logic with coupon here
+// import { Coupon } from './Components/Coupon';
 import WishList from './Components/WishList';
 import History from './Components/History';
 
-enum Tab {
+export enum Tab {
   PROFILE = 'Profile',
   WISH_LIST = 'Wish List',
   COUPON = 'Coupon',
@@ -26,12 +28,13 @@ export enum Refresher {
   Stop = 'Stop',
 }
 
-const tabExist = [Tab.PROFILE, Tab.WISH_LIST, Tab.COUPON, Tab.HISTORY];
+const tabExist = [Tab.PROFILE, Tab.WISH_LIST, Tab.HISTORY];
 
 export const Account = () => {
   const [client, setClient] = React.useState<User | null>(null);
+  const { state }: any = useLocation();
   const [loading, setLoading] = React.useState<boolean>(false);
-  const [tab, setTab] = React.useState<Tab>(Tab.PROFILE);
+  const [tab, setTab] = React.useState<Tab>(state === null ? Tab.PROFILE : (state.component as Tab));
   const [refresh, setRefresh] = React.useState<Refresher>(Refresher.START);
   const smoothScrollDiv = React.useRef<HTMLDivElement>(null);
 
@@ -84,9 +87,10 @@ export const Account = () => {
         <Profile info={client?.info} loadingState={loading} setLoadingState={setLoading} setRefresh={setRefresh} />
       );
     }
-    if (tab === Tab.COUPON) {
-      return <Coupon />;
-    }
+    //TODO: port logic with coupon here
+    // if (tab === Tab.COUPON) {
+    //   return <Coupon />;
+    // }
     if (tab === Tab.HISTORY) {
       return <History />;
     }
@@ -103,7 +107,7 @@ export const Account = () => {
   };
 
   return (
-    <ContainerGrey ref={smoothScrollDiv}>
+    <ContainerGrey>
       <Grid container className="pt-20">
         <Grid item sm={12} md={4}>
           <div className="flex px-6 pt-2 flex-col items-center">
@@ -173,7 +177,9 @@ export const Account = () => {
           {renderTab()}
         </Grid>
         <Grid item sm={12} md={8}>
-          <div className="px-16 scroll-smooth">{renderView()}</div>
+          <div ref={smoothScrollDiv} className="md:px-16 scroll-smooth">
+            {renderView()}
+          </div>
         </Grid>
       </Grid>
     </ContainerGrey>

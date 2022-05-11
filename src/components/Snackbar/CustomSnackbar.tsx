@@ -1,15 +1,16 @@
 import React from 'react';
-import { Snackbar, Alert, AlertColor } from '@mui/material';
+import { Snackbar, Alert, AlertColor, SnackbarOrigin } from '@mui/material';
 
 interface SnackbarProps {
   snackbarColor?: AlertColor;
   res: string;
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  verticalPosition?: SnackbarOrigin['vertical'];
 }
 
-export const CustomSnackbar = ({ snackbarColor, res, open, setOpen }: SnackbarProps) => {
-  const handleClose = (event: React.SyntheticEvent | Event, reason?: string) => {
+export const CustomSnackbar = ({ snackbarColor, res, open, setOpen, verticalPosition }: SnackbarProps) => {
+  const handleClose = (_event: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway') {
       return;
     }
@@ -21,7 +22,7 @@ export const CustomSnackbar = ({ snackbarColor, res, open, setOpen }: SnackbarPr
     <>
       <Snackbar
         anchorOrigin={{
-          vertical: 'top',
+          vertical: `${verticalPosition ? verticalPosition : 'top'}`,
           horizontal: 'center',
         }}
         open={open}

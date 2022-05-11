@@ -128,6 +128,22 @@ export interface UpdateClientInfoAttributes {
   timezone: string;
 }
 
+export interface PaymentReceipt {
+  uuid: string;
+  quantity: number;
+  createdAt: string;
+  car: {
+    name: string;
+    price: string;
+    carAppearance: {
+      imgs: string;
+    };
+    brand: {
+      name: string;
+    };
+  };
+}
+
 export type LoginErrorResponse = AxiosResponse<ErrorResponseData>;
 export type UserSignUpErrorResponse = AxiosResponse<ErrorResponseData>;
 export type UserPasswordRecoverResponse = AxiosResponse<ErrorResponseData>;
@@ -138,3 +154,4 @@ export type ClientInfo = AxiosResponse<User>;
 export type ProvinceInfo = AxiosResponse<ProvinceList>;
 export type DistrictInfo = AxiosResponse<DistrictList>;
 export type WardInfo = AxiosResponse<WardList>;
+export type PaymentInfo = AxiosResponse<PaymentReceipt[]>;
