@@ -128,3 +128,41 @@
   font-size: 30px;
   color: red;
 }
+.car-comments {
+  @apply my-8;
+  .writing-comment-area {
+  }
+  .comments-area {
+    @apply mt-8;
+    .slight-gray-bg {
+      background-color: #f9f9f9;
+    }
+    .comment-wrapper {
+      @apply mt-8 flex flex-row px-8 py-4;
+      .user-avatar {
+        width: 10%;
+        @apply flex justify-start;
+      }
+      .user-comment {
+        width: 90%;
+        @apply pl-8;
+        .user-name {
+          font-weight: 600;
+        }
+        .comment {
+          @apply pt-4;
+        }
+        .like-dislike-area {
+          @apply pt-4 flex;
+          .like-area {
+            user-select: none;
+            @apply mr-8;
+          }
+          .dislike-area {
+            user-select: none;
+          }
+        }
+      }
+    }
+  }
+}

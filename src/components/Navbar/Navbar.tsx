@@ -10,6 +10,7 @@ import {
   SpeedDial,
   SpeedDialAction,
   SpeedDialIcon,
+  Avatar,
 } from '@mui/material';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { AccountCircle, Menu as MenuIcon } from '@mui/icons-material';
@@ -29,12 +30,14 @@ import { Tab } from '../../pages/client/Account/Account';
 const Navbar = () => {
   const { pathname } = useLocation();
   const dispatch = useAppDispatch();
-  const token = getCookie('token');
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [open, setOpen] = React.useState<boolean>(false);
   const scrollTopDisplay = useAppSelector((globalState) => globalState.general.scrollTopDisplay);
   const [windowWidth] = useWindowWidth();
   const navigate = useNavigate();
+  const token = getCookie('token');
+  const userInfo: any = useAppSelector((globalState) => globalState.login.userInfo);
+  const status = useAppSelector((globalState) => globalState.login.status);
 
   const handleClose = () => {
     setAnchorEl(null);
@@ -153,7 +156,13 @@ const Navbar = () => {
                   <Link to={routerPath.common.BLOGS}>Blog</Link>
                 </MuiNavBarButton>
                 <IconButton sx={{ color: 'black' }} onClick={handleClick}>
-                  <AccountCircle fontSize="large" />
+                  {status !== 'Authorized' ? (
+                    <>
+                      <MenuIcon fontSize="large" />
+                    </>
+                  ) : (
+                    <Avatar alt="" src={userInfo?.avatar} />
+                  )}
                   <Menu id="basic-menu" anchorEl={anchorEl} open={open} onClose={handleClose}>
                     {renderMenuItem()}
                   </Menu>
@@ -162,7 +171,13 @@ const Navbar = () => {
             ) : (
               <div>
                 <IconButton sx={{ color: 'black' }} onClick={handleClick}>
-                  <MenuIcon fontSize="large" />
+                  {status !== 'Authorized' ? (
+                    <>
+                      <MenuIcon fontSize="large" />
+                    </>
+                  ) : (
+                    <Avatar alt="" src={userInfo?.avatar} />
+                  )}
                   <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
                     {renderMenuItem()}
                   </Menu>

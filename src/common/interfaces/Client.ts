@@ -6,6 +6,7 @@ interface LoginDataReturn {
   statusCode: number;
   headers: TokenType;
   body: TokenType;
+  userInfo?: unknown;
 }
 
 interface LoginReturn {

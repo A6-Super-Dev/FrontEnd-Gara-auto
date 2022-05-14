@@ -36,6 +36,13 @@ export interface ClientNewPassword {
   password: string;
 }
 
+export interface CommentInterface {
+  carId: number;
+  comment: string;
+  parent?: string;
+  userId: number;
+}
+
 export enum UserRoles {
   CLIENT = 'CLIENT',
   ADMIN = 'ADMIN',

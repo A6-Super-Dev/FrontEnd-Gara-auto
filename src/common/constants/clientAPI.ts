@@ -11,7 +11,7 @@ class ClientAPI {
   apiCheck = `${this.auth}/api-check`;
   checkValid = `${this.auth}/check-valid`;
   getAllBrand = `${this.client}/brand/get-all`;
-  getCar = (name: string) => `${this.client}/car/get-one/${name}`;
+  getCar = (name: string, id: number) => `${this.client}/car/get-one/${name}/${id}`;
   getCarByBrandName = (brand: string) => `${this.client}/car/brand/${brand}`;
   getBrand = (brand: string) => `${this.client}/brand/${brand}`;
   getClientData = `/${this.client}/client-data`;
@@ -20,6 +20,7 @@ class ClientAPI {
   getBlog = (id: number) => `${this.client}/blog/${id}`;
   getBlogByOffset = (offset: number) => `${this.client}/blog/offset/${offset}`;
   getPayment = `/${this.client}/payment-receipt`;
+  postComment = `${this.client}/car/comment`;
 }
 
 export default new ClientAPI();
