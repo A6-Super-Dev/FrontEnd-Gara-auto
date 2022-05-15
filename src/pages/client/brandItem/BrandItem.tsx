@@ -380,7 +380,10 @@ export const BrandItem: React.FC = () => {
                           </CardContent>
                         </CardActionArea>
                         <CardActions>
-                          <Link to={`/brand/${cutBrandName}/${item.name.toLocaleLowerCase()}`} className="flex w-full">
+                          <Link
+                            to={`/brand/${cutBrandName}/${item.name.toLocaleLowerCase()}/${item.id}`}
+                            className="flex w-full"
+                          >
                             <MuiBrandButton variant="contained" type="button" style={SubmitButtonStyle}>
                               Discover more
                             </MuiBrandButton>

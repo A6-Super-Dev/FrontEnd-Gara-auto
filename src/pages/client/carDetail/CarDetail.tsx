@@ -17,6 +17,10 @@ import { DarkAccordion } from '../../../components/MuiStyling/MuiStyling';
 import { useFetchImgs } from '../../../common/hooks/useFetchImgs';
 import clientService from '../../../services/clientService';
 import { ImageGallary } from '../../../components/ImageGallary/ImageGallery';
+import { useAppSelector } from '../../../common/hooks/ReduxHook';
+
+import CarDetailComment, { CommentReaction } from './CarDetailComment';
+
 const accordionProps: Array<UndefinedObject> = [
   {
     title: '1. Giới thiệu',
@@ -39,18 +43,37 @@ const mainParams: UndefinedObject = {
 const CarDetail: React.FC = () => {
   const [carInfo, setCarInfo] = useState<any>(undefined);
   const { imgObj, downloadImgsFromFirebase } = useFetchImgs();
-  const params = useParams();
+
+  const [carComments, setCarComments] = useState<any>([]);
+  const [commentReactions, setCommentReactions] = useState<Array<CommentReaction>>([]);
+
+  const params: any = useParams();
+  const userInfo: any = useAppSelector((globalState) => globalState.login.userInfo);
+  const userStatus: any = useAppSelector((globalState) => globalState.login.status);
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
   useEffect(() => {
     const fetchCar = async () => {
-      const carInfo = await clientService.getCar(params.car as string);
-      setCarInfo(carInfo.result);
+      const { comments, carInfo, commentReactions } = await clientService.getCar(
+        params.car as string,
+        +params?.id as any,
+      );
+      setCarInfo(carInfo);
+      setCarComments(comments);
+      const newReactions = commentReactions.map((reaction: any) => {
+        delete reaction.car_id;
+        delete reaction.comment_id;
+        delete reaction.user_id;
+        return reaction;
+      });
+      setCommentReactions(newReactions);
     };
     fetchCar();
-  }, [params.car]);
+  }, [params.car, params.id]);
+
   useEffect(() => {
     const fetchAllImgs = async () => {
       if (carInfo !== undefined) {
@@ -64,6 +87,7 @@ const CarDetail: React.FC = () => {
     };
     fetchAllImgs();
   }, [carInfo, downloadImgsFromFirebase]);
+
   return (
     <Container maxWidth={false}>
       <Box sx={{ marginTop: '154px' }}>
@@ -87,10 +111,10 @@ const CarDetail: React.FC = () => {
                   </div>
                   <table className="car-table-main-param">
                     <tbody>
-                      {Object.keys(mainParams)?.map((carParam) => {
+                      {Object.keys(mainParams)?.map((carParam, idx) => {
                         return (
                           <>
-                            <tr key={carParam}>
+                            <tr key={idx}>
                               <td className="table-first-el">
                                 <strong>{mainParams[carParam]}</strong>
                               </td>
@@ -114,7 +138,11 @@ const CarDetail: React.FC = () => {
                   <>
                     {accordionProps?.map((element, idx) => {
                       return (
-                        <DarkAccordion disableGutters={true} defaultExpanded key={idx}>
+                        <DarkAccordion
+                          disableGutters={true}
+                          defaultExpanded={[0].includes(idx) ? true : false}
+                          key={idx}
+                        >
                           <AccordionSummary
                             expandIcon={<ExpandMoreIcon color="primary" />}
                             aria-controls="panel1a-content"
@@ -123,10 +151,10 @@ const CarDetail: React.FC = () => {
                             <Typography>{element.title}</Typography>
                           </AccordionSummary>
                           <AccordionDetails>
-                            {carInfo?.[element.propName]?.split(`","`)?.map((el: string) => {
+                            {carInfo?.[element.propName]?.split(`","`)?.map((el: string, idx: number) => {
                               return (
                                 <p
-                                  key={el}
+                                  key={idx}
                                   className={`${el.includes('strong') && 'car-p-strong'}`}
                                   dangerouslySetInnerHTML={{ __html: el.replaceAll(`"]`, '').replaceAll(`["`, '') }}
                                 ></p>
@@ -154,7 +182,7 @@ const CarDetail: React.FC = () => {
                                       }
                                       return (
                                         <Grid key={idx} item sm={12} md={gridSize}>
-                                          <img className={`img-intro-item`} key={img} src={img} alt="" />
+                                          <img className={`img-intro-item`} src={img} alt="" />
                                         </Grid>
                                       );
                                     })}
@@ -191,6 +219,17 @@ const CarDetail: React.FC = () => {
             </Grid>
           </Grid>
         </Container>
+
+        <CarDetailComment
+          userStatus={userStatus}
+          carInfo={carInfo}
+          userInfo={userInfo}
+          carComments={carComments}
+          setCarComments={setCarComments}
+          commentReactions={commentReactions}
+          setCommentReactions={setCommentReactions}
+          params={params}
+        />
       </Box>
     </Container>
   );

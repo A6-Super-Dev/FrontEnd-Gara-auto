@@ -15,11 +15,13 @@ function* loginSaga(action: PayloadAction<LoginParams>) {
   try {
     yield put(login(action.payload));
     const res: LoginDataReturn = yield call(() => ClientService.login(action.payload));
+    console.log('res', res);
     if (res.statusCode === 200) {
       yield put(
         loginSuccess({
           loginMessage: 'Login success, you will be redirected to Home',
           loginStatus: res.statusCode,
+          userInfo: res.userInfo,
         }),
       );
 

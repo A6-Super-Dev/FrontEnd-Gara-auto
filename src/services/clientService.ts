@@ -2,9 +2,16 @@ import axios from 'axios';
 
 import clientAPI from '../common/constants/clientAPI';
 import thirdPartyAPI from '../common/constants/thirdPartyAPI';
-import { ClientLogin, ClientNewPassword, ClientPasswordRecover, ClientSignUp } from '../common/interfaces/Auth';
+import {
+  ClientLogin,
+  ClientNewPassword,
+  ClientPasswordRecover,
+  ClientSignUp,
+  CommentInterface,
+} from '../common/interfaces/Auth';
 import { LoginDataReturn } from '../common/interfaces/Client';
 import { BlogItemInterface } from '../pages/client/blog/BlogItem';
+import { CommentReaction } from '../pages/client/carDetail/CarDetailComment';
 import {
   ClientInfo,
   DistrictAttributes,
@@ -52,8 +59,8 @@ class ClientService {
     return data;
   }
 
-  async getCar(name: string) {
-    const { data } = await AxiosClient.get(clientAPI.getCar(name));
+  async getCar(name: string, id: number) {
+    const { data } = await AxiosClient.get(clientAPI.getCar(name, id));
     return data;
   }
 
@@ -103,6 +110,15 @@ class ClientService {
   async getPaymentReceipt(): Promise<PaymentReceipt[]> {
     const response: PaymentInfo = await AxiosClientAPI.get(clientAPI.getPayment);
     return response.data;
+  }
+  async postComment(comment: CommentInterface) {
+    return AxiosClient.post(clientAPI.postComment, comment);
+  }
+  async reactToComment(reaction: CommentReaction) {
+    return AxiosClient.post(clientAPI.reactToComment, reaction);
+  }
+  async updateCommentReaction(reaction: CommentReaction) {
+    return AxiosClient.patch(clientAPI.updateCommentReaction, reaction);
   }
 }
 
