@@ -39,7 +39,7 @@ export interface ClientNewPassword {
 export interface CommentInterface {
   carId: number;
   comment: string;
-  parent?: string;
+  mom?: string;
   userId: number;
 }
 

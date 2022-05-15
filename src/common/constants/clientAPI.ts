@@ -21,6 +21,8 @@ class ClientAPI {
   getBlogByOffset = (offset: number) => `${this.client}/blog/offset/${offset}`;
   getPayment = `/${this.client}/payment-receipt`;
   postComment = `${this.client}/car/comment`;
+  reactToComment = `${this.client}/car/comment/reaction`;
+  updateCommentReaction = `${this.client}/car/comment/reaction/update`;
 }
 
 export default new ClientAPI();

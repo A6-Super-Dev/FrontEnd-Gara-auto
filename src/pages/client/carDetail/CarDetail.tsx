@@ -1,14 +1,10 @@
-import React, { useState, useEffect, memo, useRef } from 'react';
-import { Box, Container, Grid, Typography, TextField, Avatar, IconButton } from '@mui/material';
+import React, { useState, useEffect, memo } from 'react';
+import { Box, Container, Grid, Typography } from '@mui/material';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useParams } from 'react-router-dom';
 import Rating from '@mui/material/Rating';
-import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
-import ThumbDownOutlinedIcon from '@mui/icons-material/ThumbDownOutlined';
-import ThumbUpIcon from '@mui/icons-material/ThumbUp';
-import ThumbDownIcon from '@mui/icons-material/ThumbDown';
 
 import './CarDetail.scss';
 import 'swiper/css';
@@ -22,6 +18,9 @@ import { useFetchImgs } from '../../../common/hooks/useFetchImgs';
 import clientService from '../../../services/clientService';
 import { ImageGallary } from '../../../components/ImageGallary/ImageGallery';
 import { useAppSelector } from '../../../common/hooks/ReduxHook';
+
+import CarDetailComment, { CommentReaction } from './CarDetailComment';
+
 const accordionProps: Array<UndefinedObject> = [
   {
     title: '1. Giới thiệu',
@@ -43,40 +42,14 @@ const mainParams: UndefinedObject = {
 
 const CarDetail: React.FC = () => {
   const [carInfo, setCarInfo] = useState<any>(undefined);
-  const { downloadImgsFromFirebase } = useFetchImgs();
-  const [comment, setComment] = useState<any>(undefined);
+  const { imgObj, downloadImgsFromFirebase } = useFetchImgs();
+
   const [carComments, setCarComments] = useState<any>([]);
-  const [commentReactions, setCommentReactions] = useState<any>([]);
-  const [sendingComment, setSendingComment] = useState(false);
-  const commentRef = useRef<any>(null);
+  const [commentReactions, setCommentReactions] = useState<Array<CommentReaction>>([]);
+
   const params: any = useParams();
   const userInfo: any = useAppSelector((globalState) => globalState.login.userInfo);
-
-  //comment
-  const onCommentChange = (event: any) => {
-    setComment(event.target.value);
-  };
-
-  const keyDown = async (e: any) => {
-    if (e.key === 'Enter' && e.shiftKey) {
-      return;
-    } else if (e.key === 'Enter') {
-      setSendingComment(true);
-      const result = await clientService.postComment({
-        carId: carInfo.id,
-        comment,
-        parent: '',
-        userId: userInfo.id,
-      });
-
-      setComment(() => '');
-      commentRef.current.blur();
-      commentRef.current.innerHTML = '';
-      setSendingComment(false);
-    }
-  };
-
-  //comment
+  const userStatus: any = useAppSelector((globalState) => globalState.login.status);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -90,67 +63,16 @@ const CarDetail: React.FC = () => {
       );
       setCarInfo(carInfo);
       setCarComments(comments);
-      setCommentReactions(commentReactions);
+      const newReactions = commentReactions.map((reaction: any) => {
+        delete reaction.car_id;
+        delete reaction.comment_id;
+        delete reaction.user_id;
+        return reaction;
+      });
+      setCommentReactions(newReactions);
     };
     fetchCar();
   }, [params.car, params.id]);
-
-  useEffect(() => {
-    const resetComment = () => {
-      const obj1: any = {};
-      const obj2: any = {};
-      const obj3: any = {};
-
-      if (commentReactions.length > 0) {
-        commentReactions.forEach((element: any) => {
-          if (!obj1[element.commentId] && element.like === 1) {
-            obj1[element.commentId] = 1;
-          } else if (element.like === 1) {
-            obj1[element.commentId]++;
-          }
-        });
-      }
-      if (commentReactions.length > 0) {
-        commentReactions.forEach((element: any) => {
-          if (!obj2[element.commentId] && element.like === 0) {
-            obj2[element.commentId] = 1;
-          } else if (element.like === 0) {
-            obj2[element.commentId]++;
-          }
-        });
-      }
-
-      const currUserReactions = commentReactions.filter((comment: any) => {
-        return comment.userId === userInfo.id;
-      });
-
-      currUserReactions.forEach((reaction: any) => {
-        if (reaction.like === 1) {
-          obj3[reaction.commentId] = 'like';
-        } else if (reaction.dislike === 1) {
-          obj3[reaction.commentId] = 'dislike';
-        } else {
-          obj3[reaction.commentId] = 'none';
-        }
-      });
-      setCarComments((comments: any) => {
-        let tempComments = comments;
-        tempComments = tempComments.map((comment: any) => {
-          return {
-            ...comment,
-            like: obj1[comment.id] || 0,
-            dislike: obj2[comment.id] || 0,
-            status: obj3[comment.id],
-          };
-        });
-        return tempComments;
-      });
-    };
-    resetComment();
-  }, [commentReactions, userInfo.id]);
-
-  console.log('commentReactions', commentReactions);
-  console.log('carComments', carComments);
 
   useEffect(() => {
     const fetchAllImgs = async () => {
@@ -169,7 +91,7 @@ const CarDetail: React.FC = () => {
   return (
     <Container maxWidth={false}>
       <Box sx={{ marginTop: '154px' }}>
-        {/* <Container maxWidth="lg" className="car-container">
+        <Container maxWidth="lg" className="car-container">
           <Grid
             container
             sx={{ height: '100%', borderColor: '#C3CAD8', borderWidth: '1px', borderRadius: '5px', padding: '15px' }}
@@ -296,75 +218,18 @@ const CarDetail: React.FC = () => {
               </div>
             </Grid>
           </Grid>
-        </Container> */}
-        <Container maxWidth="md" className="car-comments">
-          <TextField
-            label="Bình luận"
-            multiline
-            rows={4}
-            fullWidth
-            InputLabelProps={{ style: { fontSize: 18 } }}
-            onChange={onCommentChange}
-            onKeyDown={keyDown}
-            className="writing-comment-area"
-            value={comment}
-            inputRef={commentRef}
-            disabled={sendingComment}
-          />
-          <Box className="comments-area">
-            {carComments.map((comment: any, idx: number) => {
-              return (
-                <>
-                  <Box className={`comment-wrapper ${idx % 2 && 'slight-gray-bg'}`}>
-                    <Box className="user-avatar">
-                      <Avatar src={comment.userInfo.info.avatar} alt="" sx={{ width: 56, height: 56 }} />
-                    </Box>
-                    <Box className="user-comment">
-                      <Box className="user-name">
-                        {comment?.userInfo?.info?.firstName} {comment?.userInfo?.info?.lastName}
-                      </Box>
-                      <Box className="comment">{comment?.comment}</Box>
-                      <Box className="like-dislike-area">
-                        <Box className="like-area">
-                          {userInfo.id === comment.userId && comment.status === 'like' ? (
-                            <>
-                              <IconButton>
-                                <ThumbUpIcon />
-                              </IconButton>
-                            </>
-                          ) : (
-                            <>
-                              <IconButton>
-                                <ThumbUpOutlinedIcon />
-                              </IconButton>
-                            </>
-                          )}
-                          &nbsp; {comment.like}
-                        </Box>
-                        <Box className="dislike-area">
-                          {userInfo.id === comment.userId && comment.status === 'dislike' ? (
-                            <>
-                              <IconButton>
-                                <ThumbDownIcon />
-                              </IconButton>
-                            </>
-                          ) : (
-                            <>
-                              <IconButton>
-                                <ThumbDownOutlinedIcon />
-                              </IconButton>
-                            </>
-                          )}
-                          &nbsp; {comment.dislike}
-                        </Box>
-                      </Box>
-                    </Box>
-                  </Box>
-                </>
-              );
-            })}
-          </Box>
         </Container>
+
+        <CarDetailComment
+          userStatus={userStatus}
+          carInfo={carInfo}
+          userInfo={userInfo}
+          carComments={carComments}
+          setCarComments={setCarComments}
+          commentReactions={commentReactions}
+          setCommentReactions={setCommentReactions}
+          params={params}
+        />
       </Box>
     </Container>
   );

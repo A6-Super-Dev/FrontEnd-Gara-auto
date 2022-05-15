@@ -11,6 +11,7 @@ import {
 } from '../common/interfaces/Auth';
 import { LoginDataReturn } from '../common/interfaces/Client';
 import { BlogItemInterface } from '../pages/client/blog/BlogItem';
+import { CommentReaction } from '../pages/client/carDetail/CarDetailComment';
 import {
   ClientInfo,
   DistrictAttributes,
@@ -112,6 +113,12 @@ class ClientService {
   }
   async postComment(comment: CommentInterface) {
     return AxiosClient.post(clientAPI.postComment, comment);
+  }
+  async reactToComment(reaction: CommentReaction) {
+    return AxiosClient.post(clientAPI.reactToComment, reaction);
+  }
+  async updateCommentReaction(reaction: CommentReaction) {
+    return AxiosClient.patch(clientAPI.updateCommentReaction, reaction);
   }
 }
 
