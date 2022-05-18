@@ -18,6 +18,15 @@ jobs:
 
     steps:
       - uses: actions/checkout@v1
+
+      - name: Cypress install
+        uses: cypress-io/github-action@v2 # <----- This is where mine fails, when cypress is installing
+        with:
+          runTests: false
+
+      - name: Rebuild node sass
+        run: npm rebuild node-sass
+
       - uses: jsmrcaga/action-netlify-deploy@master
         with:
           NETLIFY_AUTH_TOKEN: QViW0j3IXyIwGSibH6gpm9esFQjfHY4WGQv-_PuP2xI
