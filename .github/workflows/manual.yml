@@ -1,0 +1,26 @@
+# This is a basic workflow that is manually triggered
+
+name: Continuous Integration For Front-end
+
+# Controls when the action will run. Workflow runs when manually triggered using the UI
+# or API.
+on:
+  release:
+    types: ['published']
+
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  deploy:
+    name: 'Deploy'
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v1
+      - uses: jsmrcaga/action-netlify-deploy@master
+        with:
+          NETLIFY_AUTH_TOKEN: QViW0j3IXyIwGSibH6gpm9esFQjfHY4WGQv-_PuP2xI
+          NETLIFY_SITE_ID: 9e4dd1e6-0782-4bbe-9cc0-395a2b3a719f
+          NETLIFY_DEPLOY_MESSAGE: 'Deploy on production'
+          NETLIFY_DEPLOY_TO_PROD: true
