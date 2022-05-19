@@ -5,6 +5,7 @@ import { ClientInfoAttributes, WishList } from '../../types/auth';
 export interface ClientDetailAttributes extends ClientInfoAttributes {
   id: number;
   userId: number;
+  safeDeleteWishList: number[];
 }
 
 const initialState: ClientDetailAttributes = {
@@ -25,6 +26,7 @@ const initialState: ClientDetailAttributes = {
   avatar: '',
   coupons: [],
   wishlist: [],
+  safeDeleteWishList: [],
 };
 
 export const UserSlice = createSlice({
@@ -44,18 +46,32 @@ export const UserSlice = createSlice({
     resetEmpty: (state: ClientDetailAttributes) => {
       state.wishlist = [];
     },
-    adjustList: (state: ClientDetailAttributes, action: PayloadAction<WishList>) => {
-      const { wishlist } = state;
-      const index = wishlist.findIndex((each) => action.payload.carId === each.carId);
-      if (index !== -1) {
-        wishlist.splice(index, 1);
-      } else {
-        wishlist.push(action.payload);
+    adjustList: (state: ClientDetailAttributes) => {
+      const { safeDeleteWishList, wishlist } = state;
+      if (safeDeleteWishList.length !== 0) {
+        safeDeleteWishList.forEach((itemToDelete) => {
+          const index = wishlist.findIndex((item) => item.carId === itemToDelete);
+          wishlist.splice(index, 1);
+        });
       }
+    },
+    setSafeDeleteList: (state: ClientDetailAttributes, action: PayloadAction<WishList>) => {
+      state.safeDeleteWishList.push(action.payload.carId);
+    },
+    resetSafeDeleteList: (state: ClientDetailAttributes) => {
+      state.safeDeleteWishList = [];
     },
   },
 });
 
-export const { setClientRelatedInfo, setKeyInfo, setWishList, resetEmpty, adjustList } = UserSlice.actions;
+export const {
+  setClientRelatedInfo,
+  setKeyInfo,
+  setWishList,
+  resetEmpty,
+  adjustList,
+  setSafeDeleteList,
+  resetSafeDeleteList,
+} = UserSlice.actions;
 
 export default UserSlice.reducer;

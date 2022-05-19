@@ -25,6 +25,7 @@ class ClientAPI {
   updateCommentReaction = `${this.client}/car/comment/reaction/update`;
   getBrandItemAttributes = (brand: string) => `${this.client}/filter-car/get-attributes/${brand}`;
   filterBrandItem = `${this.client}/filter-car`;
+  updateClientWishList = `${this.client}/wish-list`;
 }
 
 export default new ClientAPI();
