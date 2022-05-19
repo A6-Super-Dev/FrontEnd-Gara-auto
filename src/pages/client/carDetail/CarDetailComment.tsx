@@ -1,12 +1,14 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Box, Container, Grid, Typography, TextField, Avatar, IconButton } from '@mui/material';
+import { Box, Container, TextField, Avatar, IconButton } from '@mui/material';
 import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
 import ThumbDownOutlinedIcon from '@mui/icons-material/ThumbDownOutlined';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ThumbDownIcon from '@mui/icons-material/ThumbDown';
+import { useNavigate } from 'react-router-dom';
 
 import clientService from '../../../services/clientService';
 import { ClientDetailAttributes } from '../../../reduxToolKit-Saga/common/User/ClientSlice';
+import TimeHelper from '../../../common/helper/time';
 
 export type CommentReaction = {
   carId: number;
@@ -16,7 +18,6 @@ export type CommentReaction = {
   like: number;
   userId: number;
 };
-
 function broofa() {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
     const r = (Math.random() * 16) | 0,
@@ -45,9 +46,8 @@ const CarDetailComment: React.FC<{
   params,
 }) => {
   const [comment, setComment] = useState<any>(undefined);
-  //   const [carComments, setCarComments] = useState<any>([]);
-  //   const [commentReactions, setCommentReactions] = useState<Array<CommentReaction>>([]);
   const [sendingComment, setSendingComment] = useState(false);
+  const navigate = useNavigate();
   const commentRef = useRef<any>(null);
 
   const onCommentChange = (event: any) => {
@@ -108,6 +108,7 @@ const CarDetailComment: React.FC<{
 
   const likeComment = async (commentId: number) => {
     if (userStatus === 'Unauthorized') {
+      navigate('/auth/user/log-in');
       return;
     }
 
@@ -137,6 +138,7 @@ const CarDetailComment: React.FC<{
 
   const dislikeComment = async (commentId: number) => {
     if (userStatus === 'Unauthorized') {
+      navigate('/auth/user/log-in');
       return;
     }
 
@@ -213,11 +215,19 @@ const CarDetailComment: React.FC<{
             status: obj3[comment.id],
           };
         });
+        tempComments = tempComments.sort((a: any, b: any) => {
+          return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+        });
         return tempComments;
       });
     };
     resetComment();
   }, [commentReactions, setCarComments, userInfo.id]);
+  const calculateTimeDuration = (startTime: any) => {
+    const timeDiff = new Date().getTime() - new Date(startTime).getTime();
+    return TimeHelper.calDayHourMinutes(timeDiff);
+  };
+  console.log('carComments', carComments);
 
   return (
     <>
@@ -238,53 +248,55 @@ const CarDetailComment: React.FC<{
         <Box className="comments-area">
           {carComments.map((comment: any, idx: number) => {
             return (
-              <>
-                <Box className={`comment-wrapper ${idx % 2 && 'slight-gray-bg'}`}>
-                  <Box className="user-avatar">
-                    <Avatar src={comment.userInfo.info.avatar} alt="" sx={{ width: 56, height: 56 }} />
-                  </Box>
-                  <Box className="user-comment">
+              <Box key={idx} className={`comment-wrapper ${idx % 2 && 'slight-gray-bg'}`}>
+                <Box className="user-avatar">
+                  <Avatar src={comment.userInfo.info.avatar} alt="" sx={{ width: 56, height: 56 }} />
+                </Box>
+                <Box className="user-comment">
+                  <Box className="user-name-time-container">
                     <Box className="user-name">
                       {comment?.userInfo?.info?.firstName} {comment?.userInfo?.info?.lastName}
                     </Box>
-                    <Box className="comment">{comment?.comment}</Box>
-                    <Box className="like-dislike-area">
-                      <Box className="like-area" onClick={() => likeComment(comment.id)}>
-                        {comment.status === 'like' ? (
-                          <>
-                            <IconButton>
-                              <ThumbUpIcon />
-                            </IconButton>
-                          </>
-                        ) : (
-                          <>
-                            <IconButton>
-                              <ThumbUpOutlinedIcon />
-                            </IconButton>
-                          </>
-                        )}
-                        &nbsp; {comment.like}
-                      </Box>
-                      <Box className="dislike-area" onClick={() => dislikeComment(comment.id)}>
-                        {comment.status === 'dislike' ? (
-                          <>
-                            <IconButton>
-                              <ThumbDownIcon />
-                            </IconButton>
-                          </>
-                        ) : (
-                          <>
-                            <IconButton>
-                              <ThumbDownOutlinedIcon />
-                            </IconButton>
-                          </>
-                        )}
-                        &nbsp; {comment.dislike}
-                      </Box>
+                    <Box className="time-diff">{calculateTimeDuration(comment.createdAt)}</Box>
+                  </Box>
+
+                  <Box className="comment">{comment?.comment}</Box>
+                  <Box className="like-dislike-area">
+                    <Box className="like-area" onClick={() => likeComment(comment.id)}>
+                      {comment.status === 'like' ? (
+                        <>
+                          <IconButton>
+                            <ThumbUpIcon />
+                          </IconButton>
+                        </>
+                      ) : (
+                        <>
+                          <IconButton>
+                            <ThumbUpOutlinedIcon />
+                          </IconButton>
+                        </>
+                      )}
+                      &nbsp; {comment.like}
+                    </Box>
+                    <Box className="dislike-area" onClick={() => dislikeComment(comment.id)}>
+                      {comment.status === 'dislike' ? (
+                        <>
+                          <IconButton>
+                            <ThumbDownIcon />
+                          </IconButton>
+                        </>
+                      ) : (
+                        <>
+                          <IconButton>
+                            <ThumbDownOutlinedIcon />
+                          </IconButton>
+                        </>
+                      )}
+                      &nbsp; {comment.dislike}
                     </Box>
                   </Box>
                 </Box>
-              </>
+              </Box>
             );
           })}
         </Box>
@@ -293,4 +305,4 @@ const CarDetailComment: React.FC<{
   );
 };
 
-export default CarDetailComment;
+export default React.memo(CarDetailComment);
