@@ -19,6 +19,7 @@ export interface WishList {
     carAppearance: { imgs: string };
     brand: { name: string };
   };
+  carId: number;
 }
 
 export interface Coupon {

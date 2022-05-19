@@ -48,7 +48,7 @@ const CarDetail: React.FC = () => {
   const [commentReactions, setCommentReactions] = useState<Array<CommentReaction>>([]);
 
   const params: any = useParams();
-  const userInfo: any = useAppSelector((globalState) => globalState.login.userInfo);
+  const userInfo = useAppSelector((globalState) => globalState.clientInfo);
   const userStatus: any = useAppSelector((globalState) => globalState.login.status);
 
   useEffect(() => {

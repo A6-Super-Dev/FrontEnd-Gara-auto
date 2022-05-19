@@ -6,6 +6,7 @@ import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ThumbDownIcon from '@mui/icons-material/ThumbDown';
 
 import clientService from '../../../services/clientService';
+import { ClientDetailAttributes } from '../../../reduxToolKit-Saga/common/User/ClientSlice';
 
 export type CommentReaction = {
   carId: number;
@@ -27,7 +28,7 @@ function broofa() {
 const CarDetailComment: React.FC<{
   userStatus: string;
   carInfo: any;
-  userInfo: any;
+  userInfo: ClientDetailAttributes;
   carComments: any;
   setCarComments: any;
   commentReactions: Array<CommentReaction>;

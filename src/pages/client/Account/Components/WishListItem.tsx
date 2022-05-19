@@ -6,7 +6,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { WishList } from '../../../../reduxToolKit-Saga/types/auth';
 import { ColorSchema } from '../../../../components/MuiStyling/MuiStyling';
 import { useAppDispatch } from '../../../../common/hooks/ReduxHook';
-import { adjustList } from '../../../../reduxToolKit-Saga/common/User/WishListSlice';
+import { adjustList } from '../../../../reduxToolKit-Saga/common/User/ClientSlice';
 
 interface WishListItemProp {
   item: WishList;

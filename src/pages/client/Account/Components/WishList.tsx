@@ -14,7 +14,7 @@ const WishList = () => {
   const [isEditing, setIsEditing] = React.useState<boolean>(false);
   const [openSnackBar, setOpenSnackBar] = React.useState<boolean>(false);
   const [message, setMessage] = React.useState<string>('');
-  const wishList = useAppSelector((globalState: RootState) => globalState.wishlist.list);
+  const wishList = useAppSelector((globalState: RootState) => globalState.clientInfo.wishlist);
   const { loading } = useAppSelector((globalState: RootState) => globalState.general);
   const dispatch = useAppDispatch();
 
