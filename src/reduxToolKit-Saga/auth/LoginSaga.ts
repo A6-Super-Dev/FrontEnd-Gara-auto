@@ -7,7 +7,7 @@ import { destroyCookie, destroyLocalStorageItem, setCookie, setLocalStorageItem 
 import { LoginDataReturn } from '../../common/interfaces/Client';
 import ClientService from '../../services/clientService';
 import { AuthActionType, LoginErrorResponse, LoginParams, User } from '../types/auth';
-import { resetEmpty, setWishList } from '../common/User/WishListSlice';
+import { setClientRelatedInfo, setKeyInfo, resetEmpty } from '../common/User/ClientSlice';
 
 import { login, loginReject, loginSuccess, logOut, reset } from './LoginSlice';
 
@@ -21,7 +21,13 @@ function* loginSaga(action: PayloadAction<LoginParams>) {
         loginSuccess({
           loginMessage: 'Login success, you will be redirected to Home',
           loginStatus: res.statusCode,
-          userInfo: res.userInfo,
+        }),
+      );
+
+      yield put(
+        setKeyInfo({
+          id: res.userInfo.id,
+          userId: res.userInfo.userId,
         }),
       );
 
@@ -29,7 +35,8 @@ function* loginSaga(action: PayloadAction<LoginParams>) {
       setLocalStorageItem('token', String(res.headers.authorization));
 
       const user: User = yield call(() => ClientService.getClientData());
-      yield put(setWishList(user.info.wishlist));
+
+      yield put(setClientRelatedInfo(user.info));
       setTimeout(() => {
         window.location.pathname = document.referrer;
       }, 400);
