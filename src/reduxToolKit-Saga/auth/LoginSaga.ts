@@ -31,7 +31,7 @@ function* loginSaga(action: PayloadAction<LoginParams>) {
       const user: User = yield call(() => ClientService.getClientData());
       yield put(setWishList(user.info.wishlist));
       setTimeout(() => {
-        window.location.pathname = routerPath.common.HOME;
+        window.location.pathname = document.referrer;
       }, 400);
       yield put(reset());
     }
