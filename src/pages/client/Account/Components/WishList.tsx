@@ -81,14 +81,17 @@ const WishList = () => {
       <p className="text-guild-line">WishList</p>
       {wishlist.length === 0 && !loading && renderEmptyList()}
       <div className="relative mb-5">
-        <Button
-          variant="contained"
-          sx={{ backgroundColor: ColorSchema.LightGreen }}
-          endIcon={isEditing ? <Save /> : <ModeEdit />}
-          onClick={handleEditing}
-        >
-          {isEditing ? 'Save' : 'Edit'}
-        </Button>
+        {wishlist.length !== 0 ||
+          (safeDeleteWishList.length !== 0 && (
+            <Button
+              variant="contained"
+              sx={{ backgroundColor: ColorSchema.LightGreen }}
+              endIcon={isEditing ? <Save /> : <ModeEdit />}
+              onClick={handleEditing}
+            >
+              {isEditing ? 'Save' : 'Edit'}
+            </Button>
+          ))}
 
         {isEditing && (
           <Button
