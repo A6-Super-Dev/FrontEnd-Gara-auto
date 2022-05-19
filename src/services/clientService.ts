@@ -8,6 +8,7 @@ import {
   ClientPasswordRecover,
   ClientSignUp,
   CommentInterface,
+  FilterBrandItemInput,
 } from '../common/interfaces/Auth';
 import { LoginDataReturn } from '../common/interfaces/Client';
 import { BlogItemInterface } from '../pages/client/blog/BlogItem';
@@ -97,6 +98,7 @@ class ClientService {
   async updateCLientInfo(data: UpdateClientInfoAttributes): Promise<void> {
     await AxiosClientAPI.patch(clientAPI.updateProfile, data);
   }
+
   async getBlogs(page: number, limit = 10) {
     return AxiosClient.get(clientAPI.getBlogs(page, limit));
   }
@@ -119,6 +121,16 @@ class ClientService {
   }
   async updateCommentReaction(reaction: CommentReaction) {
     return AxiosClient.patch(clientAPI.updateCommentReaction, reaction);
+  }
+
+  async getAllBrandItemAttribute(brand: string) {
+    const { data } = await AxiosClient.get(clientAPI.getBrandItemAttributes(brand));
+    return data;
+  }
+
+  async filterInBrandItem(params: FilterBrandItemInput) {
+    const { data } = await AxiosClient.post(clientAPI.filterBrandItem, params);
+    return data;
   }
 }
 

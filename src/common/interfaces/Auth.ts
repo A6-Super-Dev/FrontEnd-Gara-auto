@@ -42,6 +42,13 @@ export interface CommentInterface {
   mom?: string;
   userId: number;
 }
+export interface FilterBrandItemInput {
+  brandName: string;
+  designType: string;
+  price: string;
+  seat: string;
+  radio: string;
+}
 
 export enum UserRoles {
   CLIENT = 'CLIENT',
