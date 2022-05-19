@@ -24,6 +24,7 @@ const generalPersistConfig: PersistConfig<any, unknown, unknown, unknown> = {
 
 const clientPersistConfig: PersistConfig<any, unknown, unknown, unknown> = {
   key: 'client',
+  blacklist: ['safeDeleteWishList'],
   storage,
 };
 

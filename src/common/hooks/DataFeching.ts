@@ -21,7 +21,7 @@ export function useFetch<OutputDataType = any, InputDataType = any>(
   const [loading, setLoading] = React.useState<boolean>(false);
   const [errorMessage, setErrorMessage] = React.useState<string>('');
 
-  const functionFetchData = React.useCallback(async (): Promise<void> => {
+  const functionFetchData = React.useCallback(async (): Promise<OutputDataType> => {
     const response: AxiosResponse<OutputDataType> = await axios.request({
       method,
       url: ServiceTypes.BASE_URL + url,
@@ -30,14 +30,15 @@ export function useFetch<OutputDataType = any, InputDataType = any>(
       },
       data: inputData,
     });
-    setOutputData(response.data);
+    return response.data;
   }, [method, url, needToken, inputData]);
 
   const beginFetchData = React.useCallback(async () => {
     try {
       //To actually fetch data we must use setLoading(true)
       if (loading) {
-        await functionFetchData();
+        const value = await functionFetchData();
+        setOutputData(value);
         setLoading((prev) => !prev);
       }
     } catch (error: any) {
@@ -64,5 +65,5 @@ export function useFetch<OutputDataType = any, InputDataType = any>(
     beginFetchData();
   }, [beginFetchData]);
 
-  return [outputData, errorMessage, loading, setLoading, setInputData] as const;
+  return [outputData, errorMessage, setInputData, setLoading, loading] as const;
 }
