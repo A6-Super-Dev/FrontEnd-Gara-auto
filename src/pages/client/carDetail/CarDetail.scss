@@ -88,6 +88,7 @@
 .starring-container {
   max-width: 100%;
   height: auto;
+  cursor: pointer;
 }
 .car-staring {
   height: 72px;
@@ -108,30 +109,117 @@
   @apply flex flex-row justify-center align-middle items-center;
 }
 
-.related-cars-container {
+.related-cars-blogs {
   width: 100%;
-  height: 500px;
+  display: block;
+  margin-top: 1rem;
+
+  .relatedCar-image {
+    img {
+      width: 100%;
+      object-fit: cover !important;
+      max-width: none;
+      border-radius: 5px;
+      max-height: 160px;
+      @media (max-width: 900px) {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        max-height: none;
+      }
+      @media (max-width: 600px) {
+        width: 100%;
+        height: 100%;
+      }
+    }
+  }
+  .relatedCar-content-wrapper,
+  .relatedBLogs-content-wrapper {
+    height: 100%;
+    @apply ml-4 flex flex-col justify-evenly;
+    @media (max-width: 900px) {
+      margin-top: 1rem;
+      @apply flex flex-col justify-center;
+      .blog-title {
+        -webkit-box-orient: vertical;
+        display: -webkit-box;
+        -webkit-line-clamp: 1 !important;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: normal;
+      }
+    }
+    .name {
+      -webkit-box-orient: vertical;
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: normal;
+      @apply text-xl;
+    }
+    .price {
+      color: red;
+    }
+    .blog-title {
+      font-weight: 600;
+      -webkit-box-orient: vertical;
+      display: -webkit-box;
+      -webkit-line-clamp: 4;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: normal;
+      @media (max-width: 1200px) {
+        margin-top: 1rem;
+      }
+      @media (max-width: 900px) {
+        margin-top: 1rem;
+        text-align: center;
+      }
+    }
+  }
+
+  .relatedBLogs-content-wrapper {
+    img {
+      @media (max-width: 900px) {
+        width: 100% !important;
+        height: 200px !important;
+        object-fit: cover !important;
+        max-height: none !important;
+      }
+    }
+  }
 }
-.related-cars-text-wrapper {
-  height: 30px;
+
+.related-blogs {
+  @apply mt-8;
+}
+.intro-container {
+  height: auto;
   width: 100%;
-  border-color: black;
-  text-align: center;
-  @apply border-t-2 mt-10;
-}
-.related-cars-text {
   position: relative;
-  background-color: white;
-  padding: 15px;
-  bottom: 50%;
-  line-height: 30px;
-  font-size: 30px;
-  color: red;
+  margin-top: 2rem;
+  .black-line {
+    width: 100%;
+    position: absolute;
+    bottom: 50%;
+    border-top: 2px solid black;
+    z-index: -9;
+  }
+}
+.text-wrapper {
+  cursor: pointer;
+  @apply flex items-center justify-center;
+  .related-cars-text {
+    padding: 15px;
+    font-size: 30px;
+    color: red;
+    background-color: white;
+    z-index: 9;
+  }
 }
 .car-comments {
   @apply my-8;
-  .writing-comment-area {
-  }
   .comments-area {
     @apply mt-8;
     .slight-gray-bg {
@@ -146,14 +234,25 @@
       .user-comment {
         width: 90%;
         @apply pl-8;
+        .user-name-time-container {
+          @apply flex;
+          .time-diff {
+            color: #606060;
+            cursor: pointer;
+            user-select: none;
+            padding-left: 1rem;
+            font-size: 14px;
+            @apply flex items-center;
+          }
+        }
         .user-name {
           font-weight: 600;
         }
         .comment {
-          @apply pt-4;
+          @apply pt-2;
         }
         .like-dislike-area {
-          @apply pt-4 flex;
+          @apply pt-2 flex;
           .like-area {
             user-select: none;
             @apply mr-8;

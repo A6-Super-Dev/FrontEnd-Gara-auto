@@ -43,6 +43,17 @@ class TimeHelper {
   formatDate = (day: Date | string) => {
     return moment(day).format('MMMM Do YYYY');
   };
+
+  calDayHourMinutes = (time: number) => {
+    const days = Math.floor(time / (24 * 60 * 60 * 1000));
+    const daysms = time % (24 * 60 * 60 * 1000);
+    const hours = Math.floor(daysms / (60 * 60 * 1000));
+    const hoursms = time % (60 * 60 * 1000);
+    const minutes = Math.floor(hoursms / (60 * 1000));
+    if (days > 0) return `${days} ngày trước`;
+    else if (hours > 0) return `${hours} giờ trước`;
+    else if (minutes >= 0) return `${minutes} phút trước`;
+  };
 }
 
 export default new TimeHelper();

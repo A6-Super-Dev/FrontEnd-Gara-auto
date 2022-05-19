@@ -234,14 +234,6 @@ export const BrandItem: React.FC = () => {
     return temp;
   }, [brandItemAPI.descriptions, imgObj.brandImgs, originalImgs]);
 
-  // const getImgFromAPI = (img: string) => {
-  //   const handleImg1 = img.split(',');
-  //   const handleImg2 = handleImg1.map((item) =>
-  //     item.replaceAll('"', '').replaceAll('"', '').replace('[', '').replace(']', ''),
-  //   );
-  //   return handleImg2[1];
-  // };
-
   return (
     <Container maxWidth={false} className="brand_item-container mt-12">
       <div style={mainImgStyle(params?.brandName)}>
@@ -362,12 +354,7 @@ export const BrandItem: React.FC = () => {
                           <CardMedia
                             className="h-36 "
                             component="img"
-                            image={
-                              // item.carAppearance.introImgs.length > 5
-                              //   ? getImgFromAPI(item.carAppearance.introImgs)
-                              //   : getImgFromAPI(item.carAppearance.imgs)
-                              imgFromFirebase[index]
-                            }
+                            image={imgFromFirebase[index]}
                             alt="green iguana"
                           />
                           <CardContent sx={{ paddingInline: '1.5rem', minHeight: '8rem' }}>

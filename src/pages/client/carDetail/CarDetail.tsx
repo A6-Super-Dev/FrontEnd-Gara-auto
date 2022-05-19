@@ -18,8 +18,11 @@ import { useFetchImgs } from '../../../common/hooks/useFetchImgs';
 import clientService from '../../../services/clientService';
 import { ImageGallary } from '../../../components/ImageGallary/ImageGallery';
 import { useAppSelector } from '../../../common/hooks/ReduxHook';
+import useCarDetail from '../../../common/hooks/useCarDetail';
+import useBlog from '../../../common/hooks/useBlog';
 
 import CarDetailComment, { CommentReaction } from './CarDetailComment';
+import RelatedCarsAndBlogs from './RelatedCarsAndBlogs';
 
 const accordionProps: Array<UndefinedObject> = [
   {
@@ -43,9 +46,13 @@ const mainParams: UndefinedObject = {
 const CarDetail: React.FC = () => {
   const [carInfo, setCarInfo] = useState<any>(undefined);
   const { imgObj, downloadImgsFromFirebase } = useFetchImgs();
+  const { reformatCars } = useCarDetail();
+  const { reformatBlogs } = useBlog();
 
   const [carComments, setCarComments] = useState<any>([]);
   const [commentReactions, setCommentReactions] = useState<Array<CommentReaction>>([]);
+  const [relatedCars, setRelatedCars] = useState<any>([]);
+  const [relatedBlogs, setRelatedBlogs] = useState<any>([]);
 
   const params: any = useParams();
   const userInfo = useAppSelector((globalState) => globalState.clientInfo);
@@ -57,12 +64,17 @@ const CarDetail: React.FC = () => {
 
   useEffect(() => {
     const fetchCar = async () => {
-      const { comments, carInfo, commentReactions } = await clientService.getCar(
+      const { comments, carInfo, commentReactions, relatedCars, relatedBlogs } = await clientService.getCar(
+        params.brandName,
         params.car as string,
         +params?.id as any,
       );
       setCarInfo(carInfo);
       setCarComments(comments);
+      const cars = await reformatCars(relatedCars);
+      setRelatedCars(cars);
+      const blogs = await Promise.all(reformatBlogs(relatedBlogs));
+      setRelatedBlogs(blogs);
       const newReactions = commentReactions.map((reaction: any) => {
         delete reaction.car_id;
         delete reaction.comment_id;
@@ -72,7 +84,7 @@ const CarDetail: React.FC = () => {
       setCommentReactions(newReactions);
     };
     fetchCar();
-  }, [params.car, params.id]);
+  }, [params.car, params.id, params.brandName, reformatCars, reformatBlogs]);
 
   useEffect(() => {
     const fetchAllImgs = async () => {
@@ -113,14 +125,12 @@ const CarDetail: React.FC = () => {
                     <tbody>
                       {Object.keys(mainParams)?.map((carParam, idx) => {
                         return (
-                          <>
-                            <tr key={idx}>
-                              <td className="table-first-el">
-                                <strong>{mainParams[carParam]}</strong>
-                              </td>
-                              {carInfo && <td className="table-second-el">{carInfo?.[carParam]}</td>}
-                            </tr>
-                          </>
+                          <tr key={idx}>
+                            <td className="table-first-el">
+                              <strong>{mainParams[carParam]}</strong>
+                            </td>
+                            {carInfo && <td className="table-second-el">{carInfo?.[carParam]}</td>}
+                          </tr>
                         );
                       })}
                     </tbody>
@@ -140,7 +150,7 @@ const CarDetail: React.FC = () => {
                       return (
                         <DarkAccordion
                           disableGutters={true}
-                          defaultExpanded={[0].includes(idx) ? true : false}
+                          defaultExpanded={[0, 1].includes(idx) ? true : false}
                           key={idx}
                         >
                           <AccordionSummary
@@ -211,11 +221,13 @@ const CarDetail: React.FC = () => {
                   </div>
                 </div>
               </div>
-              <div className="related-cars-container">
-                <div className="related-cars-text-wrapper">
+              <Box className="intro-container">
+                <div className="text-wrapper">
                   <span className="related-cars-text">Xe liên quan</span>
                 </div>
-              </div>
+                <div className="black-line"></div>
+              </Box>
+              <RelatedCarsAndBlogs params={params} relatedCars={relatedCars} relatedBlogs={relatedBlogs} />
             </Grid>
           </Grid>
         </Container>

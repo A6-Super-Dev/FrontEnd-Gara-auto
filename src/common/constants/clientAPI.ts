@@ -11,7 +11,7 @@ class ClientAPI {
   apiCheck = `${this.auth}/api-check`;
   checkValid = `${this.auth}/check-valid`;
   getAllBrand = `${this.client}/brand/get-all`;
-  getCar = (name: string, id: number) => `${this.client}/car/get-one/${name}/${id}`;
+  getCar = (brand: string, name: string, id: number) => `${this.client}/car/get-one/${brand}/${name}/${id}`;
   getCarByBrandName = (brand: string) => `${this.client}/car/brand/${brand}`;
   getBrand = (brand: string) => `${this.client}/brand/${brand}`;
   getClientData = `/${this.client}/client-data`;

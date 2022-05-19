@@ -1,11 +1,11 @@
-export const replaceDirtyImgUrls = (imgs: string):Array<string> => {
+export const replaceDirtyImgUrls = (imgs: string): Array<string> => {
   let newImgs: string | Array<string> = imgs;
   if (typeof imgs !== 'object') {
-    newImgs = imgs.split(`","`);
+    newImgs = imgs?.split(`","`);
   }
   if (Array.isArray(newImgs)) {
     return newImgs.map((url) => {
-      return url.replaceAll(`\"]`, '').replaceAll(`[\"`, '');
+      return url.replaceAll(`\"]`, '').replaceAll(`[\"`, '').replaceAll('https://img.tinbanxe.vn/', '');
     });
   }
   return [''];
