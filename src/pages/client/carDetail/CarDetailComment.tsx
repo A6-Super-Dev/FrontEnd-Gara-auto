@@ -59,7 +59,7 @@ const CarDetailComment: React.FC<{
       return;
     } else if (e.key === 'Enter') {
       setSendingComment(true);
-      const result = await clientService.postComment({
+      await clientService.postComment({
         carId: carInfo.id,
         comment,
         mom: '',

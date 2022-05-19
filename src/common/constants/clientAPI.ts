@@ -23,6 +23,8 @@ class ClientAPI {
   postComment = `${this.client}/car/comment`;
   reactToComment = `${this.client}/car/comment/reaction`;
   updateCommentReaction = `${this.client}/car/comment/reaction/update`;
+  getBrandItemAttributes = (brand: string) => `${this.client}/filter-car/get-attributes/${brand}`;
+  filterBrandItem = `${this.client}/filter-car`;
 }
 
 export default new ClientAPI();
