@@ -26,6 +26,7 @@ class ClientAPI {
   getBrandItemAttributes = (brand: string) => `${this.client}/filter-car/get-attributes/${brand}`;
   filterBrandItem = `${this.client}/filter-car`;
   updateClientWishList = `${this.client}/wish-list`;
+  updateClientAvatar = `${this.client}/update-client-avatar`;
 }
 
 export default new ClientAPI();

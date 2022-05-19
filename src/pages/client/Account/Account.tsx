@@ -31,12 +31,14 @@ export enum Refresher {
 const tabExist = [Tab.PROFILE, Tab.WISH_LIST, Tab.HISTORY];
 
 export const Account = () => {
+  const formData = new FormData();
   const [client, setClient] = React.useState<User | null>(null);
   const { state }: any = useLocation();
   const [loading, setLoading] = React.useState<boolean>(false);
   const [tab, setTab] = React.useState<Tab>(state === null ? Tab.PROFILE : (state.component as Tab));
   const [refresh, setRefresh] = React.useState<Refresher>(Refresher.START);
   const smoothScrollDiv = React.useRef<HTMLDivElement>(null);
+  const [avatar, setAvatar] = React.useState<File>();
 
   React.useEffect(() => {
     async function fetchClient() {
@@ -106,6 +108,22 @@ export const Account = () => {
     return TimeHelper.formatDate(String(client?.lastLoginTime));
   };
 
+  const readFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files !== null) {
+      setAvatar(e.target.files[0]);
+      const file = e.target.files[0];
+      formData.append('avatar', file, file.name);
+      try {
+        const response = await clientService.uploadAvatar(formData);
+        if (response.status === 200) {
+          window.location.reload();
+        }
+      } catch (error) {
+        console.log('error: ', error);
+      }
+    }
+  };
+
   return (
     <ContainerGrey>
       <Grid container className="pt-20">
@@ -115,9 +133,12 @@ export const Account = () => {
               <>
                 <div className="relative">
                   <img alt="" src={client?.info.avatar} className="account-avatar" />
-                  <Button variant="contained" className="account-change-avatar-btn">
-                    <CameraIcon />
-                  </Button>
+                  {!avatar && (
+                    <Button variant="contained" className="account-change-avatar-btn" component="label">
+                      <input type="file" hidden id="upload" accept="image/*" onChange={(e) => readFile(e)} />
+                      <CameraIcon />
+                    </Button>
+                  )}
                 </div>
                 <div className="bg-white mt-8 rounded-2xl ">
                   <h1 className="account-text-headline text-center">

@@ -132,6 +132,14 @@ class ClientService {
     const { data } = await AxiosClient.post(clientAPI.filterBrandItem, params);
     return data;
   }
+
+  async uploadAvatar(form: FormData) {
+    return AxiosClientAPI.put(clientAPI.updateClientAvatar, form, {
+      headers: {
+        'Content-type': 'multipart/form-data',
+      },
+    });
+  }
 }
 
 export default new ClientService();
