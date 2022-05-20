@@ -16,8 +16,8 @@ export interface GeneralState {
 
 const initialState: GeneralState = {
   loading: false,
-  theme: Theme.DARK,
-  carPaymentId: 0,
+  theme: Theme.LIGHT,
+  carPaymentId: 1,
   scrollBarDisplay: true,
   scrollTopDisplay: false,
   openSnackBar: false,
