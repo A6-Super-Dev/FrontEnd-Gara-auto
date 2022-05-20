@@ -12,6 +12,7 @@ import {
 } from '../common/interfaces/Auth';
 import { LoginDataReturn } from '../common/interfaces/Client';
 import { BlogItemInterface } from '../pages/client/blog/BlogItem';
+import { RatingCreation } from '../pages/client/carDetail/CarDetail';
 import { CommentReaction } from '../pages/client/carDetail/CarDetailComment';
 import {
   ClientInfo,
@@ -114,13 +115,25 @@ class ClientService {
     return response.data;
   }
   async postComment(comment: CommentInterface) {
-    return AxiosClient.post(clientAPI.postComment, comment);
+    return AxiosClientAPI.post(clientAPI.postComment, comment);
+  }
+  async updateComment(comment: CommentInterface) {
+    return AxiosClientAPI.patch(clientAPI.postComment, comment);
+  }
+  async deleteComment(comment: any) {
+    return AxiosClientAPI.delete(clientAPI.deleteComment(comment));
   }
   async reactToComment(reaction: CommentReaction) {
-    return AxiosClient.post(clientAPI.reactToComment, reaction);
+    return AxiosClientAPI.post(clientAPI.reactToComment, reaction);
   }
   async updateCommentReaction(reaction: CommentReaction) {
-    return AxiosClient.patch(clientAPI.updateCommentReaction, reaction);
+    return AxiosClientAPI.patch(clientAPI.updateCommentReaction, reaction);
+  }
+  async rateCar(rating: RatingCreation) {
+    return AxiosClientAPI.post(clientAPI.ratingCar, rating);
+  }
+  async updateRating(rating: RatingCreation) {
+    return AxiosClientAPI.patch(clientAPI.ratingCar, rating);
   }
 
   async getAllBrandItemAttribute(brand: string) {

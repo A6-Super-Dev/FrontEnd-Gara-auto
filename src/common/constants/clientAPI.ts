@@ -29,6 +29,8 @@ class ClientAPI {
   updateClientAvatar = `${this.client}/update-client-avatar`;
   getCarByID = (id: number) => `car/${id}`;
   processPayment = `${this.client}/process-payment`;
+  ratingCar = `${this.client}/car/rating`;
+  deleteComment = (comment: any) => `${this.client}/car/comment/${comment.id}`;
 }
 
 export default new ClientAPI();

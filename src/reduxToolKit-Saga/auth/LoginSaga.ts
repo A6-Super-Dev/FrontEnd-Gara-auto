@@ -38,7 +38,7 @@ function* loginSaga(action: PayloadAction<LoginParams>) {
 
       yield put(setClientRelatedInfo(user.info));
       setTimeout(() => {
-        window.location.pathname = document.referrer;
+        window.history.go(-1);
       }, 400);
       yield put(reset());
     }

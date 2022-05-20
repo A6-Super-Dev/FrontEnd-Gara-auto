@@ -1,14 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Box, Container, TextField, Avatar, IconButton } from '@mui/material';
-import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
-import ThumbDownOutlinedIcon from '@mui/icons-material/ThumbDownOutlined';
-import ThumbUpIcon from '@mui/icons-material/ThumbUp';
-import ThumbDownIcon from '@mui/icons-material/ThumbDown';
+import { Box, Container, TextField } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
 import clientService from '../../../services/clientService';
 import { ClientDetailAttributes } from '../../../reduxToolKit-Saga/common/User/ClientSlice';
-import TimeHelper from '../../../common/helper/time';
+
+import Comment from './Comment';
 
 export type CommentReaction = {
   carId: number;
@@ -18,7 +15,7 @@ export type CommentReaction = {
   like: number;
   userId: number;
 };
-function broofa() {
+export function broofa() {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
     const r = (Math.random() * 16) | 0,
       v = c === 'x' ? r : (r & 0x3) | 0x8;
@@ -49,6 +46,7 @@ const CarDetailComment: React.FC<{
   const [sendingComment, setSendingComment] = useState(false);
   const navigate = useNavigate();
   const commentRef = useRef<any>(null);
+  const unauthorized = userStatus === 'Unauthorized';
 
   const onCommentChange = (event: any) => {
     setComment(event.target.value);
@@ -68,7 +66,7 @@ const CarDetailComment: React.FC<{
 
       setComment(() => '');
       commentRef.current.blur();
-      commentRef.current.innerHTML = '';
+      commentRef.current.value = '';
       setSendingComment(false);
     }
   };
@@ -205,35 +203,30 @@ const CarDetailComment: React.FC<{
         }
       });
 
-      setCarComments((comments: any) => {
-        let tempComments = comments;
-        tempComments = tempComments.map((comment: CommentReaction) => {
-          return {
-            ...comment,
-            like: obj1[comment.id] || 0,
-            dislike: obj2[comment.id] || 0,
-            status: obj3[comment.id],
-          };
-        });
-        tempComments = tempComments.sort((a: any, b: any) => {
-          return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-        });
-        return tempComments;
+      let tempComments = carComments;
+      tempComments = tempComments.map((comment: CommentReaction) => {
+        return {
+          ...comment,
+          like: obj1[comment.id] || 0,
+          dislike: obj2[comment.id] || 0,
+          status: obj3[comment.id],
+        };
       });
+      tempComments = tempComments.sort((a: any, b: any) => {
+        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+      });
+      setCarComments(tempComments);
     };
     resetComment();
-  }, [commentReactions, setCarComments, userInfo.id]);
-  const calculateTimeDuration = (startTime: any) => {
-    const timeDiff = new Date().getTime() - new Date(startTime).getTime();
-    return TimeHelper.calDayHourMinutes(timeDiff);
-  };
+  }, [commentReactions, setCarComments, userInfo?.id]);
+
   console.log('carComments', carComments);
 
   return (
     <>
       <Container maxWidth="md" className="car-comments">
         <TextField
-          label={userStatus === 'Unauthorized' ? 'Please log in to comment' : 'Binh luan'}
+          label={unauthorized ? 'Please log in to comment' : 'Bình luận'}
           multiline
           rows={4}
           fullWidth
@@ -248,55 +241,17 @@ const CarDetailComment: React.FC<{
         <Box className="comments-area">
           {carComments.map((comment: any, idx: number) => {
             return (
-              <Box key={idx} className={`comment-wrapper ${idx % 2 && 'slight-gray-bg'}`}>
-                <Box className="user-avatar">
-                  <Avatar src={comment.userInfo.info.avatar} alt="" sx={{ width: 56, height: 56 }} />
-                </Box>
-                <Box className="user-comment">
-                  <Box className="user-name-time-container">
-                    <Box className="user-name">
-                      {comment?.userInfo?.info?.firstName} {comment?.userInfo?.info?.lastName}
-                    </Box>
-                    <Box className="time-diff">{calculateTimeDuration(comment.createdAt)}</Box>
-                  </Box>
-
-                  <Box className="comment">{comment?.comment}</Box>
-                  <Box className="like-dislike-area">
-                    <Box className="like-area" onClick={() => likeComment(comment.id)}>
-                      {comment.status === 'like' ? (
-                        <>
-                          <IconButton>
-                            <ThumbUpIcon />
-                          </IconButton>
-                        </>
-                      ) : (
-                        <>
-                          <IconButton>
-                            <ThumbUpOutlinedIcon />
-                          </IconButton>
-                        </>
-                      )}
-                      &nbsp; {comment.like}
-                    </Box>
-                    <Box className="dislike-area" onClick={() => dislikeComment(comment.id)}>
-                      {comment.status === 'dislike' ? (
-                        <>
-                          <IconButton>
-                            <ThumbDownIcon />
-                          </IconButton>
-                        </>
-                      ) : (
-                        <>
-                          <IconButton>
-                            <ThumbDownOutlinedIcon />
-                          </IconButton>
-                        </>
-                      )}
-                      &nbsp; {comment.dislike}
-                    </Box>
-                  </Box>
-                </Box>
-              </Box>
+              <Comment
+                key={idx}
+                idx={idx}
+                comment={comment}
+                likeComment={likeComment}
+                dislikeComment={dislikeComment}
+                carInfo={carInfo}
+                userInfo={userInfo}
+                setCarComments={setCarComments}
+                unauthorized={unauthorized}
+              />
             );
           })}
         </Box>

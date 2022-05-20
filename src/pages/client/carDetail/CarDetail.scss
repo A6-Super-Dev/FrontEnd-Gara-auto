@@ -86,27 +86,36 @@
   height: 100%;
 }
 .starring-container {
-  max-width: 100%;
-  height: auto;
   cursor: pointer;
 }
 .car-staring {
-  height: 72px;
-  width: 95%;
   display: flex;
   margin: auto;
   border-color: #dee2e6;
-  @apply px-2 py-2 border-2 rounded-xl;
+  width: 95%;
+  height: auto;
+  @apply px-2 py-2 border-2 rounded-xl flex;
 }
 .starring-text {
   width: 50%;
-  height: 100%;
-  @apply flex  flex-col justify-evenly;
+  @apply flex flex-col justify-evenly;
+  .star-rating-area {
+    position: relative;
+    .curr-rating {
+      z-index: 1;
+    }
+    .others-rated {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 9;
+    }
+  }
 }
 .starring-number {
   width: 50%;
-  height: 100%;
-  @apply flex flex-row justify-center align-middle items-center;
+  height: inherit;
+  @apply flex flex-row justify-center text-center items-center;
 }
 
 .related-cars-blogs {
@@ -226,7 +235,19 @@
       background-color: #f9f9f9;
     }
     .comment-wrapper {
+      position: relative;
       @apply mt-8 flex flex-row px-8 py-4;
+      .more-action {
+        position: absolute;
+        top: calc(50% - 25.5px);
+        right: 0;
+        z-index: 999;
+        .more-action-container {
+          user-select: none;
+          cursor: pointer;
+          @apply p-8;
+        }
+      }
       .user-avatar {
         width: 10%;
         @apply flex justify-start;

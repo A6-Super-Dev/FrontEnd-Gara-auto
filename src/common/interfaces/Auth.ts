@@ -37,6 +37,7 @@ export interface ClientNewPassword {
 }
 
 export interface CommentInterface {
+  id?: number;
   carId: number;
   comment: string;
   mom?: string;
