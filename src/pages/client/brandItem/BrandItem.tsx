@@ -100,19 +100,19 @@ export const BrandItem: React.FC = () => {
         let carImg = '';
         let tinbanxeImg;
         if (car.carAppearance.newIntroImgs.length < 5) {
-          const carIntroImgs = replaceDirtyImgUrls(car.carAppearance.imgs);
+          const carIntroImgs = replaceDirtyImgUrls(car.carAppearance.imgs, false);
           if (carIntroImgs) {
             return Promise.resolve(carIntroImgs[0]);
           }
         }
-        const originalImgs = replaceDirtyImgUrls(car.carAppearance.newIntroImgs);
-        const tinbanxeImgs = replaceDirtyImgUrls(car.carAppearance.introImgs);
-        if (tinbanxeImgs && originalImgs) {
-          if (originalImgs?.length === 1) {
-            carImg = originalImgs[0];
+        const firebaseImgUrls = replaceDirtyImgUrls(car.carAppearance.newIntroImgs);
+        const tinbanxeImgs = replaceDirtyImgUrls(car.carAppearance.introImgs, false);
+        if (tinbanxeImgs && firebaseImgUrls) {
+          if (firebaseImgUrls?.length === 1) {
+            carImg = firebaseImgUrls[0];
             tinbanxeImg = tinbanxeImgs[0];
           } else {
-            carImg = originalImgs[1];
+            carImg = firebaseImgUrls[1];
             tinbanxeImg = tinbanxeImgs[1];
           }
         }
@@ -121,7 +121,7 @@ export const BrandItem: React.FC = () => {
       }),
     );
     const availableImgs = newImgs.reduce((acc: any, promise: any) => {
-      if (promise.status === 'fulfilled' && promise.value !== '') {
+      if (promise.status === 'fulfilled') {
         acc.push(promise.value);
         return acc;
       }
@@ -129,7 +129,6 @@ export const BrandItem: React.FC = () => {
     }, []) as any;
     setImgFromFirebase(availableImgs);
   }, [getImgFromFirebase, carInfoAPI]) as any;
-
   useEffect(() => {
     carFirebaseImgs();
   }, [carFirebaseImgs]);

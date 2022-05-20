@@ -3,7 +3,7 @@ import { Box, Container, Grid, Typography } from '@mui/material';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Rating from '@mui/material/Rating';
 
 import './CarDetail.scss';
@@ -43,20 +43,43 @@ const mainParams: UndefinedObject = {
   yearOfManufacture: 'Năm sản xuất',
 };
 
+export interface RatingInterFace {
+  id: number;
+  carId: number;
+  userId: number;
+  ratingPoint: number;
+}
+export type RatingCreation = Omit<RatingInterFace, 'id'>;
+
 const CarDetail: React.FC = () => {
   const [carInfo, setCarInfo] = useState<any>(undefined);
   const { imgObj, downloadImgsFromFirebase } = useFetchImgs();
   const { reformatCars } = useCarDetail();
   const { reformatBlogs } = useBlog();
+  const navigate = useNavigate();
 
   const [carComments, setCarComments] = useState<any>([]);
   const [commentReactions, setCommentReactions] = useState<Array<CommentReaction>>([]);
   const [relatedCars, setRelatedCars] = useState<any>([]);
   const [relatedBlogs, setRelatedBlogs] = useState<any>([]);
+  const [currUserRating, setCurrUserRating] = useState<number | null>(0);
+  const [ratingPoints, setRatingPoints] = useState<Array<RatingInterFace>>([]);
 
   const params: any = useParams();
   const userInfo = useAppSelector((globalState) => globalState.clientInfo);
   const userStatus: any = useAppSelector((globalState) => globalState.login.status);
+  const unauthorized = userStatus === 'Unauthorized';
+
+  const averagePoint = React.useMemo(() => {
+    const totalPoints = ratingPoints.reduce((acc: number, curr: any) => {
+      return acc + +curr?.ratingPoint;
+    }, 0);
+    if (totalPoints) {
+      return (totalPoints / ratingPoints.length).toFixed(1);
+    } else {
+      return 0;
+    }
+  }, [ratingPoints]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -64,13 +87,16 @@ const CarDetail: React.FC = () => {
 
   useEffect(() => {
     const fetchCar = async () => {
-      const { comments, carInfo, commentReactions, relatedCars, relatedBlogs } = await clientService.getCar(
-        params.brandName,
-        params.car as string,
-        +params?.id as any,
-      );
+      const { comments, carInfo, commentReactions, relatedCars, relatedBlogs, ratingPoints } =
+        await clientService.getCar(params.brandName, params.car as string, +params?.id as any);
       setCarInfo(carInfo);
       setCarComments(comments);
+      for (const rating of ratingPoints) {
+        if (rating.userId === userInfo?.id && rating.carId === +params.id) {
+          setCurrUserRating(rating.ratingPoint);
+        }
+      }
+      setRatingPoints(ratingPoints);
       const cars = await reformatCars(relatedCars);
       setRelatedCars(cars);
       const blogs = await Promise.all(reformatBlogs(relatedBlogs));
@@ -84,7 +110,7 @@ const CarDetail: React.FC = () => {
       setCommentReactions(newReactions);
     };
     fetchCar();
-  }, [params.car, params.id, params.brandName, reformatCars, reformatBlogs]);
+  }, [params.car, params.id, params.brandName, reformatCars, unauthorized, userInfo?.id, reformatBlogs]);
 
   useEffect(() => {
     const fetchAllImgs = async () => {
@@ -99,6 +125,22 @@ const CarDetail: React.FC = () => {
     };
     fetchAllImgs();
   }, [carInfo, downloadImgsFromFirebase]);
+
+  const handleUserRatingCar = async (_e: any, value: number | null) => {
+    if (unauthorized) {
+      navigate('/auth/user/log-in');
+      return;
+    }
+    setCurrUserRating(value);
+    const response = await clientService.rateCar({ carId: +params.id, ratingPoint: value || 0, userId: userInfo.id });
+    const ratingResponse = response.data.result;
+    setRatingPoints((ratingPoints: Array<RatingInterFace>) => {
+      ratingPoints = ratingPoints.filter((element: any) => {
+        return element.id !== ratingResponse.id;
+      });
+      return [...ratingPoints, ratingResponse] as any;
+    });
+  };
 
   return (
     <Container maxWidth={false}>
@@ -209,18 +251,34 @@ const CarDetail: React.FC = () => {
               </div>
             </Grid>
             <Grid item sm={12} md={4}>
-              <div className="starring-container">
-                <div className="car-staring">
-                  <div className="starring-text">
+              <Box className="starring-container">
+                <Box className="car-staring">
+                  <Box className="starring-text">
                     <p>ĐIỂM ĐÁNH GIÁ</p>
-                    <Rating name="half-rating" value={4.6} precision={0.5} readOnly />
-                  </div>
-                  <div className="starring-number">
-                    <p className="text-lg text-red-500">4.6</p>
-                    <p> / 10</p>
-                  </div>
-                </div>
-              </div>
+                    <Box className="star-rating-area">
+                      <Rating
+                        className="curr-rating"
+                        name="half-rating"
+                        value={currUserRating}
+                        precision={0.5}
+                        onChange={handleUserRatingCar}
+                      />
+                      <Rating
+                        className="others-rated"
+                        name="half-rating"
+                        disabled={true}
+                        value={+averagePoint}
+                        precision={0.5}
+                        readOnly
+                      />
+                    </Box>
+                  </Box>
+                  <Box className="starring-number">
+                    <Box className="text-lg text-red-500">{+averagePoint}</Box>
+                    <Box> / 5</Box>
+                  </Box>
+                </Box>
+              </Box>
               <Box className="intro-container">
                 <div className="text-wrapper">
                   <span className="related-cars-text">Xe liên quan</span>
