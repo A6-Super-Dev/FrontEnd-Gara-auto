@@ -27,6 +27,8 @@ class ClientAPI {
   filterBrandItem = `${this.client}/filter-car`;
   updateClientWishList = `${this.client}/wish-list`;
   updateClientAvatar = `${this.client}/update-client-avatar`;
+  getCarByID = (id: number) => `car/${id}`;
+  processPayment = `${this.client}/process-payment`;
 }
 
 export default new ClientAPI();
