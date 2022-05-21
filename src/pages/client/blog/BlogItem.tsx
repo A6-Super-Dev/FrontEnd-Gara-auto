@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Container, Skeleton, CardActionArea, Box, Grid, Link, Modal } from '@mui/material';
+import { Container, Skeleton, CardActionArea, Typography, Box, Grid, Link } from '@mui/material';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 
@@ -75,9 +75,15 @@ export const BlogItem = () => {
   useEffect(() => {
     window.scrollTo({ top: 0 });
   }, []);
+  console.log('currBlog', currBlog);
   return (
     <>
       <Container maxWidth="md" sx={{ marginTop: '154px', marginBottom: '100px' }}>
+        <Box className="blog-item-title">
+          <Typography fontSize="2rem" color="text.secondary">
+            {currBlog?.title}
+          </Typography>
+        </Box>
         <Card>
           <CardContent>
             {!loading ? (

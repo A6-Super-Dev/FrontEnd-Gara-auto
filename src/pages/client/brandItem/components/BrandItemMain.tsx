@@ -16,6 +16,8 @@ import {
   Stack,
   TextField,
   Typography,
+  Skeleton,
+  Rating,
 } from '@mui/material';
 import { Link } from 'react-router-dom';
 
@@ -28,6 +30,7 @@ import {
 } from '../../../../components/MuiStyling/MuiStyling';
 import { CarAttributes, SeatAttributes } from '../BrandItem';
 import { allPrice } from '../../../../common/constants/fakeData';
+import { getAverageStarPoint } from '../../../../common/helper/starRating';
 
 import { ProductEmpty } from './ProductEmpty';
 
@@ -47,6 +50,7 @@ interface BrandItemMainProps {
   setSeatInForm: React.Dispatch<React.SetStateAction<string | null>>;
   setRadioASC: React.Dispatch<React.SetStateAction<string>>;
   filterCarAPI: CarAttributes[];
+  loadingFirebaseImg: boolean;
 }
 
 export const BrandItemMain: React.FC<BrandItemMainProps> = ({
@@ -61,6 +65,7 @@ export const BrandItemMain: React.FC<BrandItemMainProps> = ({
   setSeatInForm,
   setRadioASC,
   filterCarAPI,
+  loadingFirebaseImg,
 }) => {
   //convert data to seat asc
   const seatFormDB = seatFromAPI.map((item) => parseInt(item.seats));
@@ -142,17 +147,18 @@ export const BrandItemMain: React.FC<BrandItemMainProps> = ({
                     <Grid item xs={12} sm={6} md={4} lg={3} xl={3} sx={{ padding: '0.5rem' }} key={index}>
                       <Card>
                         <CardActionArea>
-                          <CardMedia
-                            className="h-36 "
-                            component="img"
-                            image={
-                              // item.carAppearance.introImgs.length > 5
-                              //   ? getImgFromAPI(item.carAppearance.introImgs)
-                              //   : getImgFromAPI(item.carAppearance.imgs)
-                              imgFromFirebase[index]
-                            }
-                            alt="green iguana"
-                          />
+                          {loadingFirebaseImg ? (
+                            <Skeleton variant="rectangular" width={'100%'} height={'9rem'} />
+                          ) : (
+                            <>
+                              <CardMedia
+                                className="h-36 "
+                                component="img"
+                                image={imgFromFirebase[index]}
+                                alt={item.name}
+                              />
+                            </>
+                          )}
                           <CardContent sx={{ paddingInline: '1.5rem', minHeight: '8rem' }}>
                             <Typography gutterBottom variant="h6" component="div">
                               {item.name}
@@ -160,10 +166,19 @@ export const BrandItemMain: React.FC<BrandItemMainProps> = ({
                             <Typography fontSize="0.875rem" color="text.secondary">
                               {`From: ${item.price}`}
                             </Typography>
+                            <Rating
+                              name="simple-controlled"
+                              value={+getAverageStarPoint(item.ratingPoints)}
+                              precision={0.5}
+                              readOnly
+                            />
                           </CardContent>
                         </CardActionArea>
                         <CardActions>
-                          <Link to={`/brand/${cutBrandName}/${item.name.toLocaleLowerCase()}`} className="flex w-full">
+                          <Link
+                            to={`/brand/${cutBrandName}/${item.name.toLocaleLowerCase()}/${item.id}`}
+                            className="flex w-full"
+                          >
                             <MuiBrandButton variant="contained" type="button" style={SubmitButtonStyle}>
                               Discover more
                             </MuiBrandButton>
