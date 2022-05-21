@@ -34,7 +34,7 @@
     "react-google-recaptcha": "^2.1.0",
     "react-modal": "^3.14.4",
     "react-redux": "^7.2.6",
-    "react-router-dom": "^6.2.1",
+    "react-router-dom": "^6.3.0",
     "react-router-v6-instrumentation": "^2.0.1",
     "react-scripts": "5.0.0",
     "react-select": "^5.3.1",
