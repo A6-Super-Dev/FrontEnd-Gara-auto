@@ -20,6 +20,7 @@ import { ImageGallary } from '../../../components/ImageGallary/ImageGallery';
 import { useAppSelector } from '../../../common/hooks/ReduxHook';
 import useCarDetail from '../../../common/hooks/useCarDetail';
 import useBlog from '../../../common/hooks/useBlog';
+import { getAverageStarPoint } from '../../../common/helper/starRating';
 
 import CarDetailComment, { CommentReaction } from './CarDetailComment';
 import RelatedCarsAndBlogs from './RelatedCarsAndBlogs';
@@ -71,14 +72,7 @@ const CarDetail: React.FC = () => {
   const unauthorized = userStatus === 'Unauthorized';
 
   const averagePoint = React.useMemo(() => {
-    const totalPoints = ratingPoints.reduce((acc: number, curr: any) => {
-      return acc + +curr?.ratingPoint;
-    }, 0);
-    if (totalPoints) {
-      return (totalPoints / ratingPoints.length).toFixed(1);
-    } else {
-      return 0;
-    }
+    return getAverageStarPoint(ratingPoints);
   }, [ratingPoints]);
 
   useEffect(() => {

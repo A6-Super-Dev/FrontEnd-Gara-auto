@@ -28,12 +28,20 @@ interface CarImgAttributes {
   imgs: string;
 }
 
+type RatingPointAttrs = {
+  carId: number;
+  id: number;
+  ratingPoint: string;
+  userId: number;
+};
+
 export interface CarAttributes {
   id: string;
   name: string;
   price: string;
   seat: string;
   carAppearance: CarImgAttributes;
+  ratingPoints: RatingPointAttrs;
 }
 
 export interface BodyTypeAttributes {
@@ -79,6 +87,7 @@ export const BrandItem: React.FC = () => {
   const [seatInForm, setSeatInForm] = useState<string | null>('');
   const [radioASC, setRadioASC] = React.useState<string>('asc');
   const [filterCarAPI, setFilterCarAPI] = useState<Array<CarAttributes>>([]);
+  const [loadingFirebaseImg, setLoadingFirebaseImg] = useState(false);
 
   const { imgObj, downloadImgsFromFirebase, getImgFromFirebase } = useFetchImgs();
   const params = useParams();
@@ -95,40 +104,44 @@ export const BrandItem: React.FC = () => {
   }, [downloadImgsFromFirebase, brandImgUrls]);
 
   const carFirebaseImgs = useCallback(async () => {
-    const newImgs = await Promise.allSettled(
-      carInfoAPI.map((car: any) => {
-        let carImg = '';
-        let tinbanxeImg;
-        if (car.carAppearance.newIntroImgs.length < 5) {
-          const carIntroImgs = replaceDirtyImgUrls(car.carAppearance.imgs, false);
-          if (carIntroImgs) {
-            return Promise.resolve(carIntroImgs[0]);
+    if (filterCarAPI.length > 0) {
+      setLoadingFirebaseImg(true);
+      const newImgs = await Promise.allSettled(
+        filterCarAPI.map((car: any) => {
+          let carImg = '';
+          let tinbanxeImg;
+          if (car.carAppearance.newIntroImgs.length < 5) {
+            const carIntroImgs = replaceDirtyImgUrls(car.carAppearance.imgs, false);
+            if (carIntroImgs) {
+              return Promise.resolve(carIntroImgs[0]);
+            }
           }
-        }
-        const firebaseImgUrls = replaceDirtyImgUrls(car.carAppearance.newIntroImgs);
-        const tinbanxeImgs = replaceDirtyImgUrls(car.carAppearance.introImgs, false);
-        if (tinbanxeImgs && firebaseImgUrls) {
-          if (firebaseImgUrls?.length === 1) {
-            carImg = firebaseImgUrls[0];
-            tinbanxeImg = tinbanxeImgs[0];
-          } else {
-            carImg = firebaseImgUrls[1];
-            tinbanxeImg = tinbanxeImgs[1];
+          const firebaseImgUrls = replaceDirtyImgUrls(car.carAppearance.newIntroImgs);
+          const tinbanxeImgs = replaceDirtyImgUrls(car.carAppearance.introImgs, false);
+          if (tinbanxeImgs && firebaseImgUrls) {
+            if (firebaseImgUrls?.length === 1) {
+              carImg = firebaseImgUrls[0];
+              tinbanxeImg = tinbanxeImgs[0];
+            } else {
+              carImg = firebaseImgUrls[1];
+              tinbanxeImg = tinbanxeImgs[1];
+            }
           }
+          const carImgRes = getImgFromFirebase(carImg, tinbanxeImg);
+          return carImgRes;
+        }),
+      );
+      const availableImgs = newImgs.reduce((acc: any, promise: any) => {
+        if (promise.status === 'fulfilled') {
+          acc.push(promise.value);
+          return acc;
         }
-        const carImgRes = getImgFromFirebase(carImg, tinbanxeImg);
-        return carImgRes;
-      }),
-    );
-    const availableImgs = newImgs.reduce((acc: any, promise: any) => {
-      if (promise.status === 'fulfilled') {
-        acc.push(promise.value);
         return acc;
-      }
-      return acc;
-    }, []) as any;
-    setImgFromFirebase(availableImgs);
-  }, [getImgFromFirebase, carInfoAPI]) as any;
+      }, []) as any;
+      setImgFromFirebase(availableImgs);
+      setLoadingFirebaseImg(false);
+    }
+  }, [getImgFromFirebase, filterCarAPI]) as any;
   useEffect(() => {
     carFirebaseImgs();
   }, [carFirebaseImgs]);
@@ -246,6 +259,7 @@ export const BrandItem: React.FC = () => {
         radioASC={radioASC}
         setRadioASC={setRadioASC}
         filterCarAPI={filterCarAPI}
+        loadingFirebaseImg={loadingFirebaseImg}
       />
 
       <BrandItemDetail brandItemRef={brandItemRef} brandItemAPI={brandItemAPI} imgObj={imgObj} />
