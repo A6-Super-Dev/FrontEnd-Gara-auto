@@ -1,10 +1,12 @@
 import React, { useState, useEffect, memo } from 'react';
-import { Box, Container, Grid, Typography } from '@mui/material';
+import { Box, Container, Button, Grid, IconButton, Typography } from '@mui/material';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import Rating from '@mui/material/Rating';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 
 import './CarDetail.scss';
 import 'swiper/css';
@@ -17,10 +19,12 @@ import { DarkAccordion } from '../../../components/MuiStyling/MuiStyling';
 import { useFetchImgs } from '../../../common/hooks/useFetchImgs';
 import clientService from '../../../services/clientService';
 import { ImageGallary } from '../../../components/ImageGallary/ImageGallery';
-import { useAppSelector } from '../../../common/hooks/ReduxHook';
+import { useAppDispatch, useAppSelector } from '../../../common/hooks/ReduxHook';
 import useCarDetail from '../../../common/hooks/useCarDetail';
 import useBlog from '../../../common/hooks/useBlog';
 import { getAverageStarPoint } from '../../../common/helper/starRating';
+import { setWishList } from '../../../reduxToolKit-Saga/common/User/ClientSlice';
+import { setPaymentId } from '../../../reduxToolKit-Saga/common/General/GeneralSlice';
 
 import CarDetailComment, { CommentReaction } from './CarDetailComment';
 import RelatedCarsAndBlogs from './RelatedCarsAndBlogs';
@@ -57,7 +61,10 @@ const CarDetail: React.FC = () => {
   const { imgObj, downloadImgsFromFirebase } = useFetchImgs();
   const { reformatCars } = useCarDetail();
   const { reformatBlogs } = useBlog();
+
   const navigate = useNavigate();
+  const params: any = useParams();
+  const currCarId = +params.id;
 
   const [carComments, setCarComments] = useState<any>([]);
   const [commentReactions, setCommentReactions] = useState<Array<CommentReaction>>([]);
@@ -66,10 +73,12 @@ const CarDetail: React.FC = () => {
   const [currUserRating, setCurrUserRating] = useState<number | null>(0);
   const [ratingPoints, setRatingPoints] = useState<Array<RatingInterFace>>([]);
 
-  const params: any = useParams();
+  const dispatch = useAppDispatch();
   const userInfo = useAppSelector((globalState) => globalState.clientInfo);
   const userStatus: any = useAppSelector((globalState) => globalState.login.status);
+
   const unauthorized = userStatus === 'Unauthorized';
+  const userWishList: Array<any> = userInfo.wishlist;
 
   const averagePoint = React.useMemo(() => {
     return getAverageStarPoint(ratingPoints);
@@ -136,6 +145,25 @@ const CarDetail: React.FC = () => {
     });
   };
 
+  const handleUserToggleWishList = async () => {
+    let newWishList;
+    if (userWishList.includes(currCarId)) {
+      newWishList = userWishList.filter((el: number) => {
+        return el !== currCarId;
+      });
+    } else {
+      newWishList = [...userWishList, currCarId];
+    }
+    dispatch(setWishList(newWishList));
+    await clientService.updateUserWishList({ listCarId: newWishList, takeAction: true });
+  };
+
+  const handleUserBuyingCar = async () => {
+    dispatch(setPaymentId(currCarId));
+    await clientService.callPaymentApi({ carId: currCarId, quantity: 1 });
+    return;
+  };
+
   return (
     <Container maxWidth={false}>
       <Box sx={{ marginTop: '154px' }}>
@@ -150,9 +178,22 @@ const CarDetail: React.FC = () => {
             <Grid item sm={12} md={5}>
               <div className="car-main-params-wrapper">
                 <div className="car-main-params">
-                  <h1 className="car-title">
-                    <strong>{carInfo?.name}</strong>
-                  </h1>
+                  <Box className="title-wrapper">
+                    <h1 className="car-title">
+                      <strong>{carInfo?.name}</strong>
+                    </h1>
+                    <IconButton onClick={handleUserToggleWishList}>
+                      {userWishList.includes(+params.id) ? (
+                        <>
+                          <FavoriteIcon sx={{ color: 'red' }} />
+                        </>
+                      ) : (
+                        <>
+                          <FavoriteBorderIcon />
+                        </>
+                      )}
+                    </IconButton>
+                  </Box>
                   <p className="car-price">{carInfo?.price}</p>
                   <div className="table-title">
                     <strong>Thông số chính</strong>
@@ -171,6 +212,11 @@ const CarDetail: React.FC = () => {
                       })}
                     </tbody>
                   </table>
+                  <Box onClick={handleUserBuyingCar} className="payment-area">
+                    <Link to="/auth/my-account" target="_blank">
+                      <Button variant="contained">Thanh toán</Button>
+                    </Link>
+                  </Box>
                 </div>
               </div>
             </Grid>

@@ -29,6 +29,9 @@
     width: 90%;
     margin: auto;
   }
+  .title-wrapper {
+    @apply flex justify-between;
+  }
 }
 
 .car {
@@ -68,6 +71,9 @@
   justify-content: center;
   font-size: 24px;
   color: red;
+}
+.payment-area {
+  @apply flex justify-center mt-6;
 }
 
 .car-p-strong {

@@ -58,6 +58,15 @@ export enum UserRoles {
   SALE = 'SALE',
 }
 
+export interface UserWishListBody {
+  listCarId: Array<number>;
+  takeAction: boolean;
+}
+export interface PaymentBody {
+  carId: number;
+  quantity: number;
+}
+
 class AuthInterfaces {
   private validateRegEx = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/;
   public clientLoginSchema;
