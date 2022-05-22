@@ -47,6 +47,13 @@ export const Account = () => {
   const smoothScrollDiv = React.useRef<HTMLDivElement>(null);
   const [avatar, setAvatar] = React.useState<File>();
   const { carPaymentId } = useAppSelector((globalState: RootState) => globalState.general);
+  const previousPageUrlInfos = new URL(document.referrer);
+
+  React.useEffect(() => {
+    if (previousPageUrlInfos.pathname.includes('brand')) {
+      setTab(Tab.PAYMENT);
+    }
+  }, [previousPageUrlInfos.pathname]);
 
   React.useEffect(() => {
     async function fetchClient() {

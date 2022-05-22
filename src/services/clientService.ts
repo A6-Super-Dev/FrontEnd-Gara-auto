@@ -9,6 +9,8 @@ import {
   ClientSignUp,
   CommentInterface,
   FilterBrandItemInput,
+  PaymentBody,
+  UserWishListBody,
 } from '../common/interfaces/Auth';
 import { LoginDataReturn } from '../common/interfaces/Client';
 import { BlogItemInterface } from '../pages/client/blog/BlogItem';
@@ -143,6 +145,16 @@ class ClientService {
 
   async filterInBrandItem(params: FilterBrandItemInput) {
     const { data } = await AxiosClient.post(clientAPI.filterBrandItem, params);
+    return data;
+  }
+
+  async updateUserWishList(userWishListBody: UserWishListBody) {
+    const { data } = await AxiosClientAPI.patch(clientAPI.updateClientWishList, userWishListBody);
+    return data;
+  }
+
+  async callPaymentApi(paymentBody: PaymentBody) {
+    const { data } = await AxiosClientAPI.post(clientAPI.processPayment, paymentBody);
     return data;
   }
 
