@@ -57,11 +57,16 @@ const CarDetailComment: React.FC<{
       return;
     } else if (e.key === 'Enter') {
       setSendingComment(true);
-      await clientService.postComment({
-        carId: carInfo.id,
-        comment,
-        mom: '',
-        userId: userInfo.id,
+      const newComment = (
+        await clientService.postComment({
+          carId: carInfo.id,
+          comment,
+          mom: '',
+          userId: userInfo.id,
+        })
+      ).data.newCreatedComment;
+      setCarComments((carComments: Array<any>) => {
+        return [newComment, ...carComments];
       });
 
       setComment(() => '');

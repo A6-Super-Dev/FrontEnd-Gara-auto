@@ -146,6 +146,10 @@ const CarDetail: React.FC = () => {
   };
 
   const handleUserToggleWishList = async () => {
+    if (unauthorized) {
+      navigate('/auth/user/log-in');
+      return;
+    }
     let newWishList;
     if (userWishList.includes(currCarId)) {
       newWishList = userWishList.filter((el: number) => {
@@ -159,6 +163,9 @@ const CarDetail: React.FC = () => {
   };
 
   const handleUserBuyingCar = async () => {
+    if (unauthorized) {
+      return;
+    }
     dispatch(setPaymentId(currCarId));
     await clientService.callPaymentApi({ carId: currCarId, quantity: 1 });
     return;
@@ -213,9 +220,19 @@ const CarDetail: React.FC = () => {
                     </tbody>
                   </table>
                   <Box onClick={handleUserBuyingCar} className="payment-area">
-                    <Link to="/auth/my-account" target="_blank">
-                      <Button variant="contained">Thanh toán</Button>
-                    </Link>
+                    {unauthorized ? (
+                      <>
+                        <Link to="/auth/user/log-in">
+                          <Button variant="contained">Thanh toán</Button>
+                        </Link>
+                      </>
+                    ) : (
+                      <>
+                        <Link to="/auth/my-account" target="_blank">
+                          <Button variant="contained">Thanh toán</Button>
+                        </Link>
+                      </>
+                    )}
                   </Box>
                 </div>
               </div>
